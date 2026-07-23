@@ -1,785 +1,232 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="pt-BR" class="dark">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Futebol Evolution | Plataforma Profissional</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-    content="width=device-width, initial-scale=1.0">
-
-    <title>Futebol Evolution</title>
-
-    <link rel="stylesheet" href="style.css">
-
-    <link rel="preconnect"
-    href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet">
-
+  <link rel="stylesheet" href="style.css">
 </head>
-
-<body>
-
-<div class="app">
-
-<!-- MENU LATERAL -->
-
-<aside class="menu">
-
-<h1>⚽ Futebol Evolution</h1>
-
-<p>Evolua como atleta.</p>
-
-<nav>
-
-<button id="inicio">
-🏠 Início
-</button>
-
-<button id="perfil">
-👤 Perfil
-</button>
-
-<button id="avatar">
-🎮 Avatar
-</button>
-
-<button id="treinos">
-💪 Treinos
-</button>
-
-<button id="agenda">
-📅 Agenda
-</button>
-
-<button id="ia">
-🤖 IA Treinador
-</button>
-
-<button id="teste">
-📋 Teste
-</button>
-
-<button id="nutricao">
-🍎 Nutrição
-</button>
-
-<button id="biblioteca">
-📚 Biblioteca
-</button>
-
-<button id="evolucao">
-📈 Evolução
-</button>
-
-<button id="video">
-🎥 Análise de Vídeo
-</button>
-
-<button id="config">
-⚙ Configurações
-</button>
-
-</nav>
-
-</aside>
-
-<!-- CONTEÚDO -->
-
-<main class="conteudo">
-
-<header>
-
-<h2>
-Bem-vindo ao Futebol Evolution
-</h2>
-
-<p>
-
-Seu treinador virtual para evoluir no futebol.
-
-</p>
-
-</header>
-
-<section class="inicio">
-
-<h2>
-Treino de Hoje
-</h2>
-
-<div class="card">
-
-<p>
-
-Nenhum treino iniciado.
-
-</p>
-
-<button id="entrar">
-
-Entrar
-
-</button>
-
-</div>
-
-</section>
-
-<section class="status">
-
-<h2>
-
-Status do Atleta
-
-</h2>
-
-<div class="barras">
-
-<label>Energia</label>
-
-<progress
-value="100"
-max="100">
-</progress>
-
-<label>Força</label>
-
-<progress
-value="30"
-max="100">
-</progress>
-
-<label>Velocidade</label>
-
-<progress
-value="40"
-max="100">
-</progress>
-
-<label>Resistência</label>
-
-<progress
-value="35"
-max="100">
-</progress>
-
-<label>Drible</label>
-
-<progress
-value="50"
-max="100">
-</progress>
-
-<label>Passe</label>
-
-<progress
-value="55"
-max="100">
-</progress>
-
-<label>Finalização</label>
-
-<progress
-value="45"
-max="100">
-</progress>
-
-</div>
-
-</section>
-<!-- ========================= -->
-<!-- PERFIL DO ATLETA -->
-<!-- ========================= -->
-
-<section class="perfil">
-
-<h2>👤 Perfil do Atleta</h2>
-
-<div class="perfil-grid">
-
-<div class="campo">
-
-<label>Nome</label>
-
-<input
-type="text"
-id="nome"
-placeholder="Seu nome">
-
-</div>
-
-<div class="campo">
-
-<label>Idade</label>
-
-<input
-type="number"
-id="idade">
-
-</div>
-
-<div class="campo">
-
-<label>Altura</label>
-
-<input
-type="number"
-step="0.01"
-id="altura">
-
-</div>
-
-<div class="campo">
-
-<label>Peso</label>
-
-<input
-type="number"
-step="0.1"
-id="peso">
-
-</div>
-
-<div class="campo">
-
-<label>Pé dominante</label>
-
-<select id="pe">
-
-<option>Direito</option>
-
-<option>Esquerdo</option>
-
-<option>Ambidestro</option>
-
-</select>
-
-</div>
-
-<div class="campo">
-
-<label>Objetivo</label>
-
-<select id="objetivo">
-
-<option>Ganhar força</option>
-
-<option>Ganhar velocidade</option>
-
-<option>Melhorar resistência</option>
-
-<option>Melhorar passe</option>
-
-<option>Melhorar chute</option>
-
-<option>Evoluir completo</option>
-
-</select>
-
-</div>
-
-</div>
-
-<button id="salvarPerfil">
-
-Salvar Perfil
-
-</button>
-
-</section>
-
-<!-- ========================= -->
-<!-- AVATAR -->
-<!-- ========================= -->
-
-<section class="avatar">
-
-<h2>🎮 Meu Avatar</h2>
-
-<div class="avatar-card">
-
-<img
-id="avatarImagem"
-src="assets/avatar/avatar.png"
-alt="Avatar">
-
-<h3 id="nivel">
-
-Nível Iniciante
-
-</h3>
-
-<p>
-
-Experiência
-
-</p>
-
-<div class="barraXP">
-
-<div
-class="xp"
-id="xp">
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ========================= -->
-<!-- CARTA DO JOGADOR -->
-<!-- ========================= -->
-
-<section class="carta">
-
-<h2>
-
-⭐ Meu Cartão
-
-</h2>
-
-<div class="card-player">
-
-<div class="overall">
-
-<h1 id="overall">
-
-60
-
-</h1>
-
-<p>OVR</p>
-
-</div>
-
-<div class="dados">
-
-<h3 id="nomeCarta">
-
-Jogador
-
-</h3>
-
-<p id="posicaoCarta">
-
-Posição: Em análise
-
-</p>
-
-</div>
-
-<div class="atributos">
-
-<div>PAC <span id="pac">60</span></div>
-
-<div>SHO <span id="sho">58</span></div>
-
-<div>PAS <span id="pas">64</span></div>
-
-<div>DRI <span id="dri">70</span></div>
-
-<div>DEF <span id="def">48</span></div>
-
-<div>PHY <span id="phy">55</span></div>
-
-</div>
-
-</div>
-
-</section>
-<!-- ========================= -->
-<!-- IA TREINADOR -->
-<!-- ========================= -->
-
-<section class="ia">
-
-<h2>🤖 IA Treinador</h2>
-
-<div class="chat">
-
-<div id="mensagens">
-
-<p>
-Olá! Eu sou seu treinador virtual.
-</p>
-
-<p>
-
-Vou acompanhar sua evolução e montar seus treinos.
-
-</p>
-
-</div>
-
-<div class="campo-chat">
-
-<input
-type="text"
-id="pergunta"
-placeholder="Pergunte qualquer coisa sobre futebol...">
-
-<button id="enviar">
-
-Enviar
-
-</button>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ========================= -->
-<!-- AGENDA INTELIGENTE -->
-<!-- ========================= -->
-
-<section class="agenda">
-
-<h2>📅 Agenda Inteligente</h2>
-
-<div class="agenda-card">
-
-<h3>Treino de Hoje</h3>
-
-<p id="treinoHoje">
-
-Nenhum treino programado.
-
-</p>
-
-<button id="gerarTreino">
-
-Gerar Treino
-
-</button>
-
-</div>
-
-</section>
-
-<!-- ========================= -->
-<!-- TESTE DE EVOLUÇÃO -->
-<!-- ========================= -->
-
-<section class="teste">
-
-<h2>📋 Avaliação do Atleta</h2>
-
-<p>
-
-No primeiro acesso será realizado um teste com 50 perguntas.
-
-</p>
-
-<p>
-
-Depois um novo teste aparecerá automaticamente a cada 2 meses.
-
-</p>
-
-<button id="iniciarTeste">
-
-Iniciar Teste
-
-</button>
-
-</section>
-
-<!-- ========================= -->
-<!-- NUTRIÇÃO -->
-<!-- ========================= -->
-
-<section class="nutricao">
-
-<h2>🍎 Nutrição</h2>
-
-<div class="alimentacao">
-
-<p>
-
-A IA criará recomendações conforme:
-
-</p>
-
-<ul>
-
-<li>Idade</li>
-
-<li>Peso</li>
-
-<li>Objetivo</li>
-
-<li>Carga de treino</li>
-
-<li>Recuperação</li>
-
-</ul>
-
-<button id="verPlano">
-
-Ver Plano Alimentar
-
-</button>
-
-</div>
-
-</section>
-
-<!-- ========================= -->
-<!-- RECUPERAÇÃO -->
-<!-- ========================= -->
-
-<section class="recuperacao">
-
-<h2>😴 Recuperação</h2>
-
-<label>
-
-Como está seu corpo hoje?
-
-</label>
-
-<select id="estadoFisico">
-
-<option>Sem dor</option>
-
-<option>Cansado</option>
-
-<option>Dor muscular</option>
-
-<option>Muito cansado</option>
-
-</select>
-
-<button id="salvarEstado">
-
-Salvar
-
-</button>
-
-</section>
-
-<!-- ========================= -->
-<!-- BIBLIOTECA -->
-<!-- ========================= -->
-
-<section class="biblioteca">
-
-<h2>📚 Biblioteca de Treinos</h2>
-
-<div class="gridBiblioteca">
-
-<button>Passe</button>
-
-<button>Domínio</button>
-
-<button>Finalização</button>
-
-<button>Drible</button>
-
-<button>Velocidade</button>
-
-<button>Força</button>
-
-<button>Resistência</button>
-
-<button>Jogo de Corpo</button>
-
-<button>Cabeceio</button>
-
-<button>Alongamento</button>
-
-</div>
-
-</section>
-
-<!-- ========================= -->
-<!-- ANÁLISE DE VÍDEO -->
-<!-- ========================= -->
-
-<section class="video">
-
-<h2>🎥 Análise de Vídeo</h2>
-
-<p>
-
-Disponível após 30 dias de uso do aplicativo.
-
-</p>
-
-<input
-type="file"
-accept="video/*">
-
-<button>
-
-Enviar Vídeo
-
-</button>
-
-</section>
-<!-- ========================= -->
-<!-- CONFIGURAÇÕES -->
-<!-- ========================= -->
-
-<section class="configuracoes">
-
-<h2>⚙️ Configurações</h2>
-
-<div class="config-grid">
-
-<div class="campo">
-
-<label>E-mail</label>
-
-<input
-type="email"
-id="email"
-placeholder="Digite seu e-mail">
-
-</div>
-
-<div class="campo">
-
-<label>Senha</label>
-
-<input
-type="password"
-id="senha"
-placeholder="Digite sua senha">
-
-</div>
-
-<button id="cadastrar">
-
-Cadastrar
-
-</button>
-
-<button id="login">
-
-Entrar
-
-</button>
-
-<hr>
-
-<label>
-
-Tema
-
-</label>
-
-<select id="tema">
-
-<option value="escuro">
-
-Escuro
-
-</option>
-
-<option value="claro">
-
-Claro
-
-</option>
-
-</select>
-
-<hr>
-
-<label>
-
-Idioma
-
-</label>
-
-<select id="idioma">
-
-<option>
-
-Português
-
-</option>
-
-<option>
-
-English
-
-</option>
-
-<option>
-
-Español
-
-</option>
-
-</select>
-
-<hr>
-
-<button id="salvarConfiguracoes">
-
-Salvar Configurações
-
-</button>
-
-</div>
-
-</section>
-
-<!-- ========================= -->
-<!-- SOBRE O APP -->
-<!-- ========================= -->
-
-<section class="sobre">
-
-<h2>
-
-ℹ️ Sobre
-
-</h2>
-
-<p>
-
-Futebol Evolution é um aplicativo criado para ajudar atletas de qualquer idade a evoluírem através de treinos, avaliações, inteligência artificial e acompanhamento da evolução.
-
-</p>
-
-</section>
-
-<footer>
-
-<p>
-
-© 2026 Futebol Evolution
-
-</p>
-
-<p>
-
-Versão 1.0
-
-</p>
-
-</footer>
-
-</main>
-
-</div>
-
-<script src="script.js"></script>
-
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between">
+
+  <div id="auth-screen" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 max-w-md w-full shadow-2xl my-8">
+      <div class="text-center mb-6">
+        <div class="inline-flex bg-emerald-500 text-slate-950 p-3 rounded-xl font-black text-2xl mb-2">FE</div>
+        <h2 class="text-2xl font-bold text-white">Futebol <span class="text-emerald-400">Evolution</span></h2>
+        <p class="text-slate-400 text-sm">Acesse sua conta ou cadastre-se para evoluir</p>
+      </div>
+
+      <form id="auth-form" class="space-y-4" onsubmit="handleAuth(event)">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Tipo de Acesso</label>
+          <select id="user-role" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none" onchange="toggleAdminField()">
+            <option value="user">Atleta / Jogador</option>
+            <option value="admin">Administrador (Técnico)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Nome Completo</label>
+          <input type="text" id="user-name" required placeholder="Seu nome" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">E-mail</label>
+          <input type="email" id="user-email" required placeholder="seu@email.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+        </div>
+
+        <div id="athlete-fields" class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Altura (cm)</label>
+            <input type="number" id="user-height" placeholder="Ex: 178" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Peso (kg)</label>
+            <input type="number" id="user-weight" placeholder="Ex: 72" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Foto de Perfil (Opcional)</label>
+          <input type="file" id="user-photo" accept="image/*" class="w-full text-xs text-slate-400 bg-slate-950 border border-slate-800 rounded-lg p-2 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-500 file:text-slate-950 hover:file:bg-emerald-600">
+        </div>
+
+        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-lg transition mt-4">
+          Entrar
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+        <div class="bg-emerald-500 text-slate-950 p-2 rounded-lg font-black text-xl">FE</div>
+        <span class="text-xl font-bold tracking-wider text-white">FUTEBOL <span class="text-emerald-400">EVOLUTION</span></span>
+      </div>
+
+      <nav class="hidden md:flex space-x-1">
+        <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-emerald-400 bg-slate-800"><i class="fa-solid fa-house mr-1"></i> Início</button>
+        <button onclick="switchTab('test')" id="nav-test" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white"><i class="fa-solid fa-clipboard-question mr-1"></i> Diagnóstico (50 Qs)</button>
+        <button onclick="switchTab('avatar')" id="nav-avatar" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white"><i class="fa-solid fa-user-gear mr-1"></i> Criar Avatar</button>
+        <button onclick="switchTab('videos')" id="nav-videos" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white"><i class="fa-solid fa-video mr-1"></i> Enviar Vídeo</button>
+        <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-amber-400 hover:text-amber-300 hidden"><i class="fa-solid fa-shield-halved mr-1"></i> Painel Admin</button>
+      </nav>
+
+      <div class="flex items-center space-x-3">
+        <span id="nav-user-name" class="text-sm font-medium text-slate-300"></span>
+        <button onclick="logout()" class="text-xs text-red-400 hover:underline"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
+
+    <section id="tab-home" class="tab-content active space-y-6">
+      <div class="bg-gradient-to-r from-emerald-950 to-slate-900 border border-emerald-500/20 rounded-2xl p-6">
+        <h1 class="text-3xl font-extrabold text-white mb-2" id="welcome-message">Bem-vindo, Atleta!</h1>
+        <p class="text-slate-300 text-sm max-w-2xl" id="admin-custom-announcement">
+          Realize o teste de 50 perguntas para liberarmos o seu programa completo de treinos táticos e físicos.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+          <h3 class="text-lg font-bold mb-4 text-emerald-400"><i class="fa-solid fa-chart-radar mr-2"></i>Atributos do Atleta</h3>
+          <canvas id="attributesChart" class="max-h-64"></canvas>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+          <h3 class="text-lg font-bold mb-4 text-emerald-400"><i class="fa-solid fa-chart-line mr-2"></i>Evolução Semanal</h3>
+          <canvas id="progressChart" class="max-h-64"></canvas>
+        </div>
+      </div>
+
+      <div id="training-plan-card" class="bg-slate-900 border border-slate-800 p-6 rounded-xl hidden">
+        <h3 class="text-xl font-bold text-white mb-2"><i class="fa-solid fa-dumbbell text-emerald-400 mr-2"></i>Seu Plano de Treino Personalizado</h3>
+        <div id="training-details" class="text-slate-300 text-sm space-y-2"></div>
+      </div>
+    </section>
+
+    <section id="tab-test" class="tab-content">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-3xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-white">Avaliação Técnica e Tática</h2>
+          <span id="quiz-progress" class="text-xs bg-emerald-950 text-emerald-400 px-3 py-1 rounded-full font-semibold">Pergunta 1 de 50</span>
+        </div>
+
+        <div id="quiz-container">
+          <h3 id="quiz-question" class="text-lg font-semibold text-slate-200 mb-4">Carregando pergunta...</h3>
+          <div id="quiz-options" class="space-y-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-avatar" class="tab-content">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-slate-900 border border-slate-800 p-8 rounded-2xl">
+        <div class="flex justify-center bg-slate-950 p-6 rounded-xl border border-slate-800">
+          <svg id="avatar-svg" viewBox="0 0 200 240" class="w-64 h-80">
+            <rect id="avatar-body" x="70" y="80" width="60" height="100" rx="10" fill="#f1c27d" />
+            <circle id="avatar-head" cx="100" cy="50" r="30" fill="#f1c27d" />
+            <path id="avatar-hair" d="M 70 45 Q 100 15 130 45 Z" fill="#2d1e18" />
+            <path id="avatar-shirt" d="M 68 80 L 132 80 L 125 140 L 75 140 Z" fill="#10b981" />
+            <rect id="avatar-shorts" x="73" y="140" width="54" height="35" fill="#0f172a" />
+            <rect x="78" y="175" width="16" height="40" fill="#f1c27d" />
+            <rect x="106" y="175" width="16" height="40" fill="#f1c27d" />
+            <rect id="avatar-shoes" x="74" y="215" width="22" height="12" rx="3" fill="#ef4444" />
+            <rect id="avatar-shoes-2" x="104" y="215" width="22" height="12" rx="3" fill="#ef4444" />
+            <g id="avatar-accessory" class="hidden">
+              <circle cx="90" cy="50" r="6" fill="none" stroke="#000" stroke-width="2" />
+              <circle cx="110" cy="50" r="6" fill="none" stroke="#000" stroke-width="2" />
+              <line x1="96" y1="50" x2="104" y2="50" stroke="#000" stroke-width="2" />
+            </g>
+          </svg>
+        </div>
+
+        <div class="space-y-4">
+          <h2 class="text-2xl font-bold text-white">Personalizar Seu Atleta</h2>
+          
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Cabelo (Cor)</label>
+            <select onchange="updateAvatar('hairColor', this.value)" class="bg-slate-950 border border-slate-800 rounded p-2 text-xs text-white w-full">
+              <option value="#2d1e18">Castanho</option>
+              <option value="#000000">Preto</option>
+              <option value="#eab308">Loiro</option>
+              <option value="#ef4444">Ruivo</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Cor da Camisa</label>
+            <input type="color" value="#10b981" onchange="updateAvatar('shirt', this.value)" class="bg-transparent cursor-pointer w-10 h-10 rounded">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Cor da Chuteira</label>
+            <input type="color" value="#ef4444" onchange="updateAvatar('shoes', this.value)" class="bg-transparent cursor-pointer w-10 h-10 rounded">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Acessórios</label>
+            <button onclick="toggleAccessory()" class="bg-slate-800 hover:bg-slate-700 text-xs text-white px-3 py-2 rounded-lg">Colocar/Tirar Óculos</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-videos" class="tab-content">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-xl mx-auto">
+        <h2 class="text-2xl font-bold text-white mb-2">Envio de Vídeo para Avaliação</h2>
+        <p class="text-slate-400 text-sm mb-6">Envie links do YouTube/Drive com seus lances para que a equipe técnica avalie seu desempenho.</p>
+
+        <form onsubmit="submitVideo(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Título do Vídeo</label>
+            <input type="text" id="video-title" required placeholder="Ex: Melhores lances - Campeonato Regional" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Link do Vídeo</label>
+            <input type="url" id="video-url" required placeholder="https://youtube.com/..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+          </div>
+          <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2.5 rounded-lg transition">Enviar Vídeo</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="tab-admin" class="tab-content">
+      <div class="space-y-6">
+        <h2 class="text-3xl font-bold text-amber-400"><i class="fa-solid fa-shield-halved mr-2"></i>Painel do Administrador</h2>
+
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+          <h3 class="text-lg font-bold text-white">Editar Avisos Globais do Site</h3>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Mensagem do Banner Principal</label>
+            <input type="text" id="admin-announcement-input" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white outline-none" placeholder="Digite o aviso para todos os usuários">
+          </div>
+          <button onclick="saveAdminSettings()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm">Atualizar Site</button>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+          <h3 class="text-lg font-bold text-white mb-4">Vídeos Recebidos para Avaliação</h3>
+          <div id="admin-video-list" class="space-y-3 text-sm text-slate-400">
+            Nenhum vídeo enviado ainda.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-slate-900 border-t border-slate-800 py-6 text-center text-slate-500 text-sm">
+    <p>&copy; 2026 Futebol Evolution — Plataforma de Evolução Atlética</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
-
 </html>
