@@ -42,14 +42,20 @@
           <input type="email" id="user-email" required placeholder="seu@email.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
         </div>
 
-        <div id="athlete-fields" class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Altura (cm)</label>
-            <input type="number" id="user-height" placeholder="Ex: 178" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Peso (kg)</label>
-            <input type="number" id="user-weight" placeholder="Ex: 72" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+        <div id="athlete-fields" class="space-y-3">
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1">Idade</label>
+              <input type="number" id="user-age" required placeholder="Ex: 18" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1">Altura (cm)</label>
+              <input type="number" id="user-height" required placeholder="Ex: 178" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1">Peso (kg)</label>
+              <input type="number" id="user-weight" required placeholder="Ex: 72" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+            </div>
           </div>
         </div>
 
@@ -75,7 +81,6 @@
       <nav class="hidden md:flex space-x-1">
         <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-emerald-400 bg-slate-800"><i class="fa-solid fa-house mr-1"></i> Início</button>
         <button onclick="switchTab('test')" id="nav-test" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white"><i class="fa-solid fa-clipboard-question mr-1"></i> Diagnóstico (50 Qs)</button>
-        <button onclick="switchTab('avatar')" id="nav-avatar" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white"><i class="fa-solid fa-user-gear mr-1"></i> Criar Avatar</button>
         <button onclick="switchTab('videos')" id="nav-videos" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white"><i class="fa-solid fa-video mr-1"></i> Enviar Vídeo</button>
         <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-amber-400 hover:text-amber-300 hidden"><i class="fa-solid fa-shield-halved mr-1"></i> Painel Admin</button>
       </nav>
@@ -116,66 +121,17 @@
 
     <section id="tab-test" class="tab-content">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-3xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold text-white">Avaliação Técnica e Tática</h2>
+        <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+          <div>
+            <span id="quiz-category" class="text-xs uppercase tracking-wider font-bold text-emerald-400">Categoria</span>
+            <h2 class="text-xl font-bold text-white">Avaliação de Desempenho</h2>
+          </div>
           <span id="quiz-progress" class="text-xs bg-emerald-950 text-emerald-400 px-3 py-1 rounded-full font-semibold">Pergunta 1 de 50</span>
         </div>
 
         <div id="quiz-container">
           <h3 id="quiz-question" class="text-lg font-semibold text-slate-200 mb-4">Carregando pergunta...</h3>
           <div id="quiz-options" class="space-y-3"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-avatar" class="tab-content">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-slate-900 border border-slate-800 p-8 rounded-2xl">
-        <div class="flex justify-center bg-slate-950 p-6 rounded-xl border border-slate-800">
-          <svg id="avatar-svg" viewBox="0 0 200 240" class="w-64 h-80">
-            <rect id="avatar-body" x="70" y="80" width="60" height="100" rx="10" fill="#f1c27d" />
-            <circle id="avatar-head" cx="100" cy="50" r="30" fill="#f1c27d" />
-            <path id="avatar-hair" d="M 70 45 Q 100 15 130 45 Z" fill="#2d1e18" />
-            <path id="avatar-shirt" d="M 68 80 L 132 80 L 125 140 L 75 140 Z" fill="#10b981" />
-            <rect id="avatar-shorts" x="73" y="140" width="54" height="35" fill="#0f172a" />
-            <rect x="78" y="175" width="16" height="40" fill="#f1c27d" />
-            <rect x="106" y="175" width="16" height="40" fill="#f1c27d" />
-            <rect id="avatar-shoes" x="74" y="215" width="22" height="12" rx="3" fill="#ef4444" />
-            <rect id="avatar-shoes-2" x="104" y="215" width="22" height="12" rx="3" fill="#ef4444" />
-            <g id="avatar-accessory" class="hidden">
-              <circle cx="90" cy="50" r="6" fill="none" stroke="#000" stroke-width="2" />
-              <circle cx="110" cy="50" r="6" fill="none" stroke="#000" stroke-width="2" />
-              <line x1="96" y1="50" x2="104" y2="50" stroke="#000" stroke-width="2" />
-            </g>
-          </svg>
-        </div>
-
-        <div class="space-y-4">
-          <h2 class="text-2xl font-bold text-white">Personalizar Seu Atleta</h2>
-          
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Cabelo (Cor)</label>
-            <select onchange="updateAvatar('hairColor', this.value)" class="bg-slate-950 border border-slate-800 rounded p-2 text-xs text-white w-full">
-              <option value="#2d1e18">Castanho</option>
-              <option value="#000000">Preto</option>
-              <option value="#eab308">Loiro</option>
-              <option value="#ef4444">Ruivo</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Cor da Camisa</label>
-            <input type="color" value="#10b981" onchange="updateAvatar('shirt', this.value)" class="bg-transparent cursor-pointer w-10 h-10 rounded">
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Cor da Chuteira</label>
-            <input type="color" value="#ef4444" onchange="updateAvatar('shoes', this.value)" class="bg-transparent cursor-pointer w-10 h-10 rounded">
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Acessórios</label>
-            <button onclick="toggleAccessory()" class="bg-slate-800 hover:bg-slate-700 text-xs text-white px-3 py-2 rounded-lg">Colocar/Tirar Óculos</button>
-          </div>
         </div>
       </div>
     </section>
@@ -202,6 +158,25 @@
     <section id="tab-admin" class="tab-content">
       <div class="space-y-6">
         <h2 class="text-3xl font-bold text-amber-400"><i class="fa-solid fa-shield-halved mr-2"></i>Painel do Administrador</h2>
+
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+          <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-users mr-2 text-emerald-400"></i>Atletas Cadastrados no Site</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 text-xs uppercase border-b border-slate-800">
+                <tr>
+                  <th class="p-3">Nome</th>
+                  <th class="p-3">E-mail</th>
+                  <th class="p-3">Idade</th>
+                  <th class="p-3">Altura / Peso</th>
+                  <th class="p-3">Diagnóstico</th>
+                </tr>
+              </thead>
+              <tbody id="admin-user-list" class="divide-y divide-slate-800">
+                </tbody>
+            </table>
+          </div>
+        </div>
 
         <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
           <h3 class="text-lg font-bold text-white">Editar Avisos Globais do Site</h3>

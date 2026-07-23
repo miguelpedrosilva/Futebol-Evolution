@@ -1,17 +1,11 @@
-/* ==========================================================================
-   FUTEBOL EVOLUTION - ESTILOS GERAIS E CUSTOMIZAÇÕES
-   ========================================================================== */
-
-/* --- Configurações da Página --- */
 html, body {
   min-height: 100vh;
-  background-color: #020617; /* Slate 950 */
-  color: #f8fafc; /* Slate 50 */
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #020617;
+  color: #f8fafc;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   scroll-behavior: smooth;
 }
 
-/* --- Controle de Exibição das Abas (Single Page Application) --- */
 .tab-content {
   display: none;
   opacity: 0;
@@ -25,69 +19,24 @@ html, body {
   transform: translateY(0);
 }
 
-/* --- Personalização da Barra de Rolagem (Scrollbar) --- */
 ::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a; /* Slate 900 */
+  background: #0f172a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155; /* Slate 700 */
+  background: #334155;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #10b981; /* Emerald 500 */
+  background: #10b981;
 }
 
-/* --- Estilização do Canvas de Gráficos --- */
 canvas {
   max-width: 100% !important;
   height: auto !important;
-}
-
-/* --- Transições do Avatar Interativo --- */
-#avatar-svg {
-  filter: drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.5));
-}
-
-.avatar-part {
-  transition: fill 0.3s ease, stroke 0.3s ease;
-}
-
-/* --- Estilização Personalizada para Inputs de Cor e Seletores --- */
-input[type="color"] {
-  -webkit-appearance: none;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-input[type="color"]::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
-
-input[type="color"]::-webkit-color-swatch {
-  border: 1px solid #334155;
-  border-radius: 8px;
-}
-
-/* --- Animação para Notificações e Destaques --- */
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(16, 185, 129, 0.5);
-  }
-}
-
-.glow-effect {
-  animation: pulseGlow 3s infinite ease-in-out;
 }
