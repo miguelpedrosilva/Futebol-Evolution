@@ -1,1 +1,785 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>Futebol Evolution</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect"
+    href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- MENU LATERAL -->
+
+<aside class="menu">
+
+<h1>⚽ Futebol Evolution</h1>
+
+<p>Evolua como atleta.</p>
+
+<nav>
+
+<button id="inicio">
+🏠 Início
+</button>
+
+<button id="perfil">
+👤 Perfil
+</button>
+
+<button id="avatar">
+🎮 Avatar
+</button>
+
+<button id="treinos">
+💪 Treinos
+</button>
+
+<button id="agenda">
+📅 Agenda
+</button>
+
+<button id="ia">
+🤖 IA Treinador
+</button>
+
+<button id="teste">
+📋 Teste
+</button>
+
+<button id="nutricao">
+🍎 Nutrição
+</button>
+
+<button id="biblioteca">
+📚 Biblioteca
+</button>
+
+<button id="evolucao">
+📈 Evolução
+</button>
+
+<button id="video">
+🎥 Análise de Vídeo
+</button>
+
+<button id="config">
+⚙ Configurações
+</button>
+
+</nav>
+
+</aside>
+
+<!-- CONTEÚDO -->
+
+<main class="conteudo">
+
+<header>
+
+<h2>
+Bem-vindo ao Futebol Evolution
+</h2>
+
+<p>
+
+Seu treinador virtual para evoluir no futebol.
+
+</p>
+
+</header>
+
+<section class="inicio">
+
+<h2>
+Treino de Hoje
+</h2>
+
+<div class="card">
+
+<p>
+
+Nenhum treino iniciado.
+
+</p>
+
+<button id="entrar">
+
+Entrar
+
+</button>
+
+</div>
+
+</section>
+
+<section class="status">
+
+<h2>
+
+Status do Atleta
+
+</h2>
+
+<div class="barras">
+
+<label>Energia</label>
+
+<progress
+value="100"
+max="100">
+</progress>
+
+<label>Força</label>
+
+<progress
+value="30"
+max="100">
+</progress>
+
+<label>Velocidade</label>
+
+<progress
+value="40"
+max="100">
+</progress>
+
+<label>Resistência</label>
+
+<progress
+value="35"
+max="100">
+</progress>
+
+<label>Drible</label>
+
+<progress
+value="50"
+max="100">
+</progress>
+
+<label>Passe</label>
+
+<progress
+value="55"
+max="100">
+</progress>
+
+<label>Finalização</label>
+
+<progress
+value="45"
+max="100">
+</progress>
+
+</div>
+
+</section>
+<!-- ========================= -->
+<!-- PERFIL DO ATLETA -->
+<!-- ========================= -->
+
+<section class="perfil">
+
+<h2>👤 Perfil do Atleta</h2>
+
+<div class="perfil-grid">
+
+<div class="campo">
+
+<label>Nome</label>
+
+<input
+type="text"
+id="nome"
+placeholder="Seu nome">
+
+</div>
+
+<div class="campo">
+
+<label>Idade</label>
+
+<input
+type="number"
+id="idade">
+
+</div>
+
+<div class="campo">
+
+<label>Altura</label>
+
+<input
+type="number"
+step="0.01"
+id="altura">
+
+</div>
+
+<div class="campo">
+
+<label>Peso</label>
+
+<input
+type="number"
+step="0.1"
+id="peso">
+
+</div>
+
+<div class="campo">
+
+<label>Pé dominante</label>
+
+<select id="pe">
+
+<option>Direito</option>
+
+<option>Esquerdo</option>
+
+<option>Ambidestro</option>
+
+</select>
+
+</div>
+
+<div class="campo">
+
+<label>Objetivo</label>
+
+<select id="objetivo">
+
+<option>Ganhar força</option>
+
+<option>Ganhar velocidade</option>
+
+<option>Melhorar resistência</option>
+
+<option>Melhorar passe</option>
+
+<option>Melhorar chute</option>
+
+<option>Evoluir completo</option>
+
+</select>
+
+</div>
+
+</div>
+
+<button id="salvarPerfil">
+
+Salvar Perfil
+
+</button>
+
+</section>
+
+<!-- ========================= -->
+<!-- AVATAR -->
+<!-- ========================= -->
+
+<section class="avatar">
+
+<h2>🎮 Meu Avatar</h2>
+
+<div class="avatar-card">
+
+<img
+id="avatarImagem"
+src="assets/avatar/avatar.png"
+alt="Avatar">
+
+<h3 id="nivel">
+
+Nível Iniciante
+
+</h3>
+
+<p>
+
+Experiência
+
+</p>
+
+<div class="barraXP">
+
+<div
+class="xp"
+id="xp">
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- CARTA DO JOGADOR -->
+<!-- ========================= -->
+
+<section class="carta">
+
+<h2>
+
+⭐ Meu Cartão
+
+</h2>
+
+<div class="card-player">
+
+<div class="overall">
+
+<h1 id="overall">
+
+60
+
+</h1>
+
+<p>OVR</p>
+
+</div>
+
+<div class="dados">
+
+<h3 id="nomeCarta">
+
+Jogador
+
+</h3>
+
+<p id="posicaoCarta">
+
+Posição: Em análise
+
+</p>
+
+</div>
+
+<div class="atributos">
+
+<div>PAC <span id="pac">60</span></div>
+
+<div>SHO <span id="sho">58</span></div>
+
+<div>PAS <span id="pas">64</span></div>
+
+<div>DRI <span id="dri">70</span></div>
+
+<div>DEF <span id="def">48</span></div>
+
+<div>PHY <span id="phy">55</span></div>
+
+</div>
+
+</div>
+
+</section>
+<!-- ========================= -->
+<!-- IA TREINADOR -->
+<!-- ========================= -->
+
+<section class="ia">
+
+<h2>🤖 IA Treinador</h2>
+
+<div class="chat">
+
+<div id="mensagens">
+
+<p>
+Olá! Eu sou seu treinador virtual.
+</p>
+
+<p>
+
+Vou acompanhar sua evolução e montar seus treinos.
+
+</p>
+
+</div>
+
+<div class="campo-chat">
+
+<input
+type="text"
+id="pergunta"
+placeholder="Pergunte qualquer coisa sobre futebol...">
+
+<button id="enviar">
+
+Enviar
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- AGENDA INTELIGENTE -->
+<!-- ========================= -->
+
+<section class="agenda">
+
+<h2>📅 Agenda Inteligente</h2>
+
+<div class="agenda-card">
+
+<h3>Treino de Hoje</h3>
+
+<p id="treinoHoje">
+
+Nenhum treino programado.
+
+</p>
+
+<button id="gerarTreino">
+
+Gerar Treino
+
+</button>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- TESTE DE EVOLUÇÃO -->
+<!-- ========================= -->
+
+<section class="teste">
+
+<h2>📋 Avaliação do Atleta</h2>
+
+<p>
+
+No primeiro acesso será realizado um teste com 50 perguntas.
+
+</p>
+
+<p>
+
+Depois um novo teste aparecerá automaticamente a cada 2 meses.
+
+</p>
+
+<button id="iniciarTeste">
+
+Iniciar Teste
+
+</button>
+
+</section>
+
+<!-- ========================= -->
+<!-- NUTRIÇÃO -->
+<!-- ========================= -->
+
+<section class="nutricao">
+
+<h2>🍎 Nutrição</h2>
+
+<div class="alimentacao">
+
+<p>
+
+A IA criará recomendações conforme:
+
+</p>
+
+<ul>
+
+<li>Idade</li>
+
+<li>Peso</li>
+
+<li>Objetivo</li>
+
+<li>Carga de treino</li>
+
+<li>Recuperação</li>
+
+</ul>
+
+<button id="verPlano">
+
+Ver Plano Alimentar
+
+</button>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- RECUPERAÇÃO -->
+<!-- ========================= -->
+
+<section class="recuperacao">
+
+<h2>😴 Recuperação</h2>
+
+<label>
+
+Como está seu corpo hoje?
+
+</label>
+
+<select id="estadoFisico">
+
+<option>Sem dor</option>
+
+<option>Cansado</option>
+
+<option>Dor muscular</option>
+
+<option>Muito cansado</option>
+
+</select>
+
+<button id="salvarEstado">
+
+Salvar
+
+</button>
+
+</section>
+
+<!-- ========================= -->
+<!-- BIBLIOTECA -->
+<!-- ========================= -->
+
+<section class="biblioteca">
+
+<h2>📚 Biblioteca de Treinos</h2>
+
+<div class="gridBiblioteca">
+
+<button>Passe</button>
+
+<button>Domínio</button>
+
+<button>Finalização</button>
+
+<button>Drible</button>
+
+<button>Velocidade</button>
+
+<button>Força</button>
+
+<button>Resistência</button>
+
+<button>Jogo de Corpo</button>
+
+<button>Cabeceio</button>
+
+<button>Alongamento</button>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- ANÁLISE DE VÍDEO -->
+<!-- ========================= -->
+
+<section class="video">
+
+<h2>🎥 Análise de Vídeo</h2>
+
+<p>
+
+Disponível após 30 dias de uso do aplicativo.
+
+</p>
+
+<input
+type="file"
+accept="video/*">
+
+<button>
+
+Enviar Vídeo
+
+</button>
+
+</section>
+<!-- ========================= -->
+<!-- CONFIGURAÇÕES -->
+<!-- ========================= -->
+
+<section class="configuracoes">
+
+<h2>⚙️ Configurações</h2>
+
+<div class="config-grid">
+
+<div class="campo">
+
+<label>E-mail</label>
+
+<input
+type="email"
+id="email"
+placeholder="Digite seu e-mail">
+
+</div>
+
+<div class="campo">
+
+<label>Senha</label>
+
+<input
+type="password"
+id="senha"
+placeholder="Digite sua senha">
+
+</div>
+
+<button id="cadastrar">
+
+Cadastrar
+
+</button>
+
+<button id="login">
+
+Entrar
+
+</button>
+
+<hr>
+
+<label>
+
+Tema
+
+</label>
+
+<select id="tema">
+
+<option value="escuro">
+
+Escuro
+
+</option>
+
+<option value="claro">
+
+Claro
+
+</option>
+
+</select>
+
+<hr>
+
+<label>
+
+Idioma
+
+</label>
+
+<select id="idioma">
+
+<option>
+
+Português
+
+</option>
+
+<option>
+
+English
+
+</option>
+
+<option>
+
+Español
+
+</option>
+
+</select>
+
+<hr>
+
+<button id="salvarConfiguracoes">
+
+Salvar Configurações
+
+</button>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- SOBRE O APP -->
+<!-- ========================= -->
+
+<section class="sobre">
+
+<h2>
+
+ℹ️ Sobre
+
+</h2>
+
+<p>
+
+Futebol Evolution é um aplicativo criado para ajudar atletas de qualquer idade a evoluírem através de treinos, avaliações, inteligência artificial e acompanhamento da evolução.
+
+</p>
+
+</section>
+
+<footer>
+
+<p>
+
+© 2026 Futebol Evolution
+
+</p>
+
+<p>
+
+Versão 1.0
+
+</p>
+
+</footer>
+
+</main>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
