@@ -1,3 +1,4 @@
+/* Customizações globais */
 html, body {
   min-height: 100vh;
   background-color: #020617;
@@ -6,11 +7,12 @@ html, body {
   scroll-behavior: smooth;
 }
 
+/* Transições das abas */
 .tab-content {
   display: none;
   opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform: translateY(6px);
+  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
 }
 
 .tab-content.active {
@@ -19,8 +21,19 @@ html, body {
   transform: translateY(0);
 }
 
+/* Esconde barras de rolagem no menu mobile mantendo o scroll funcional */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Barra de rolagem customizada */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -34,9 +47,4 @@ html, body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #10b981;
-}
-
-canvas {
-  max-width: 100% !important;
-  height: auto !important;
 }

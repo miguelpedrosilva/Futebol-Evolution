@@ -1,14 +1,16 @@
 /* ==========================================================================
-   FUTEBOL EVOLUTION - LÓGICA E INTERATIVIDADE (JS)
+   FUTEBOL EVOLUTION - LÓGICA COMPLETA, LOGIN PERSISTENTE E DIAGNÓSTICO
    ========================================================================== */
 
 let currentUser = null;
-let registeredUsers = [];
-let submittedVideos = [];
+let registeredUsers = JSON.parse(localStorage.getItem('fe_registered_users')) || [];
+let submittedVideos = JSON.parse(localStorage.getItem('fe_submitted_videos')) || [];
 let currentQuestionIndex = 0;
 let quizAnswers = {};
+let radarChartInstance = null;
+let lineChartInstance = null;
 
-// --- ESTRUTURA COMPLETA DAS 50 PERGUNTAS DIVIDIDAS EM 7 BLOCOS ---
+// --- BANCO DE 50 PERGUNTAS ---
 const questions = [
   // I. Modalidade e Adaptação
   { cat: "I. Modalidade", q: "Onde você rende melhor: campo amplo de grama ou quadra reduzida de futsal?", opts: ["Campo Amplo", "Quadra de Futsal", "Rendo bem em ambos"] },
@@ -40,42 +42,50 @@ const questions = [
   { cat: "III. Atributos Físicos", q: "Como é sua recuperação física entre jogos durante a semana?", opts: ["Rápida (Estou pronto no dia seguinte)", "Preciso de 2 a 3 dias", "Fico dolorido por muito tempo"] },
 
   // IV. Atributos Táticos e Visão de Jogo
-  { cat: "IV. Atributos Táticos", q: "Olhar ao redor para escanear o campo antes de receber a bola é um hábito?", opts: ["Sim, faço sempre", "Às vezes esqueço", "Raramente escanemanento"] },
-  { cat: "IV. Atributos Táticos", q: "Qual sua atitude imediata quando o time perde a bola?", opts: ["Pressiono imediatamente (Perde e Pressiona)", "Recomponho minha posição defensiva", "Demoro para reage"] },
+  { cat: "IV. Atributos Táticos", q: "Olhar ao redor para escanear o campo antes de receber a bola é um hábito?", opts: ["Sim, faço sempre", "Às vezes esqueço", "Raramente escaneamento"] },
+  { cat: "IV. Atributos Táticos", q: "Qual sua atitude imediata quando o time perde a bola?", opts: ["Pressiono imediatamente", "Recomponho minha posição", "Demoro para reagir"] },
   { cat: "IV. Atributos Táticos", q: "Prefere jogar de frente para o gol ou de costas para a zaga?", opts: ["De frente para o gol", "De costas (Como pivô)", "Indiferente"] },
-  { cat: "IV. Atributos Táticos", q: "Sabe identificar e ocupar espaços vazios sem a bola?", opts: ["Sim, me movimento constantemente", "Às vezes fico estático", "Tenho dificuldade de leitura"] },
+  { cat: "IV. Atributos Táticos", q: "Sabe identificar e ocupar espaços vazios sem a bola?", opts: ["Sim, me movimento constantemente", "Às vezes fico estático", "Tenho dificuldade"] },
   { cat: "IV. Atributos Táticos", q: "Conhece e cumpre suas obrigações defensivas na sua posição?", opts: ["Cumpro à risca", "Faço o básico", "Prefiro focar no ataque"] },
-  { cat: "IV. Atributos Táticos", q: "Qual sua facilidade para dar passes decisivos que deixam o colega na cara do gol?", opts: ["Elevada (Visão de jogo afiada)", "Moderada", "Baixa"] },
+  { cat: "IV. Atributos Táticos", q: "Qual sua facilidade para dar passes decisivos que deixam o colega na cara do gol?", opts: ["Elevada", "Moderada", "Baixa"] },
   { cat: "IV. Atributos Táticos", q: "O que faz na transição defensiva (contra-ataque do adversário)?", opts: ["Volto dando sprint para ajudar", "Certo o espaço estratégico", "Demoro a recompor"] },
-  { cat: "IV. Atributos Táticos", q: "Orientar e conversar com os companheiros durante o jogo é um costume seu?", opts: ["Sim, falo e oriento o tempo todo", "Falo apenas o necessário", "Sou quieto em campo"] },
-  { cat: "IV. Atributos Táticos", q: "Consegue ler o ritmo do jogo (saber quando acelerar ou cadenciar)?", opts: ["Sim, controlo o ritmo", "Tenho certa noção", "Jogos num ritmo só"] },
+  { cat: "IV. Atributos Táticos", q: "Orientar e conversar com os companheiros durante o jogo é um costume seu?", opts: ["Sim, falo e oriento", "Falo apenas o necessário", "Sou quieto"] },
+  { cat: "IV. Atributos Táticos", q: "Consegue ler o ritmo do jogo (saber quando acelerar ou cadenciar)?", opts: ["Sim, controlo o ritmo", "Tenho certa noção", "Jogo num ritmo só"] },
 
   // V. Atributos Mentais e Psicológicos
-  { cat: "V. Atributos Mentais", q: "Como reage logo após cometer um erro grave na partida?", opts: ["Mantenho a cabeça erguida e foco no próximo lance", "Fico chateado por uns minutos", "Sinto o baque e perco a confiança"] },
-  { cat: "V. Atributos Mentais", q: "Como é seu desempenho sob pressão (jogos decisivos, torcida, placar adverso)?", opts: ["Cresço no jogo", "Mantenho o padrão", "Sinto nervosismo"] },
-  { cat: "V. Atributos Mentais", q: "Consegue manter a calma com provocações de adversários ou arbitragem?", opts: ["Totalmente frio/focado", "Às vezes me irrita", "Fácil de perder a cabeça"] },
-  { cat: "V. Atributos Mentais", q: "Tem perfil de liderança/comunicação ou prefere focar só na sua função?", opts: ["Líder/Comunicador", "Foco apenas no meu desempenho"] },
-  { cat: "V. Atributos Mentais", q: "Tem disciplina tática para fazer o que o treinador pede, mesmo sem gostar?", opts: ["Sim, 100% disciplinado", "Faço com ressalvas", "Tenho tendência a improvisar"] },
-  { cat: "V. Atributos Mentais", q: "Seu foco e competitividade duram do primeiro ao último minuto?", opts: ["Sim, intensidade máxima", "Flutua durante o jogo", "Perco o foco com facilidade"] },
-  { cat: "V. Atributos Mentais", q: "Como lida emocionalmente com a reserva ou substituições?", opts: ["Respeito e trabalho mais", "Fico chateado mas aceito", "Demonstro insatisfação"] },
-  { cat: "V. Atributos Mentais", q: "Sente ansiedade antes dos jogos que atrapalhe seu futebol?", opts: ["Não, fico tranquilo", "Uma ansiedade saudável", "Sim, trava meu futebol"] },
+  { cat: "V. Atributos Mentais", q: "Como reage logo após cometer um erro grave na partida?", opts: ["Mantenho a cabeça erguida", "Fico chateado por uns minutos", "Sinto o baque"] },
+  { cat: "V. Atributos Mentais", q: "Como é seu desempenho sob pressão?", opts: ["Cresço no jogo", "Mantenho o padrão", "Sinto nervosismo"] },
+  { cat: "V. Atributos Mentais", q: "Consegue manter a calma com provocações?", opts: ["Totalmente focado", "Às vezes me irrita", "Perco a cabeça fácil"] },
+  { cat: "V. Atributos Mentais", q: "Tem perfil de liderança/comunicação ou prefere focar só na sua função?", opts: ["Líder/Comunicador", "Foco apenas no meu jogo"] },
+  { cat: "V. Atributos Mentais", q: "Tem disciplina tática para fazer o que o treinador pede?", opts: ["Sim, 100% disciplinado", "Faço com ressalvas", "Improviso bastante"] },
+  { cat: "V. Atributos Mentais", q: "Seu foco e competitividade duram do primeiro ao último minuto?", opts: ["Sim, intensidade máxima", "Flutua durante o jogo", "Perco o foco"] },
+  { cat: "V. Atributos Mentais", q: "Como lida emocionalmente com a reserva ou substituições?", opts: ["Respeito e trabalho mais", "Fico chateado", "Demonstro insatisfação"] },
+  { cat: "V. Atributos Mentais", q: "Sente ansiedade antes dos jogos que atrapalhe seu futebol?", opts: ["Não, fico tranquilo", "Ansiedade saudável", "Sim, trava meu futebol"] },
 
   // VI. Posições e Preferências
   { cat: "VI. Posições e Preferências", q: "No Campo, em qual função renderia mais?", opts: ["Atacante / Ponta / Centroavante", "Meio-campo / Volante", "Defensor / Zagueiro / Lateral", "Goleiro"] },
   { cat: "VI. Posições e Preferências", q: "Na Quadra, em qual função renderia mais?", opts: ["Pivô / Ala Driblador", "Fixo / Ala Construtor", "Goleiro"] },
   { cat: "VI. Posições e Preferências", q: "Seu perfil é mais criador/controlador ou finalizador/veloz?", opts: ["Criador / Controlador", "Finalizador / Veloz"] },
   { cat: "VI. Posições e Preferências", q: "Na defesa, rende melhor em marcação individual ou por zona?", opts: ["Marcação Individual", "Marcação por Zona"] },
-  { cat: "VI. Posições e Preferências", q: "Prefere jogar aberto pelas laterais ou focado no centro do jogo?", opts: ["Aberto pelas pontas/laterais", "No centro do campo/quadra"] },
+  { cat: "VI. Posições e Preferências", q: "Prefere jogar aberto pelas laterais ou focado no centro do jogo?", opts: ["Aberto pelas pontas", "No centro do campo"] },
 
   // VII. Mapeamento de Pontos Fortes e Fracos
   { cat: "VII. Pontos Fortes e Fracos", q: "Qual a sua maior virtude declarada no jogo?", opts: ["Técnica e Visão", "Velocidade e Físico", "Raça e Marcação", "Finalização"] },
   { cat: "VII. Pontos Fortes e Fracos", q: "Qual área precisa de melhora mais urgente?", opts: ["Uso da perna ruim", "Resistência Física", "Concentração/Calma", "Marcação/Posicionamento"] },
   { cat: "VII. Pontos Fortes e Fracos", q: "Qual fundamento hoje é seu maior gargalo?", opts: ["Chute / Cabeceio", "Passe / Controle", "Marcação / Desarme"] },
   { cat: "VII. Pontos Fortes e Fracos", q: "O que seus companheiros mais elogiam no seu jogo?", opts: ["Entrega/Raça", "Habilidade/Passe", "Inteligência Tática", "Gols"] },
-  { cat: "VII. Pontos Fortes e Fracos", q: "O que os adversários mais tentam explorar contra você?", opts: ["Minha perna ruim", "Minha velocidade/fôlego", "Minha paciência/temperamento"] }
+  { cat: "VII. Pontos Fortes e Fracos", q: "O que os adversários mais tentam explorar contra você?", opts: ["Minha perna ruim", "Minha velocidade/fôlego", "Minha paciência"] }
 ];
 
-// --- AUTENTICAÇÃO E REGISTRO ---
+// --- CARREGAMENTO INICIAL ---
+document.addEventListener('DOMContentLoaded', () => {
+  const savedUser = localStorage.getItem('fe_logged_user');
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+    applyLoggedInUser();
+  }
+});
+
 function handleAuth(event) {
   event.preventDefault();
   
@@ -86,11 +96,24 @@ function handleAuth(event) {
     age: document.getElementById('user-age').value,
     height: document.getElementById('user-height').value,
     weight: document.getElementById('user-weight').value,
-    diagnosis: 'Pendente (Teste não realizado)'
+    hasBall: document.getElementById('user-has-ball').value,
+    diagnosis: null
   };
 
-  registeredUsers.push(currentUser);
+  localStorage.setItem('fe_logged_user', JSON.stringify(currentUser));
 
+  const existingIdx = registeredUsers.findIndex(u => u.email === currentUser.email);
+  if (existingIdx >= 0) {
+    registeredUsers[existingIdx] = currentUser;
+  } else {
+    registeredUsers.push(currentUser);
+  }
+  localStorage.setItem('fe_registered_users', JSON.stringify(registeredUsers));
+
+  applyLoggedInUser();
+}
+
+function applyLoggedInUser() {
   document.getElementById('auth-screen').classList.add('hidden');
   document.getElementById('nav-user-name').innerText = currentUser.name;
   
@@ -103,6 +126,10 @@ function handleAuth(event) {
   
   initCharts();
   loadQuizQuestion();
+
+  if (currentUser.diagnosis) {
+    renderTechnicalReport(currentUser.diagnosis);
+  }
 }
 
 function toggleAdminField() {
@@ -114,10 +141,10 @@ function toggleAdminField() {
 }
 
 function logout() {
+  localStorage.removeItem('fe_logged_user');
   location.reload();
 }
 
-// --- NAVEGAÇÃO DE ABAS ---
 function switchTab(tabId) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('text-emerald-400', 'bg-slate-800'));
@@ -127,9 +154,11 @@ function switchTab(tabId) {
   
   const navBtn = document.getElementById('nav-' + tabId);
   if (navBtn) navBtn.classList.add('text-emerald-400', 'bg-slate-800');
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// --- QUIZ TÁTICO (50 PERGUNTAS) ---
+// --- SISTEMA DE QUIZ ---
 function loadQuizQuestion() {
   if (currentQuestionIndex >= questions.length) {
     finishQuiz();
@@ -146,7 +175,7 @@ function loadQuizQuestion() {
 
   qData.opts.forEach(opt => {
     const btn = document.createElement('button');
-    btn.className = "w-full text-left bg-slate-950 hover:bg-slate-800 border border-slate-800 p-3.5 rounded-xl text-sm text-slate-200 transition font-medium hover:border-emerald-500/50";
+    btn.className = "w-full text-left bg-slate-950 hover:bg-slate-800 border border-slate-800 p-3.5 rounded-xl text-xs sm:text-sm text-slate-200 transition font-medium hover:border-emerald-500/50";
     btn.innerText = opt;
     btn.onclick = () => {
       quizAnswers[currentQuestionIndex] = opt;
@@ -158,38 +187,90 @@ function loadQuizQuestion() {
 }
 
 function finishQuiz() {
-  const positionResult = quizAnswers[40] || "Meia-Atacante / Ala";
-  currentUser.diagnosis = positionResult;
+  // Processa dados do diagnóstico
+  const mainPos = quizAnswers[38] || "Meio-campo / Meia";
+  const preferredFoot = quizAnswers[6] || "Apenas dominante";
+  const mainStrength = quizAnswers[45] || "Técnica e Visão";
+  const mainWeakness = quizAnswers[46] || "Uso da perna ruim";
+
+  const diagnosisData = {
+    position: mainPos,
+    strengths: [mainStrength, quizAnswers[48] || "Raça e entrega", "Boa leitura de jogo inicial"],
+    weaknesses: [mainWeakness, `Ajuste necessário no pé fraco (${preferredFoot})`, "Resistência nos minutos finais"],
+    dos: [
+      "Jogar simples de 1 a 2 toques no meio de campo.",
+      "Escanear o campo antes de dominar a bola.",
+      "Manter a intensidade tática nas recomposições."
+    ],
+    donts: [
+      "Evitar prender a bola de costas sob pressão alta.",
+      "Não tentar passes arriscados na zona de defesa.",
+      "Evitar perder o foco com erros de arbitragem."
+    ]
+  };
+
+  currentUser.diagnosis = diagnosisData;
+
+  // Salva atualizado
+  localStorage.setItem('fe_logged_user', JSON.stringify(currentUser));
+  const idx = registeredUsers.findIndex(u => u.email === currentUser.email);
+  if (idx >= 0) {
+    registeredUsers[idx].diagnosis = diagnosisData;
+    localStorage.setItem('fe_registered_users', JSON.stringify(registeredUsers));
+  }
 
   document.getElementById('quiz-container').innerHTML = `
     <div class="text-center py-8 space-y-4">
-      <i class="fa-solid fa-circle-check text-emerald-400 text-6xl"></i>
-      <h3 class="text-2xl font-bold text-white">Mapeamento Tático Concluído!</h3>
-      <p class="text-slate-400 text-sm max-w-md mx-auto">Analisamos suas 50 respostas. Seu perfil tático e físico foi processado com sucesso.</p>
-      <button onclick="switchTab('home')" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-2.5 rounded-lg transition">Ver Diagnóstico Completo</button>
+      <i class="fa-solid fa-clipboard-check text-emerald-400 text-6xl"></i>
+      <h3 class="text-2xl font-bold text-white">Avaliação Concluída com Sucesso!</h3>
+      <p class="text-slate-400 text-xs sm:text-sm max-w-md mx-auto">O relatório tático e o plano de treinos foram gerados pelo sistema.</p>
+      <button onclick="switchTab('home')" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-2.5 rounded-lg transition text-sm">Ver Meu Relatório Tático</button>
     </div>
   `;
-  
-  const planCard = document.getElementById('training-plan-card');
-  const details = document.getElementById('training-details');
-  planCard.classList.remove('hidden');
-  
-  details.innerHTML = `
-    <p><strong>Perfil de Posição:</strong> ${positionResult}</p>
-    <p><strong>Plano de Treino Recomendado:</strong> Treino Tático Integrado + Tomada de Decisão em Espaço Reduzido.</p>
-    <p><strong>Trabalho Específico:</strong> Ajuste de perna não-dominante e aprimoramento de transição defensiva.</p>
-  `;
 
+  renderTechnicalReport(diagnosisData);
   renderAdminUsers();
 }
 
-// --- PAINEL DO ADMINISTRADOR ---
+// --- EXIBIR RELATÓRIO DO TÉCNICO ---
+function renderTechnicalReport(data) {
+  const card = document.getElementById('diagnostic-report-card');
+  if (!card || !data) return;
+
+  card.classList.remove('hidden');
+  document.getElementById('badge-position').innerText = `Posição Recomendada: ${data.position}`;
+
+  // Preenche listas
+  document.getElementById('report-strengths').innerHTML = data.strengths.map(s => `<li>${s}</li>`).join('');
+  document.getElementById('report-weaknesses').innerHTML = data.weaknesses.map(w => `<li>${w}</li>`).join('');
+  document.getElementById('report-dos').innerHTML = data.dos.map(d => `<li>${d}</li>`).join('');
+  document.getElementById('report-donts').innerHTML = data.donts.map(d => `<li>${d}</li>`).join('');
+
+  const hasBall = currentUser.hasBall === 'sim';
+  document.getElementById('report-ball-status').innerText = hasBall 
+    ? "Módulo de Treinos: Com Bola + Físico Aplicado" 
+    : "Módulo de Treinos: Físico Específico sem Bola (Calistenia & Explosão)";
+
+  const planText = hasBall ? `
+    <p>• <strong>Treino A (Passe e Controle):</strong> 20 min de paredão com a perna fraca alternando de primeira.</p>
+    <p>• <strong>Treino B (Condução e Drible):</strong> Ziguezague em cones/garrafas focando em trocas rápidas de direção.</p>
+    <p>• <strong>Treino C (Finalização/Chute):</strong> 15 tiros de meta/chutes focando na precisão e curva da bola.</p>
+  ` : `
+    <p>• <strong>Treino A (Explosão e Arranque):</strong> 8 tiros de 10m com 45s de descanso entre as séries.</p>
+    <p>• <strong>Treino B (Agilidade):</strong> Escada de agilidade / saltos laterais focando em mudança de direção.</p>
+    <p>• <strong>Treino C (Core e Estabilidade):</strong> Prancha, abdominais e fortalecimento de joelho/tornozelo.</p>
+  `;
+
+  document.getElementById('report-training-plan').innerHTML = planText;
+}
+
+// --- ADMIN & VÍDEOS ---
 function renderAdminUsers() {
   const list = document.getElementById('admin-user-list');
   if (!list) return;
 
   if (registeredUsers.length === 0) {
-    list.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500">Nenhum atleta cadastrado até o momento.</td></tr>`;
+    list.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">Nenhum atleta cadastrado.</td></tr>`;
     return;
   }
 
@@ -197,9 +278,10 @@ function renderAdminUsers() {
     <tr class="hover:bg-slate-950/50 transition">
       <td class="p-3 font-semibold text-white">${u.name}</td>
       <td class="p-3">${u.email}</td>
-      <td class="p-3">${u.age ? u.age + ' anos' : 'N/I'}</td>
-      <td class="p-3">${u.height ? u.height + 'cm' : '-'} / ${u.weight ? u.weight + 'kg' : '-'}</td>
-      <td class="p-3 text-emerald-400 font-medium">${u.diagnosis}</td>
+      <td class="p-3">${u.age} anos</td>
+      <td class="p-3">${u.height}cm / ${u.weight}kg</td>
+      <td class="p-3 uppercase">${u.hasBall}</td>
+      <td class="p-3 text-emerald-400 font-medium">${u.diagnosis ? u.diagnosis.position : 'Pendente'}</td>
     </tr>
   `).join('');
 }
@@ -215,7 +297,8 @@ function submitVideo(event) {
     user: currentUser ? currentUser.name : 'Atleta'
   });
 
-  alert('Vídeo enviado com sucesso para a comissão técnica!');
+  localStorage.setItem('fe_submitted_videos', JSON.stringify(submittedVideos));
+  alert('Vídeo enviado com sucesso!');
   renderAdminVideos();
   event.target.reset();
 }
@@ -227,8 +310,8 @@ function renderAdminVideos() {
   list.innerHTML = submittedVideos.map(v => `
     <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 flex justify-between items-center">
       <div>
-        <p class="text-white font-semibold">${v.title}</p>
-        <p class="text-xs text-slate-500">Enviado por: ${v.user}</p>
+        <p class="text-white font-semibold text-xs sm:text-sm">${v.title}</p>
+        <p class="text-xs text-slate-500">Atleta: ${v.user}</p>
       </div>
       <a href="${v.url}" target="_blank" class="bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 text-xs px-3 py-1.5 rounded-md font-medium">Assistir</a>
     </div>
@@ -239,33 +322,35 @@ function saveAdminSettings() {
   const msg = document.getElementById('admin-announcement-input').value;
   if (msg) {
     document.getElementById('admin-custom-announcement').innerText = msg;
-    alert('Aviso do site atualizado!');
+    alert('Mensagem atualizada!');
   }
 }
 
-// --- GRÁFICOS (CHART.JS) ---
+// --- GRÁFICOS ---
 function initCharts() {
   const radarEl = document.getElementById('attributesChart');
   if (radarEl) {
-    const ctxRadar = radarEl.getContext('2d');
-    new Chart(ctxRadar, {
+    if (radarChartInstance) radarChartInstance.destroy();
+    radarChartInstance = new Chart(radarEl.getContext('2d'), {
       type: 'radar',
       data: {
-        labels: ['Passe', 'Finalização', 'Velocidade', 'Defesa', 'Físico', 'Visão Tática'],
+        labels: ['Passe', 'Chute', 'Velocidade', 'Defesa', 'Físico', 'Visão'],
         datasets: [{
-          label: 'Atributos do Atleta',
-          data: [78, 70, 85, 60, 75, 82],
+          label: 'Média do Atleta',
+          data: [75, 68, 82, 60, 74, 80],
           backgroundColor: 'rgba(16, 185, 129, 0.2)',
           borderColor: '#10b981',
           pointBackgroundColor: '#10b981'
         }]
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
           r: {
             angleLines: { color: '#334155' },
             grid: { color: '#334155' },
-            pointLabels: { color: '#94a3b8' },
+            pointLabels: { color: '#94a3b8', font: { size: 10 } },
             ticks: { display: false }
           }
         }
@@ -275,19 +360,21 @@ function initCharts() {
 
   const lineEl = document.getElementById('progressChart');
   if (lineEl) {
-    const ctxLine = lineEl.getContext('2d');
-    new Chart(ctxLine, {
+    if (lineChartInstance) lineChartInstance.destroy();
+    lineChartInstance = new Chart(lineEl.getContext('2d'), {
       type: 'line',
       data: {
-        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+        labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'],
         datasets: [{
-          label: 'Rendimento nos Treinos (%)',
-          data: [65, 75, 82, 90],
+          label: 'Evolução (%)',
+          data: [60, 72, 80, 88],
           borderColor: '#10b981',
           tension: 0.3
         }]
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
           x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
           y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
