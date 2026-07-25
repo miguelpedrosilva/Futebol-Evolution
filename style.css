@@ -1,4 +1,4 @@
-/* Customizações globais */
+/* Customizações Globais */
 html, body {
   min-height: 100vh;
   background-color: #020617;
@@ -7,7 +7,7 @@ html, body {
   scroll-behavior: smooth;
 }
 
-/* Transições das abas */
+/* Transições de Abas */
 .tab-content {
   display: none;
   opacity: 0;
@@ -21,7 +21,13 @@ html, body {
   transform: translateY(0);
 }
 
-/* Esconde barras de rolagem no menu mobile mantendo o scroll funcional */
+/* FUTUCARD - Estilo Ouro EA FC / FIFA */
+.futcard-gold {
+  background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%);
+  box-shadow: 0 20px 35px -10px rgba(234, 179, 8, 0.3);
+}
+
+/* Utilitários para Rolagem Mobile */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -30,21 +36,17 @@ html, body {
   scrollbar-width: none;
 }
 
-/* Barra de rolagem customizada */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-
 ::-webkit-scrollbar-track {
   background: #0f172a;
 }
-
 ::-webkit-scrollbar-thumb {
   background: #334155;
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: #10b981;
 }
