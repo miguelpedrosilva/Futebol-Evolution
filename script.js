@@ -1,6 +1,13 @@
 /* ==========================================================================
-   FUTEBOL EVOLUTION - LÓGICA COMPLETA, FUTUCARD, BLOQUEIO E AGENDA
+   FUTEBOL EVOLUTION - LÓGICA COMPLETA
+   CREDENCIAIS ADMIN: 
+   - Nome: 
+   - Senha: 
    ========================================================================== */
+
+// 🔑 CONFIGURAÇÃO SECRETA DO ADMINISTRADOR
+const ADMIN_NAME = "Miguel Prime";
+const ADMIN_PASSWORD = "3020";
 
 let currentUser = null;
 let registeredUsers = JSON.parse(localStorage.getItem('fe_registered_users')) || [];
@@ -92,21 +99,54 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// ALTERA OS CAMPOS EXIGIDOS AO MUDAR O PERFIL NO FORMULÁRIO
+function toggleAdminField() {
+  const role = document.getElementById('user-role').value;
+  const athleteFields = document.getElementById('athlete-fields');
+  const inputs = athleteFields.querySelectorAll('input, select');
+  
+  if (role === 'admin') {
+    athleteFields.style.display = 'none';
+    inputs.forEach(input => input.removeAttribute('required'));
+  } else {
+    athleteFields.style.display = 'block';
+    inputs.forEach(input => input.setAttribute('required', 'true'));
+  }
+}
+
+// LOGICA DE LOGIN E VERIFICAÇÃO DE ADMIN
 function handleAuth(event) {
   event.preventDefault();
+
+  const role = document.getElementById('user-role').value;
+  const inputName = document.getElementById('user-name').value.trim();
+
+  // 🛡️ VERIFICAÇÃO EXCLUSIVA DE ADMINISTRADOR
+  if (role === 'admin') {
+    if (inputName.toLowerCase() !== ADMIN_NAME.toLowerCase()) {
+      alert(`❌ Acesso Negado! O nome de Administrador deve ser exatamente "${ADMIN_NAME}".`);
+      return;
+    }
+
+    const senhaDigitada = prompt("🔒 Digite a Senha Secreta do Administrador:");
+    if (senhaDigitada !== ADMIN_PASSWORD) {
+      alert("❌ Senha incorreta! Acesso de Administrador bloqueado.");
+      return;
+    }
+  }
 
   const photoInput = document.getElementById('user-photo-input');
   let photoBase64 = "https://via.placeholder.com/150";
 
   const proceedWithAuth = (imgSrc) => {
     currentUser = {
-      name: document.getElementById('user-name').value,
+      name: inputName,
       email: document.getElementById('user-email').value,
-      role: document.getElementById('user-role').value,
-      age: document.getElementById('user-age').value,
-      height: document.getElementById('user-height').value,
-      weight: document.getElementById('user-weight').value,
-      hasBall: document.getElementById('user-has-ball').value,
+      role: role,
+      age: role === 'admin' ? 30 : (document.getElementById('user-age').value || 18),
+      height: role === 'admin' ? 175 : (document.getElementById('user-height').value || 175),
+      weight: role === 'admin' ? 70 : (document.getElementById('user-weight').value || 70),
+      hasBall: role === 'admin' ? 'sim' : document.getElementById('user-has-ball').value,
       photo: imgSrc,
       diagnosis: null,
       scores: null,
@@ -120,7 +160,7 @@ function handleAuth(event) {
     applyLoggedInUser();
   };
 
-  if (photoInput.files && photoInput.files[0]) {
+  if (role !== 'admin' && photoInput.files && photoInput.files[0]) {
     const reader = new FileReader();
     reader.onload = function(e) { proceedWithAuth(e.target.result); };
     reader.readAsDataURL(photoInput.files[0]);
@@ -191,12 +231,6 @@ function switchTab(tabId) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function toggleAdminField() {
-  const role = document.getElementById('user-role').value;
-  const athleteFields = document.getElementById('athlete-fields');
-  if (athleteFields) athleteFields.style.display = role === 'admin' ? 'none' : 'block';
-}
-
 // --- LÓGICA DO QUIZ & REGRA DOS 60 DIAS ---
 function checkQuizLockStatus() {
   if (!currentUser.quizDate) return;
@@ -207,8 +241,7 @@ function checkQuizLockStatus() {
 
   if (diffDays < COOLDOWN_DAYS) {
     const remainingDays = COOLDOWN_DAYS - diffDays;
-    
-    // Bloqueia tela de quiz e ativa alertas
+
     document.getElementById('quiz-active-screen').classList.add('hidden');
     document.getElementById('quiz-block-screen').classList.remove('hidden');
     document.getElementById('quiz-countdown-box').innerText = `${remainingDays} Dias Restantes`;
@@ -250,14 +283,13 @@ function finishQuiz() {
   const mainVirtue = quizAnswers[45] || "Passe e Visão";
   const mainWeakness = quizAnswers[46] || "Uso da perna ruim";
 
-  // CÁLCULO DE ATRIBUTOS (0 a 100)
   const scores = [
-    quizAnswers[5] && quizAnswers[5].includes("9 a 10") ? 92 : 72,  // PAS
-    quizAnswers[27] && quizAnswers[27].includes("100%") ? 85 : 62,  // DEF
-    quizAnswers[8] && quizAnswers[8].includes("Alto") ? 88 : 65,    // CHU
-    quizAnswers[16] && quizAnswers[16].includes("Inteiro") ? 86 : 64, // FIS
-    quizAnswers[15] && quizAnswers[15].includes("explodido") ? 91 : 70,// VEL
-    quizAnswers[23] && quizAnswers[23].includes("frequente") ? 90 : 68 // VIS
+    quizAnswers[5] && quizAnswers[5].includes("9 a 10") ? 92 : 72,
+    quizAnswers[27] && quizAnswers[27].includes("100%") ? 85 : 62,
+    quizAnswers[8] && quizAnswers[8].includes("Alto") ? 88 : 65,
+    quizAnswers[16] && quizAnswers[16].includes("Inteiro") ? 86 : 64,
+    quizAnswers[15] && quizAnswers[15].includes("explodido") ? 91 : 70,
+    quizAnswers[23] && quizAnswers[23].includes("frequente") ? 90 : 68
   ];
 
   const diagnosisData = {
@@ -358,15 +390,11 @@ function updateFutuCardDisplay() {
 }
 
 function downloadFutuCard() {
-  const card = document.getElementById('futcard-container');
-  
-  // Renderização simples via canvas nativo do navegador
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   canvas.width = 400;
   canvas.height = 550;
 
-  // Fundo Dourado
   const grad = ctx.createLinearGradient(0, 0, 0, 550);
   grad.addColorStop(0, '#fef08a');
   grad.addColorStop(0.5, '#eab308');
@@ -374,12 +402,10 @@ function downloadFutuCard() {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 400, 550);
 
-  // Moldura
   ctx.strokeStyle = '#78350f';
   ctx.lineWidth = 8;
   ctx.strokeRect(10, 10, 380, 530);
 
-  // Textos
   ctx.fillStyle = '#0f172a';
   ctx.font = 'bold 42px sans-serif';
   ctx.fillText(document.getElementById('card-overall').innerText, 30, 70);
@@ -417,13 +443,11 @@ function renderCalendar() {
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  // Dias da semana
   const weekDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
   weekDays.forEach(d => {
     grid.innerHTML += `<div class="font-bold text-slate-500 py-1">${d}</div>`;
   });
 
-  // Espaços vazios
   for (let i = 0; i < firstDay; i++) {
     grid.innerHTML += `<div></div>`;
   }
@@ -529,7 +553,7 @@ function renderUserVideos() {
   `).join('');
 }
 
-// --- ADMIN ---
+// --- TABELA DO PAINEL ADMIN ---
 function renderAdminUsers() {
   const list = document.getElementById('admin-user-list');
   if (!list) return;
