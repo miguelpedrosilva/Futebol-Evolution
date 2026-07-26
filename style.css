@@ -1,52 +1,513 @@
-/* Customizações Globais */
-html, body {
-  min-height: 100vh;
-  background-color: #020617;
-  color: #f8fafc;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  scroll-behavior: smooth;
+/* ==========================================================================
+   FUTEBOL EVOLUTION - ESTILOS GLOBAIS & VISUAL PREMIUM (STYLE.CSS)
+   ========================================================================== */
+
+/* 1. VARIÁVEIS DE DESIGN & CORES */
+:root {
+    --bg-main: #0f172a;          /* Azul escuro slaty / fundo principal */
+    --bg-card: #1e293b;          /* Fundo dos cards e containers */
+    --bg-card-hover: #334155;    /* Hover de elementos interativos */
+    --text-primary: #f8fafc;     /* Texto claro principal */
+    --text-secondary: #94a3b8;   /* Texto secundário / legendas */
+    
+    /* Cores de Destaque */
+    --accent-gold: #eab308;      /* Destaque Ouro EA FC */
+    --accent-gold-dark: #a16207;
+    --accent-green: #22c55e;     /* Botões de ação e sucesso */
+    --accent-green-hover: #16a34a;
+    --accent-red: #ef4444;       /* Alertas e ações destrutivas */
+    --accent-blue: #3b82f6;      /* Elementos informativos */
+    
+    /* Degradê FutuCard Ouro (Efeito Metálico) */
+    --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+    --gold-text-gradient: linear-gradient(180deg, #ffe082 0%, #ffb300 100%);
+    
+    /* Bordas e Sombras */
+    --border-color: #334155;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --shadow-main: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    --shadow-glow-gold: 0 0 20px rgba(234, 179, 8, 0.3);
 }
 
-/* Transições de Abas */
-.tab-content {
-  display: none;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+/* 2. RESET E REGRAS BÁSICAS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-.tab-content.active {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding-bottom: 50px;
+    line-height: 1.5;
 }
 
-/* FUTUCARD - Estilo Ouro EA FC / FIFA */
-.futcard-gold {
-  background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%);
-  box-shadow: 0 20px 35px -10px rgba(234, 179, 8, 0.3);
+/* 3. LAYOUT & CONTAINERS */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 15px;
 }
 
-/* Utilitários para Rolagem Mobile */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.card-box {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-main);
 }
 
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
 }
-::-webkit-scrollbar-track {
-  background: #0f172a;
+
+/* 4. HEADER & NAV BAR */
+.main-header {
+    background-color: #0b1120;
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
-::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
+
+.logo-container {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #10b981;
+
+.logo-container i {
+    color: var(--accent-gold);
+    font-size: 1.5rem;
+}
+
+.logo-container strong {
+    color: var(--accent-gold);
+}
+
+.user-nav {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* 5. BOTÕES & BADGES */
+.btn-primary {
+    background-color: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+}
+
+.btn-primary-green {
+    background-color: var(--accent-green);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: var(--radius-sm);
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.btn-primary-green:hover {
+    background-color: var(--accent-green-hover);
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+}
+
+.btn-secondary {
+    background-color: var(--bg-card-hover);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #475569;
+}
+
+.btn-voice {
+    background-color: #8b5cf6;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.badge {
+    background-color: rgba(234, 179, 8, 0.15);
+    color: var(--accent-gold);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.badge-admin {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+/* 6. FORMULÁRIOS & AUTENTICAÇÃO */
+.auth-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.tab-btn.active {
+    color: var(--accent-gold);
+    border-bottom: 3px solid var(--accent-gold);
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px;
+    background-color: #0f172a;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+/* 7. FUTUCARD OURO (ESTILO EA FC / FIFA) */
+.card-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.futucard-gold {
+    width: 280px;
+    height: 420px;
+    background: var(--gold-gradient);
+    border-radius: 16px;
+    padding: 18px;
+    color: #1a1a1a;
+    box-shadow: var(--shadow-glow-gold);
+    position: relative;
+    border: 3px solid #ffe082;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-overall {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+}
+
+.card-overall #card-ovr {
+    font-size: 3.2rem;
+    font-weight: 900;
+}
+
+.card-overall #card-pos {
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.card-photo-frame {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #1a1a1a;
+    background-color: #fff;
+}
+
+.card-photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-name {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    padding-bottom: 5px;
+    margin: 10px 0;
+}
+
+.card-stats {
+    display: flex;
+    justify-content: space-around;
+    font-weight: 800;
+    font-size: 1.05rem;
+}
+
+.stat-col div {
+    margin-bottom: 4px;
+}
+
+.stat-col span {
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+/* 8. COOLDOWN & QUIZ */
+.cooldown-banner {
+    text-align: center;
+    padding: 30px;
+}
+
+.countdown-box {
+    margin: 20px 0;
+    background: rgba(234, 179, 8, 0.1);
+    border: 1px dashed var(--accent-gold);
+    padding: 20px;
+    border-radius: var(--radius-md);
+}
+
+.countdown-box strong {
+    font-size: 3rem;
+    color: var(--accent-gold);
+    display: block;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn-option {
+    background-color: var(--bg-card-hover);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    text-align: left;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-option:hover {
+    border-color: var(--accent-gold);
+    background-color: #475569;
+}
+
+/* 9. MINI-GAMES & TIMER GUIADO */
+.minigame-frame {
+    width: 100%;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-top: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.minigame-frame img {
+    width: 100%;
+    max-height: 320px;
+    object-fit: cover;
+    display: block;
+}
+
+.timer-display-box {
+    background: #0b1120;
+    border: 2px solid var(--accent-gold);
+    border-radius: var(--radius-md);
+    padding: 25px;
+    text-align: center;
+}
+
+.big-timer {
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: var(--accent-gold);
+    font-family: monospace;
+    letter-spacing: 2px;
+    margin: 15px 0;
+}
+
+.prep-controls, .timer-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.exercise-guide-preview {
+    background-color: var(--bg-card);
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    margin: 15px 0;
+    font-size: 0.95rem;
+}
+
+/* 10. DIAGNÓSTICO & PAINEL ADMIN */
+.dos-and-donts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.text-green { color: var(--accent-green); }
+.text-red { color: var(--accent-red); }
+
+.announcement-bar {
+    background-color: rgba(59, 130, 246, 0.2);
+    border-left: 4px solid var(--accent-blue);
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    border-radius: var(--radius-sm);
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    text-align: left;
+}
+
+.admin-table th, .admin-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table th {
+    background-color: #0f172a;
+    color: var(--text-secondary);
+}
+
+/* 11. MODAL */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    padding: 25px;
+    border-radius: var(--radius-md);
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+/* UTILITÁRIOS */
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+
+/* RESPONSIVIDADE (CELULAR) */
+@media (max-width: 768px) {
+    .dos-and-donts {
+        grid-template-columns: 1fr;
+    }
+    .big-timer {
+        font-size: 3.2rem;
+    }
+    .futucard-gold {
+        width: 250px;
+        height: 380px;
+    }
 }
