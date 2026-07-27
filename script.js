@@ -1,11 +1,11 @@
 /* ==========================================================================
    FUTEBOL EVOLUTION - LÓGICA COMPLETA
    CREDENCIAIS ADMIN: 
-   - Nome: 
-   - Senha: 
+   - Nome: Miguel Prime
+   - Senha: 3020
    ========================================================================== */
 
-// 🔑 CONFIGURAÇÃO SECRETA DO ADMINISTRADOR
+// CONFIGURAÇÃO SECRETA DO ADMINISTRADOR
 const ADMIN_NAME = "Miguel Prime";
 const ADMIN_PASSWORD = "3020";
 
@@ -90,7 +90,7 @@ const questions = [
   { cat: "VII. Diagnóstico Final", q: "Qual o seu objetivo principal no futebol hoje?", opts: ["Evoluir para base profissional", "Melhorar para jogos locais", "Ficar em forma"] }
 ];
 
-// --- CARREGAMENTO INICIAL ---
+// CARREGAMENTO INICIAL
 document.addEventListener('DOMContentLoaded', () => {
   const savedUser = localStorage.getItem('fe_logged_user');
   if (savedUser) {
@@ -121,16 +121,16 @@ function handleAuth(event) {
   const role = document.getElementById('user-role').value;
   const inputName = document.getElementById('user-name').value.trim();
 
-  // 🛡️ VERIFICAÇÃO EXCLUSIVA DE ADMINISTRADOR
+  // VERIFICAÇÃO EXCLUSIVA DE ADMINISTRADOR
   if (role === 'admin') {
     if (inputName.toLowerCase() !== ADMIN_NAME.toLowerCase()) {
-      alert(`❌ Acesso Negado! O nome de Administrador deve ser exatamente "${ADMIN_NAME}".`);
+      alert(`Acesso Negado! O nome de Administrador deve ser exatamente "${ADMIN_NAME}".`);
       return;
     }
 
-    const senhaDigitada = prompt("🔒 Digite a Senha Secreta do Administrador:");
+    const senhaDigitada = prompt("Digite a Senha Secreta do Administrador:");
     if (senhaDigitada !== ADMIN_PASSWORD) {
-      alert("❌ Senha incorreta! Acesso de Administrador bloqueado.");
+      alert("Senha incorreta! Acesso de Administrador bloqueado.");
       return;
     }
   }
@@ -231,7 +231,7 @@ function switchTab(tabId) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// --- LÓGICA DO QUIZ & REGRA DOS 60 DIAS ---
+// LÓGICA DO QUIZ & REGRA DOS 60 DIAS
 function checkQuizLockStatus() {
   if (!currentUser.quizDate) return;
 
@@ -331,7 +331,7 @@ function finishQuiz() {
   checkQuizLockStatus();
 }
 
-// --- RELATÓRIO DO TÉCNICO ---
+// RELATÓRIO DO TÉCNICO
 function renderTechnicalReport(data) {
   const card = document.getElementById('diagnostic-report-card');
   if (!card || !data) return;
@@ -362,7 +362,7 @@ function renderTechnicalReport(data) {
   document.getElementById('report-training-plan').innerHTML = planText;
 }
 
-// --- FUTUCARD ---
+// FUTUCARD
 function updateFutuCardDisplay() {
   if (!currentUser) return;
 
@@ -415,8 +415,6 @@ function downloadFutuCard() {
 
   ctx.font = 'bold 16px sans-serif';
   ctx.fillText(`PAS: ${document.getElementById('stat-pas').innerText}   DEF: ${document.getElementById('stat-def').innerText}`, 30, 320);
-  ctx.font = 'bold 16px sans-serif';
-  ctx.fillText(`PAS: ${document.getElementById('stat-pas').innerText}   DEF: ${document.getElementById('stat-def').innerText}`, 30, 320);
   ctx.fillText(`CHU: ${document.getElementById('stat-chu').innerText}   FIS: ${document.getElementById('stat-fis').innerText}`, 30, 360);
   ctx.fillText(`VEL: ${document.getElementById('stat-vel').innerText}   VIS: ${document.getElementById('stat-vis').innerText}`, 30, 400);
 
@@ -429,7 +427,7 @@ function downloadFutuCard() {
   link.click();
 }
 
-// --- AGENDA & CALENDÁRIO ---
+// AGENDA & CALENDÁRIO
 function renderCalendar() {
   const grid = document.getElementById('calendar-grid');
   const monthYearLabel = document.getElementById('calendar-month-year');
@@ -490,7 +488,7 @@ function markTodayWorkout() {
   }
 }
 
-// --- CRONÔMETRO ---
+// CRONÔMETRO
 function toggleTimer() {
   const btn = document.getElementById('timer-start-btn');
   if (timerInterval) {
@@ -520,7 +518,7 @@ function resetTimer() {
   btn.className = 'bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-lg text-xs';
 }
 
-// --- GALERIA DE VÍDEOS ---
+// GALERIA DE VÍDEOS
 function submitVideo(e) {
   e.preventDefault();
   const title = document.getElementById('video-title').value;
@@ -555,7 +553,7 @@ function renderUserVideos() {
   `).join('');
 }
 
-// --- TABELA DO PAINEL ADMIN ---
+// TABELA DO PAINEL ADMIN
 function renderAdminUsers() {
   const list = document.getElementById('admin-user-list');
   if (!list) return;
@@ -580,7 +578,7 @@ function saveAdminAnnouncement() {
   }
 }
 
-// --- GRÁFICOS DINÂMICOS ---
+// GRÁFICOS DINÂMICOS
 function initCharts(attributeData = [0,0,0,0,0,0], progressData = [0,0,0,0]) {
   const radarEl = document.getElementById('attributesChart');
   if (radarEl) {

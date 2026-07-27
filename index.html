@@ -18,7 +18,7 @@
       <div class="text-center mb-6">
         <div class="inline-flex bg-emerald-500 text-slate-950 p-3 rounded-xl font-black text-2xl mb-2">FE</div>
         <h2 class="text-2xl font-bold text-white">Futebol <span class="text-emerald-400">Evolution</span></h2>
-        <p class="text-slate-400 text-xs sm:text-sm">Cadastre seu perfil de atleta profissional</p>
+        <p class="text-slate-400 text-xs sm:text-sm">Cadastre seu perfil de atleta profissional v2.0</p>
       </div>
 
       <form id="auth-form" class="space-y-4" onsubmit="handleAuth(event)">
@@ -228,7 +228,7 @@
           </div>
 
           <div class="mt-4 pt-2 border-t border-slate-950/20 text-center">
-            <span class="text-[10px] font-black uppercase tracking-widest text-slate-900/60">FUTBOL EVOLUTION CERTIFIED</span>
+            <span class="text-[10px] font-black uppercase tracking-widest text-slate-900/60">FUTEBOL EVOLUTION CERTIFIED</span>
           </div>
         </div>
 
@@ -279,4 +279,88 @@
           </div>
 
           <div class="flex justify-between items-center text-sm font-semibold">
-            <button onclick="changeMonth(-1)" class="text-slate-400 hover:text-white"
+            <button onclick="changeMonth(-1)" class="text-slate-400 hover:text-white"><i class="fa-solid fa-chevron-left"></i> Mês Anterior</button>
+            <span id="calendar-month-year" class="text-emerald-400 font-bold">-- ----</span>
+            <button onclick="changeMonth(1)" class="text-slate-400 hover:text-white">Próximo Mês <i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+
+          <div id="calendar-grid" class="grid grid-cols-7 gap-2 text-center text-xs"></div>
+
+          <button onclick="markTodayWorkout()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
+            <i class="fa-solid fa-check"></i> Registrar Treino de Hoje
+          </button>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between space-y-4">
+          <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-stopwatch text-amber-400 mr-2"></i> Cronômetro de Treino</h2>
+          
+          <div class="text-center py-6">
+            <span id="timer-display" class="text-5xl font-black text-emerald-400 tracking-wider">00:00</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button id="timer-start-btn" onclick="toggleTimer()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-lg text-xs">Iniciar</button>
+            <button onclick="resetTimer()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 rounded-lg text-xs">Zerar</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="tab-videos" class="tab-content space-y-6">
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl max-w-2xl mx-auto space-y-4">
+        <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-video text-emerald-400 mr-2"></i> Minha Biblioteca de Vídeos</h2>
+        <p class="text-xs text-slate-400">Adicione links dos seus melhores lances ou treinos para acompanhar seu progresso visual.</p>
+        
+        <form onsubmit="submitVideo(event)" class="space-y-3">
+          <input type="text" id="video-title" required placeholder="Título do Vídeo (Ex: Melhores Dribles)" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+          <input type="url" id="video-url" required placeholder="Link do Vídeo (YouTube, Drive, Vimeo)" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+          <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2.5 rounded-lg text-xs">Salvar Vídeo</button>
+        </form>
+
+        <div id="user-video-gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-4 border-t border-slate-800"></div>
+      </div>
+    </section>
+
+    <section id="tab-admin" class="tab-content space-y-6">
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-bold text-amber-400"><i class="fa-solid fa-shield-halved mr-2"></i> Painel do Administrador (Técnico)</h2>
+          <span class="bg-amber-500/10 text-amber-400 text-xs px-3 py-1 rounded-full border border-amber-500/30">Miguel Prime</span>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-xs font-semibold text-slate-400">Publicar Aviso Geral para os Atletas:</label>
+          <div class="flex gap-2">
+            <input type="text" id="admin-announcement-input" placeholder="Digite um recado oficial..." class="flex-grow bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-amber-400 outline-none">
+            <button onclick="saveAdminAnnouncement()" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold px-4 py-2.5 rounded-lg text-xs">Publicar</button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950 text-slate-400 uppercase">
+              <tr>
+                <th class="p-3">Atleta</th>
+                <th class="p-3">E-mail</th>
+                <th class="p-3">Idade</th>
+                <th class="p-3">Físico</th>
+                <th class="p-3">Possui Bola</th>
+                <th class="p-3">Posição Diagnóstico</th>
+              </tr>
+            </thead>
+            <tbody id="admin-user-list" class="divide-y divide-slate-800"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+    Futebol Evolution © 2026 - Plataforma de Alta Performance
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
