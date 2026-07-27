@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futebol Evolution - Plataforma Profissional v2.0</title>
+    <title>Futebol Evolution - Plataforma de Atletas</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <link rel="stylesheet" href="style-v2.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -25,10 +25,10 @@
             </a>
             
             <nav class="header-nav">
-                <button class="btn btn-secondary" onclick="switchView('login-view')" style="width: auto; padding: 0.5rem 1rem;">
+                <button class="btn btn-secondary nav-btn" onclick="switchView('login-view')">
                     <i class="fa-solid fa-right-to-bracket"></i> Entrar
                 </button>
-                <button class="btn btn-admin" onclick="switchView('admin-view')" style="width: auto; padding: 0.5rem 1rem;">
+                <button class="btn btn-admin nav-btn" onclick="switchView('admin-view')">
                     <i class="fa-solid fa-user-shield"></i> Painel Admin
                 </button>
             </nav>
@@ -78,7 +78,7 @@
                     <input type="email" id="user-email" class="form-control" placeholder="seu@email.com" required>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">
+                <button type="submit" class="btn btn-primary">
                     Acessar Plataforma
                 </button>
             </form>
@@ -95,7 +95,7 @@
                 <div class="fut-card">
                     <div class="fut-card-overall" id="card-overall">88</div>
                     <div class="fut-card-position" id="card-position">MEI - Meia Atacante</div>
-                    <h3 style="margin: 0.5rem 0; color: #fff;" id="card-athlete-name">Lucas Silva</h3>
+                    <h3 class="fut-card-name" id="card-athlete-name">Lucas Silva</h3>
                     
                     <div class="attributes-grid">
                         <div class="attr-item"><span class="attr-label">PAS</span><span class="attr-value" id="val-pas">85</span></div>
@@ -111,7 +111,7 @@
             <div class="dashboard-card">
                 <div class="dashboard-card-header">
                     <h3 class="dashboard-card-title"><i class="fa-solid fa-chart-pie"></i> Análise de Desempenho</h3>
-                    <span style="color: var(--text-muted); font-size: 0.8rem;">Teia Tática</span>
+                    <span class="text-muted-sm">Teia Tática</span>
                 </div>
                 
                 <div class="chart-container">
@@ -120,12 +120,12 @@
             </div>
         </section>
 
-        <section id="admin-view" class="hero-box" style="display: none; max-width: 1000px; text-align: left;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h2 class="auth-title" style="margin: 0;">Painel de <span>Administração</span></h2>
+        <section id="admin-view" class="hero-box admin-box" style="display: none;">
+            <div class="admin-header-flex">
+                <h2 class="auth-title">Painel de <span>Administração</span></h2>
                 <span class="badge badge-purple"><i class="fa-solid fa-user-shield"></i> Modo Geral</span>
             </div>
-            <p class="auth-subtitle">Gestão de atletas cadastrados e atualização dos atributos do gráfico.</p>
+            <p class="auth-subtitle">Gestão de atletas cadastrados e atualização de métricas táticas.</p>
 
             <div class="admin-table-container">
                 <table class="admin-table">
@@ -146,7 +146,7 @@
                             <td>Administrador</td>
                             <td>99</td>
                             <td><span class="badge badge-purple">Ativo</span></td>
-                            <td><button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; width: auto;">Editar</button></td>
+                            <td><button class="btn btn-secondary btn-sm">Editar</button></td>
                         </tr>
                         <tr>
                             <td><strong>Lucas Silva</strong></td>
@@ -154,7 +154,7 @@
                             <td>Atleta Profissional</td>
                             <td>88</td>
                             <td><span class="badge badge-green">Avaliado</span></td>
-                            <td><button class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; width: auto;" onclick="switchView('dashboard-view')">Ver Card</button></td>
+                            <td><button class="btn btn-primary btn-sm" onclick="switchView('dashboard-view')">Ver Card</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -163,89 +163,6 @@
 
     </main>
 
-    <script>
-        let radarChartInstance = null;
-
-        // Alternar visualizações/telas sem recarregar a página
-        function switchView(viewId) {
-            const views = ['hero-view', 'login-view', 'dashboard-view', 'admin-view'];
-            views.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.style.display = (id === viewId) ? 'block' : 'none';
-            });
-
-            // Se for para o Dashboard, inicia o Gráfico de Radar
-            if (viewId === 'dashboard-view') {
-                setTimeout(initRadarChart, 100);
-            }
-        }
-
-        // Login Simulado
-        function handleLogin(event) {
-            event.preventDefault();
-            const profile = document.getElementById('access-profile').value;
-            const name = document.getElementById('user-name').value || 'Lucas Silva';
-            
-            document.getElementById('card-athlete-name').innerText = name;
-
-            if (profile === 'admin') {
-                switchView('admin-view');
-            } else {
-                switchView('dashboard-view');
-            }
-        }
-
-        // Inicialização do Gráfico de Radar em Chart.js (Fidelidade ao Padrão Original)
-        function initRadarChart() {
-            const ctx = document.getElementById('radarChart');
-            if (!ctx) return;
-
-            if (radarChartInstance) {
-                radarChartInstance.destroy();
-            }
-
-            radarChartInstance = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['PAS (Passe)', 'RIT (Ritmo)', 'FIN (Finalização)', 'DRI (Drible)', 'DEF (Defesa)', 'FIS (Físico)'],
-                    datasets: [{
-                        label: 'Atributos Táticos',
-                        data: [85, 90, 82, 89, 65, 78],
-                        backgroundColor: 'rgba(0, 230, 118, 0.25)',
-                        borderColor: '#00e676',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#f59e0b',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#f59e0b'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    scales: {
-                        r: {
-                            angleLines: { color: '#1e293b' },
-                            grid: { color: '#1e293b' },
-                            pointLabels: {
-                                color: '#94a3b8',
-                                font: { size: 11, weight: 'bold', family: 'Inter' }
-                            },
-                            ticks: {
-                                color: '#64748b',
-                                backdropColor: 'transparent',
-                                stepSize: 20
-                            },
-                            suggestedMin: 0,
-                            suggestedMax: 100
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false }
-                    }
-                }
-            });
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

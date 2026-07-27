@@ -1,14 +1,12 @@
 /* ==========================================================================
-   FUTEBOL EVOLUTION v2.0 - JAVASCRIPT COMPLETO & REVISADO
+   FUTEBOL EVOLUTION - JAVASCRIPT PRINCIPAL v2.0
    ========================================================================== */
 
-// --------------------------------------------------------------------------
-// 1. ESTADO GLOBAL DA APLICAÇÃO
-// --------------------------------------------------------------------------
+// Instância global do gráfico de radar
 let radarChartInstance = null;
 
-// Dados do Atleta Padrão (Podem ser alterados no Admin ou Form)
-let athleteProfile = {
+// Objeto do Atleta (Dados em memória)
+const athleteData = {
     nome: "Lucas Silva",
     email: "lucas@atleta.com",
     perfil: "atleta",
@@ -25,26 +23,15 @@ let athleteProfile = {
 };
 
 // --------------------------------------------------------------------------
-// 2. INICIALIZAÇÃO E EVENT LISTENERS
+// Inicialização
 // --------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
-    // Configura o formulário de login/cadastro se existir no DOM
-    const authForm = document.getElementById("auth-form");
-    if (authForm) {
-        authForm.addEventListener("submit", handleLogin);
-    }
-
-    // Atualiza a interface com os dados iniciais do atleta
-    updateAthleteUI();
+    updateCardUI();
 });
 
 // --------------------------------------------------------------------------
-// 3. SISTEMA DE NAVEGAÇÃO DE TELAS (SWITCH VIEW)
+// Navegação de Telas sem Recarregar
 // --------------------------------------------------------------------------
-/**
- * Alterna visibilidade entre as seções da aplicação sem recarregar a página
- * @param {string} viewId - ID do elemento da seção ('hero-view', 'login-view', 'dashboard-view', 'admin-view')
- */
 function switchView(viewId) {
     const views = ['hero-view', 'login-view', 'dashboard-view', 'admin-view'];
 
@@ -55,47 +42,39 @@ function switchView(viewId) {
         }
     });
 
-    // Se a view for a Dashboard, renderiza/redesenha o Gráfico de Radar
+    // Se for para a Dashboard, inicializa ou atualiza o Gráfico de Radar
     if (viewId === 'dashboard-view') {
-        // Pequeno atraso para garantir que a div esteja visível antes do Chart.js calcular as dimensões
-        setTimeout(() => {
-            renderRadarChart();
-        }, 100);
+        setTimeout(renderRadarChart, 100);
     }
 
-    // Rola suavemente até o topo da página ao mudar de tela
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // --------------------------------------------------------------------------
-// 4. AUTENTICAÇÃO E CADASTRO
+// Processamento do Formulário de Login/Cadastro
 // --------------------------------------------------------------------------
-/**
- * Processa a entrada/cadastro do usuário no sistema
- * @param {Event} event 
- */
 function handleLogin(event) {
     if (event) event.preventDefault();
 
-    const profileSelect = document.getElementById('access-profile');
     const nameInput = document.getElementById('user-name');
     const emailInput = document.getElementById('user-email');
+    const profileSelect = document.getElementById('access-profile');
 
     if (nameInput && nameInput.value.trim() !== '') {
-        athleteProfile.nome = nameInput.value.trim();
+        athleteData.nome = nameInput.value.trim();
     }
     
     if (emailInput && emailInput.value.trim() !== '') {
-        athleteProfile.email = emailInput.value.trim();
+        athleteData.email = emailInput.value.trim();
     }
 
     const selectedProfile = profileSelect ? profileSelect.value : 'atleta';
-    athleteProfile.perfil = selectedProfile;
+    athleteData.perfil = selectedProfile;
 
-    // Atualiza elementos visuais da interface
-    updateAthleteUI();
+    // Atualiza a tela com os novos dados
+    updateCardUI();
 
-    // Redirecionamento por perfil
+    // Redireciona
     if (selectedProfile === 'admin') {
         switchView('admin-view');
     } else {
@@ -103,61 +82,36 @@ function handleLogin(event) {
     }
 }
 
-/**
- * Realiza o encerramento da sessão
- */
-function logout() {
-    switchView('hero-view');
-}
-
 // --------------------------------------------------------------------------
-// 5. ATUALIZAÇÃO DA INTERFACE DO ATLETA & CARDS
+// Atualiza a Interface do Atleta
 // --------------------------------------------------------------------------
-/**
- * Sincroniza os dados do objeto JavaScript com o HTML
- */
-function updateAthleteUI() {
-    // Nome e Posição
+function updateCardUI() {
     const nameEl = document.getElementById('card-athlete-name');
     const posEl = document.getElementById('card-position');
     const overallEl = document.getElementById('card-overall');
 
-    if (nameEl) nameEl.innerText = athleteProfile.nome;
-    if (posEl) posEl.innerText = athleteProfile.posicao;
-    if (overallEl) overallEl.innerText = athleteProfile.overall;
+    if (nameEl) nameEl.innerText = athleteData.nome;
+    if (posEl) posEl.innerText = athleteData.posicao;
+    if (overallEl) overallEl.innerText = athleteData.overall;
 
-    // Valores dos Atributos individuais
-    const attrs = athleteProfile.atributos;
+    const attrs = athleteData.atributos;
     for (const key in attrs) {
-        const attrElement = document.getElementById(`val-${key}`);
-        if (attrElement) {
-            attrElement.innerText = attrs[key];
-        }
-    }
-
-    // Se o gráfico já existir, atualiza os dados em tempo real
-    if (radarChartInstance) {
-        radarChartInstance.data.datasets[0].data = [
-            attrs.pas, attrs.rit, attrs.fin, attrs.dri, attrs.def, attrs.fis
-        ];
-        radarChartInstance.update();
+        const el = document.getElementById(`val-${key}`);
+        if (el) el.innerText = attrs[key];
     }
 }
 
 // --------------------------------------------------------------------------
-// 6. RENDERIZAÇÃO DO GRÁFICO DE RADAR (CHART.JS)
+// Renderização do Gráfico de Radar (Chart.js)
 // --------------------------------------------------------------------------
-/**
- * Inicializa ou recria o gráfico de teia tática (Radar Chart)
- */
 function renderRadarChart() {
     const canvas = document.getElementById('radarChart');
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    const attrs = athleteProfile.atributos;
+    const attrs = athleteData.atributos;
 
-    // Se o gráfico já existe, destrói para recriar de forma limpa
+    // Se o gráfico já existia, destrói antes de criar um novo para não sobrepor
     if (radarChartInstance) {
         radarChartInstance.destroy();
     }
@@ -176,15 +130,12 @@ function renderRadarChart() {
             datasets: [{
                 label: 'Atributos Táticos',
                 data: [attrs.pas, attrs.rit, attrs.fin, attrs.dri, attrs.def, attrs.fis],
-                backgroundColor: 'rgba(0, 230, 118, 0.25)',  // Verde Menta Transparente
+                backgroundColor: 'rgba(0, 230, 118, 0.25)',  // Verde Menta
                 borderColor: '#00e676',                      // Verde Vibrante
                 borderWidth: 2,
-                pointBackgroundColor: '#f59e0b',             // Pontos em Dourado
+                pointBackgroundColor: '#f59e0b',             // Dourado
                 pointBorderColor: '#ffffff',
-                pointHoverBackgroundColor: '#ffffff',
-                pointHoverBorderColor: '#f59e0b',
-                pointRadius: 4,
-                pointHoverRadius: 6
+                pointRadius: 4
             }]
         },
         options: {
@@ -192,19 +143,11 @@ function renderRadarChart() {
             maintainAspectRatio: true,
             scales: {
                 r: {
-                    angleLines: { 
-                        color: '#1e293b' // Linhas de fundo escuras
-                    },
-                    grid: { 
-                        color: '#1e293b' 
-                    },
+                    angleLines: { color: '#1e293b' },
+                    grid: { color: '#1e293b' },
                     pointLabels: {
                         color: '#94a3b8',
-                        font: { 
-                            size: 11, 
-                            weight: 'bold', 
-                            family: "'Inter', sans-serif" 
-                        }
+                        font: { size: 11, weight: 'bold', family: "'Inter', sans-serif" }
                     },
                     ticks: {
                         color: '#64748b',
@@ -216,37 +159,8 @@ function renderRadarChart() {
                 }
             },
             plugins: {
-                legend: { 
-                    display: false 
-                },
-                tooltip: {
-                    backgroundColor: '#131c2e',
-                    titleColor: '#00e676',
-                    bodyColor: '#ffffff',
-                    borderColor: '#1e293b',
-                    borderWidth: 1
-                }
+                legend: { display: false }
             }
         }
     });
-}
-
-// --------------------------------------------------------------------------
-// 7. FUNÇÕES DO PAINEL ADMIN
-// --------------------------------------------------------------------------
-/**
- * Atualiza os atributos de um atleta via Painel Admin
- * @param {Object} newAttributes - Objeto com os novos atributos
- */
-function updateAthleteAttributes(newAttributes) {
-    if (!newAttributes) return;
-
-    athleteProfile.atributos = { ...athleteProfile.atributos, ...newAttributes };
-    
-    // Recalcula o Overall médio
-    const vals = Object.values(athleteProfile.atributos);
-    const avg = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
-    athleteProfile.overall = avg;
-
-    updateAthleteUI();
 }
