@@ -1,168 +1,282 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futebol Evolution - Plataforma de Atletas</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Futebol Evolution | Plataforma Profissional</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-slate-950">
 
-    <header class="main-header">
-        <div class="header-container">
-            <a href="#" class="brand-logo" onclick="switchView('hero-view')">
-                <i class="fa-solid fa-futbol logo-icon"></i>
-                FUTEBOL <span class="highlight">EVOLUTION</span>
-            </a>
-            
-            <nav class="header-nav">
-                <button class="btn btn-secondary nav-btn" onclick="switchView('login-view')">
-                    <i class="fa-solid fa-right-to-bracket"></i> Entrar
-                </button>
-                <button class="btn btn-admin nav-btn" onclick="switchView('admin-view')">
-                    <i class="fa-solid fa-user-shield"></i> Painel Admin
-                </button>
-            </nav>
+  <div id="auth-screen" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl my-8">
+      <div class="text-center mb-6">
+        <div class="inline-flex bg-emerald-500 text-slate-950 p-3 rounded-xl font-black text-2xl mb-2">FE</div>
+        <h2 class="text-2xl font-bold text-white">Futebol <span class="text-emerald-400">Evolution</span></h2>
+        <p class="text-slate-400 text-xs sm:text-sm">Cadastre seu perfil de atleta profissional</p>
+      </div>
+
+      <form id="auth-form" class="space-y-4" onsubmit="handleAuth(event)">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Perfil</label>
+          <select id="user-role" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none" onchange="toggleAdminField()">
+            <option value="user">Atleta / Jogador</option>
+            <option value="admin">Administrador (Técnico)</option>
+          </select>
         </div>
-    </header>
 
-    <main class="main-content">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Nome Completo</label>
+          <input type="text" id="user-name" required placeholder="Ex: Lucas Silva" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+        </div>
 
-        <section id="hero-view" class="hero-box">
-            <h1 class="hero-title">Evolua Seu Futebol ao <span>Nível Profissional</span></h1>
-            <p class="hero-subtitle">
-                Realize avaliações táticas, acompanhe seus atributos em tempo real e obtenha seu Evolution Card Oficial do Futebol Evolution.
-            </p>
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="switchView('login-view')">
-                    <i class="fa-solid fa-user-plus"></i> Criar Conta Atleta
-                </button>
-                <button class="btn btn-secondary" onclick="switchView('login-view')">
-                    <i class="fa-solid fa-key"></i> Já Sou Cadastrado
-                </button>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">E-mail</label>
+          <input type="email" id="user-email" required placeholder="seu@email.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+        </div>
+
+        <div id="athlete-fields" class="space-y-3">
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1">Idade</label>
+              <input type="number" id="user-age" min="5" max="60" required placeholder="17" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-white focus:border-emerald-500 outline-none">
             </div>
-        </section>
-
-        <section id="login-view" class="auth-container" style="display: none;">
-            <div class="logo-fe-box">FE</div>
-            
-            <h2 class="auth-title">Futebol <span>Evolution</span></h2>
-            <p class="auth-subtitle">Cadastre seu perfil de atleta profissional v2.0</p>
-
-            <form id="auth-form" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label class="form-label" for="access-profile">Perfil de Acesso</label>
-                    <select id="access-profile" class="form-select" required>
-                        <option value="admin">Administrador (Miguel Prime)</option>
-                        <option value="atleta" selected>Atleta Profissional</option>
-                        <option value="scout">Olheiro / Recrutador</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="user-name">Nome Completo</label>
-                    <input type="text" id="user-name" class="form-control" placeholder="Ex: Lucas Silva" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="user-email">E-mail</label>
-                    <input type="email" id="user-email" class="form-control" placeholder="seu@email.com" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary">
-                    Acessar Plataforma
-                </button>
-            </form>
-        </section>
-
-        <section id="dashboard-view" class="dashboard-grid" style="display: none;">
-            
-            <div class="dashboard-card">
-                <div class="dashboard-card-header">
-                    <h3 class="dashboard-card-title"><i class="fa-solid fa-id-card"></i> Evolution Card</h3>
-                    <span class="badge badge-green">Oficial</span>
-                </div>
-                
-                <div class="fut-card">
-                    <div class="fut-card-overall" id="card-overall">88</div>
-                    <div class="fut-card-position" id="card-position">MEI - Meia Atacante</div>
-                    <h3 class="fut-card-name" id="card-athlete-name">Lucas Silva</h3>
-                    
-                    <div class="attributes-grid">
-                        <div class="attr-item"><span class="attr-label">PAS</span><span class="attr-value" id="val-pas">85</span></div>
-                        <div class="attr-item"><span class="attr-label">RIT</span><span class="attr-value" id="val-rit">90</span></div>
-                        <div class="attr-item"><span class="attr-label">FIN</span><span class="attr-value" id="val-fin">82</span></div>
-                        <div class="attr-item"><span class="attr-label">DRI</span><span class="attr-value" id="val-dri">89</span></div>
-                        <div class="attr-item"><span class="attr-label">DEF</span><span class="attr-value" id="val-def">65</span></div>
-                        <div class="attr-item"><span class="attr-label">FIS</span><span class="attr-value" id="val-fis">78</span></div>
-                    </div>
-                </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1">Altura (cm)</label>
+              <input type="number" id="user-height" required placeholder="175" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-white focus:border-emerald-500 outline-none">
             </div>
-
-            <div class="dashboard-card">
-                <div class="dashboard-card-header">
-                    <h3 class="dashboard-card-title"><i class="fa-solid fa-chart-pie"></i> Análise de Desempenho</h3>
-                    <span class="text-muted-sm">Teia Tática</span>
-                </div>
-                
-                <div class="chart-container">
-                    <canvas id="radarChart"></canvas>
-                </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1">Peso (kg)</label>
+              <input type="number" id="user-weight" required placeholder="70" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-white focus:border-emerald-500 outline-none">
             </div>
-        </section>
+          </div>
 
-        <section id="admin-view" class="hero-box admin-box" style="display: none;">
-            <div class="admin-header-flex">
-                <h2 class="auth-title">Painel de <span>Administração</span></h2>
-                <span class="badge badge-purple"><i class="fa-solid fa-user-shield"></i> Modo Geral</span>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Sua Foto de Perfil / Atleta</label>
+            <input type="file" id="user-photo-input" accept="image/*" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-300 focus:border-emerald-500 outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Possui bola de futebol para os treinos?</label>
+            <select id="user-has-ball" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none">
+              <option value="sim">Sim, tenho bola disponível</option>
+              <option value="nao">Não, prefiro treinos sem bola (físico/calistenia)</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-lg transition mt-4">
+          Acessar Plataforma
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center py-3 md:h-16 gap-3">
+      <div class="flex items-center justify-between w-full md:w-auto">
+        <div class="flex items-center space-x-2 cursor-pointer" onclick="switchTab('home')">
+          <div class="bg-emerald-500 text-slate-950 px-2.5 py-1 rounded-lg font-black text-lg">FE</div>
+          <span class="text-lg font-bold tracking-wider text-white">FUTEBOL <span class="text-emerald-400">EVOLUTION</span></span>
+        </div>
+        <button onclick="logout()" class="md:hidden text-xs text-red-400 bg-red-950/50 px-2.5 py-1.5 rounded-lg border border-red-800/50"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+      </div>
+
+      <nav class="flex w-full md:w-auto overflow-x-auto no-scrollbar space-x-1 pb-1 md:pb-0">
+        <button onclick="switchTab('home')" id="nav-home" class="nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium text-emerald-400 bg-slate-800"><i class="fa-solid fa-house mr-1"></i> Início</button>
+        <button onclick="switchTab('futcard')" id="nav-futcard" class="nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium text-amber-400 hover:text-amber-300"><i class="fa-solid fa-id-card mr-1"></i> FutuCard</button>
+        <button onclick="switchTab('test')" id="nav-test" class="nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium text-slate-300 hover:text-white"><i class="fa-solid fa-clipboard-question mr-1"></i> Avaliação (50 Qs)</button>
+        <button onclick="switchTab('agenda')" id="nav-agenda" class="nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium text-slate-300 hover:text-white"><i class="fa-solid fa-calendar-days mr-1"></i> Agenda & Treinos</button>
+        <button onclick="switchTab('videos')" id="nav-videos" class="nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium text-slate-300 hover:text-white"><i class="fa-solid fa-video mr-1"></i> Vídeos</button>
+        <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium text-amber-400 hover:text-amber-300 hidden"><i class="fa-solid fa-shield-halved mr-1"></i> Admin</button>
+      </nav>
+
+      <div class="hidden md:flex items-center space-x-3">
+        <img id="nav-user-photo" src="https://via.placeholder.com/150" class="w-8 h-8 rounded-full object-cover border border-emerald-500/50 hidden">
+        <span id="nav-user-name" class="text-sm font-medium text-slate-300"></span>
+        <button onclick="logout()" class="text-xs text-red-400 hover:underline ml-2"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+
+    <section id="tab-home" class="tab-content active space-y-6">
+      <div class="bg-gradient-to-r from-emerald-950 via-slate-900 to-slate-900 border border-emerald-500/20 rounded-2xl p-6 relative overflow-hidden">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white mb-2" id="welcome-message">Bem-vindo, Atleta!</h1>
+        <p class="text-slate-300 text-xs sm:text-sm max-w-2xl" id="admin-custom-announcement">
+          Realize a Avaliação de 50 Perguntas para desbloquear seu FutuCard oficial, relatório tático e gráficos de desempenho.
+        </p>
+      </div>
+
+      <div id="quiz-cooldown-alert" class="hidden bg-amber-950/40 border border-amber-500/30 rounded-xl p-4 flex items-center justify-between text-amber-300 text-xs sm:text-sm">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-lock text-amber-400 text-xl"></i>
+          <div>
+            <p class="font-bold">Avaliação Concluída e Bloqueada para Treino</p>
+            <p id="cooldown-timer-text" class="text-slate-400">Sua próxima reavaliação estará disponível em alguns dias.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="diagnostic-report-card" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+          <h2 class="text-xl font-bold text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-user-ninja"></i> Diagnóstico do Treinador</h2>
+          <span id="badge-position" class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-bold px-3 py-1 rounded-full">--</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-emerald-950/20 border border-emerald-500/30 p-4 rounded-xl">
+            <h3 class="text-emerald-400 font-bold text-sm mb-2"><i class="fa-solid fa-thumbs-up mr-2"></i> Pontos Fortes</h3>
+            <ul id="report-strengths" class="text-xs sm:text-sm text-slate-300 space-y-1 list-disc list-inside"></ul>
+          </div>
+          <div class="bg-red-950/20 border border-red-500/30 p-4 rounded-xl">
+            <h3 class="text-red-400 font-bold text-sm mb-2"><i class="fa-solid fa-triangle-exclamation mr-2"></i> Pontos Fracos (Corrigir)</h3>
+            <ul id="report-weaknesses" class="text-xs sm:text-sm text-slate-300 space-y-1 list-disc list-inside"></ul>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <h3 class="text-emerald-400 font-bold text-sm mb-2"><i class="fa-solid fa-circle-check mr-2"></i> O que DEVE Fazer em Campo</h3>
+            <ul id="report-dos" class="text-xs sm:text-sm text-slate-300 space-y-1 list-disc list-inside"></ul>
+          </div>
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <h3 class="text-red-400 font-bold text-sm mb-2"><i class="fa-solid fa-circle-xmark mr-2"></i> O que NÃO DEVE Fazer</h3>
+            <ul id="report-donts" class="text-xs sm:text-sm text-slate-300 space-y-1 list-disc list-inside"></ul>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-5 rounded-xl border border-emerald-500/40">
+          <h3 class="text-lg font-bold text-white mb-2"><i class="fa-solid fa-dumbbell text-emerald-400 mr-2"></i> Plano de Treino Recomendado</h3>
+          <p id="report-ball-status" class="text-xs text-emerald-400 mb-3 font-semibold"></p>
+          <div id="report-training-plan" class="text-xs sm:text-sm text-slate-300 space-y-2"></div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+        <h3 class="text-base sm:text-lg font-bold text-amber-400 mb-2"><i class="fa-solid fa-person-running mr-2"></i> Rotina Pré-Treino & Prevenção de Lesões</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-300 mt-3">
+          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+            <p class="font-bold text-white mb-1">1. Mobilidade Articular (3 min)</p>
+            <p>Rotação de tornozelos, quadril e joelhos antes de iniciar as corridas.</p>
+          </div>
+          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+            <p class="font-bold text-white mb-1">2. Ativação Dinâmica (4 min)</p>
+            <p>Elevação de joelho (Skipping), anfersen e trotes laterais progressivos.</p>
+          </div>
+          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+            <p class="font-bold text-white mb-1">3. Aceleração (3 min)</p>
+            <p>3 piques curtos de 10m com aumento de velocidade gradual.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-slate-900 border border-slate-800 p-4 sm:p-5 rounded-xl relative">
+          <h3 class="text-base sm:text-lg font-bold mb-3 text-emerald-400"><i class="fa-solid fa-chart-radar mr-2"></i> Atributos do Atleta</h3>
+          <div id="chart-zero-warning" class="absolute inset-0 bg-slate-900/90 z-10 flex flex-col items-center justify-center p-4 text-center">
+            <i class="fa-solid fa-lock text-slate-600 text-3xl mb-2"></i>
+            <p class="text-slate-400 text-xs sm:text-sm font-semibold">Gráficos Zerados</p>
+            <p class="text-slate-500 text-xs">Responda o teste de 50 perguntas para calcular suas notas.</p>
+          </div>
+          <div class="relative h-60 w-full"><canvas id="attributesChart"></canvas></div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-4 sm:p-5 rounded-xl relative">
+          <h3 class="text-base sm:text-lg font-bold mb-3 text-emerald-400"><i class="fa-solid fa-chart-line mr-2"></i> Evolução de Treinos</h3>
+          <div class="relative h-60 w-full"><canvas id="progressChart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-futcard" class="tab-content">
+      <div class="max-w-md mx-auto space-y-6">
+        <div class="text-center">
+          <h2 class="text-2xl font-bold text-amber-400">Seu FutuCard Oficial</h2>
+          <p class="text-xs text-slate-400">Cartão de atributos gerado a partir do seu diagnóstico.</p>
+        </div>
+
+        <div id="futcard-container" class="futcard-gold p-6 rounded-3xl border-4 border-amber-300 shadow-2xl relative overflow-hidden text-slate-900 select-none">
+          <div class="flex justify-between items-start">
+            <div class="flex flex-col items-center leading-none">
+              <span id="card-overall" class="text-5xl font-black tracking-tighter">00</span>
+              <span id="card-pos" class="text-xs font-extrabold uppercase mt-1 bg-slate-950 text-amber-400 px-2 py-0.5 rounded">---</span>
             </div>
-            <p class="auth-subtitle">Gestão de atletas cadastrados e atualização de métricas táticas.</p>
-
-            <div class="admin-table-container">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Atleta</th>
-                            <th>E-mail</th>
-                            <th>Perfil</th>
-                            <th>Overall</th>
-                            <th>Status</th>
-                            <th>Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Miguel Prime</strong></td>
-                            <td>miguel@futebolevolution.com</td>
-                            <td>Administrador</td>
-                            <td>99</td>
-                            <td><span class="badge badge-purple">Ativo</span></td>
-                            <td><button class="btn btn-secondary btn-sm">Editar</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Lucas Silva</strong></td>
-                            <td>lucas@atleta.com</td>
-                            <td>Atleta Profissional</td>
-                            <td>88</td>
-                            <td><span class="badge badge-green">Avaliado</span></td>
-                            <td><button class="btn btn-primary btn-sm" onclick="switchView('dashboard-view')">Ver Card</button></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="w-28 h-28 rounded-2xl overflow-hidden border-2 border-slate-950/40 bg-slate-800 shadow-inner flex items-center justify-center">
+              <img id="card-photo" src="https://via.placeholder.com/150" class="w-full h-full object-cover">
             </div>
-        </section>
+          </div>
 
-    </main>
+          <div class="text-center my-3 border-b border-slate-950/20 pb-2">
+            <h3 id="card-name" class="text-xl font-black uppercase tracking-wide truncate">NOME DO ATLETA</h3>
+            <p id="card-meta" class="text-xs font-semibold opacity-80">-- ANOS | BRASIL</p>
+          </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+          <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs font-bold px-2">
+            <div class="flex justify-between"><span>PAS (Passe)</span><span id="stat-pas">00</span></div>
+            <div class="flex justify-between"><span>DEF (Defesa)</span><span id="stat-def">00</span></div>
+            <div class="flex justify-between"><span>CHU (Chute)</span><span id="stat-chu">00</span></div>
+            <div class="flex justify-between"><span>FIS (Físico)</span><span id="stat-fis">00</span></div>
+            <div class="flex justify-between"><span>VEL (Velocidade)</span><span id="stat-vel">00</span></div>
+            <div class="flex justify-between"><span>VIS (Visão)</span><span id="stat-vis">00</span></div>
+          </div>
+
+          <div class="mt-4 pt-2 border-t border-slate-950/20 text-center">
+            <span class="text-[10px] font-black uppercase tracking-widest text-slate-900/60">FUTBOL EVOLUTION CERTIFIED</span>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button onclick="downloadFutuCard()" class="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg text-sm flex items-center justify-center gap-2">
+            <i class="fa-solid fa-download"></i> Baixar Imagem do FutuCard
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-test" class="tab-content">
+      <div id="quiz-block-screen" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center max-w-xl mx-auto space-y-4">
+        <i class="fa-solid fa-clock-rotate-left text-amber-400 text-5xl"></i>
+        <h2 class="text-2xl font-bold text-white">Avaliação em Período de Treino</h2>
+        <p class="text-slate-300 text-sm">Você já concluiu sua avaliação. Para garantir resultados reais, sua reavaliação ficará disponível em:</p>
+        <div id="quiz-countdown-box" class="bg-slate-950 border border-amber-500/30 py-3 px-6 rounded-xl text-amber-400 font-extrabold text-xl inline-block">
+          -- Dias
+        </div>
+      </div>
+
+      <div id="quiz-active-screen" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-3xl mx-auto">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-6 border-b border-slate-800 pb-4">
+          <div>
+            <span id="quiz-category" class="text-xs uppercase tracking-wider font-bold text-emerald-400">Categoria</span>
+            <h2 class="text-lg sm:text-xl font-bold text-white">Avaliação Tática & Física de 50 Perguntas</h2>
+          </div>
+          <span id="quiz-progress" class="text-xs bg-emerald-950 text-emerald-400 px-3 py-1 rounded-full font-semibold w-fit">Pergunta 1 de 50</span>
+        </div>
+
+        <div id="quiz-container">
+          <h3 id="quiz-question" class="text-base sm:text-lg font-semibold text-slate-200 mb-4">Carregando pergunta...</h3>
+          <div id="quiz-options" class="space-y-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-agenda" class="tab-content space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="md:col-span-2 bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-calendar-check text-emerald-400 mr-2"></i> Frequência de Treinos</h2>
+            <div class="flex items-center gap-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-bold px-3 py-1 rounded-full">
+              <i class="fa-solid fa-fire text-amber-400"></i>
+              <span id="streak-count">0</span> Dias Seguidos
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center text-sm font-semibold">
+            <button onclick="changeMonth(-1)" class="text-slate-400 hover:text-white"
