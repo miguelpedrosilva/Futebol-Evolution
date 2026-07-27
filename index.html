@@ -3,466 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futebol Evolution - Plataforma Scout</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Futebol Evolution - Plataforma Profissional v2.0</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <link rel="stylesheet" href="style-v2.css">
 </head>
 <body>
 
-    <div id="notification-banner" class="notification-banner hidden"></div>
-
     <header class="main-header">
         <div class="header-container">
-            <div class="logo-box">
+            <a href="#" class="brand-logo" onclick="switchView('hero-view')">
                 <i class="fa-solid fa-futbol logo-icon"></i>
-                <span>FUTEBOL <strong class="accent-text">EVOLUTION</strong></span>
-            </div>
-
-            <div id="user-info-badge" class="user-badge hidden">
-                <img id="header-user-photo" src="" alt="Foto Perfil">
-                <div class="user-badge-text">
-                    <strong id="header-user-name">Nome</strong>
-                    <span id="header-user-role" class="badge-role">Categoria</span>
-                </div>
-            </div>
-
-            <div class="header-actions">
-                <button id="btn-login-modal" class="btn btn-outline btn-small"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>
-                <button id="btn-admin-modal" class="btn btn-secondary btn-small"><i class="fa-solid fa-user-shield"></i> Painel Admin</button>
-                <button id="btn-logout" class="btn btn-danger btn-small hidden"><i class="fa-solid fa-power-off"></i> Sair</button>
-            </div>
+                FUTEBOL <span class="highlight">EVOLUTION</span>
+            </a>
+            
+            <nav class="header-nav">
+                <button class="btn btn-secondary" onclick="switchView('login-view')" style="width: auto; padding: 0.5rem 1rem;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Entrar
+                </button>
+                <button class="btn btn-admin" onclick="switchView('admin-view')" style="width: auto; padding: 0.5rem 1rem;">
+                    <i class="fa-solid fa-user-shield"></i> Painel Admin
+                </button>
+            </nav>
         </div>
     </header>
 
-    <main class="container">
+    <main class="main-content">
 
-        <section id="welcome-section" class="welcome-box">
-            <h1>Evolua Seu Futebol ao <span class="accent-text">Nível Profissional</span></h1>
-            <p>Realize avaliações táticas, acompanhe seus atributos em tempo real e obtenha seu Evolution Card Oficial do Futebol Evolution.</p>
-            <div class="welcome-buttons">
-                <button id="btn-start-register" class="btn btn-primary btn-large"><i class="fa-solid fa-user-plus"></i> Criar Conta Atleta</button>
-                <button id="btn-start-login" class="btn btn-outline btn-large"><i class="fa-solid fa-key"></i> Já Sou Cadastrado</button>
-            </div>
-        </section>
-
-        <section id="athlete-portal" class="portal-grid hidden">
-            
-            <div class="card-column">
-                <div class="evolution-card" id="evolution-card-element">
-                    <span id="badge-destaque-semana" class="badge-gold-star hidden"><i class="fa-solid fa-star"></i> CRAQUE DA SEMANA</span>
-                    
-                    <div class="card-header-stats">
-                        <div class="overall-box">
-                            <span id="card-overall-value">70</span>
-                            <small>OVR</small>
-                        </div>
-                        <div class="position-box">
-                            <span id="card-primary-pos">MC</span>
-                            <span id="card-secondary-pos" class="sec-pos hidden">/ ME</span>
-                        </div>
-                    </div>
-
-                    <div class="card-photo-box">
-                        <img id="card-player-photo" src="https://via.placeholder.com/150" alt="Atleta">
-                    </div>
-
-                    <div class="card-info">
-                        <h2 id="card-player-name">NOME DO ATLETA</h2>
-                        <div class="card-details">
-                            <span id="card-player-age">00 anos</span> • 
-                            <span id="card-player-height">0 cm</span> • 
-                            <span id="card-player-weight">0 kg</span>
-                        </div>
-                    </div>
-
-                    <div class="card-attributes-grid">
-                        <div class="stat-item"><span>PAS:</span> <strong id="stat-pas">70</strong></div>
-                        <div class="stat-item"><span>RIT:</span> <strong id="stat-rit">70</strong></div>
-                        <div class="stat-item"><span>FIN:</span> <strong id="stat-fin">70</strong></div>
-                        <div class="stat-item"><span>DRI:</span> <strong id="stat-dri">70</strong></div>
-                        <div class="stat-item"><span>DEF:</span> <strong id="stat-def">70</strong></div>
-                        <div class="stat-item"><span>FIS:</span> <strong id="stat-fis">70</strong></div>
-                    </div>
-                </div>
-
-                <button id="btn-download-card" class="btn btn-primary btn-full margin-top-15">
-                    <i class="fa-solid fa-download"></i> Baixar Evolution Card (PNG HD)
+        <section id="hero-view" class="hero-box">
+            <h1 class="hero-title">Evolua Seu Futebol ao <span>Nível Profissional</span></h1>
+            <p class="hero-subtitle">
+                Realize avaliações táticas, acompanhe seus atributos em tempo real e obtenha seu Evolution Card Oficial do Futebol Evolution.
+            </p>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="switchView('login-view')">
+                    <i class="fa-solid fa-user-plus"></i> Criar Conta Atleta
                 </button>
-                <canvas id="evolution-card-canvas" width="600" height="900" class="hidden-canvas"></canvas>
-            </div>
-
-            <div class="dashboard-column">
-                
-                <div class="card margin-bottom-20">
-                    <h3><i class="fa-solid fa-chart-pie accent-text"></i> Gráfico de Atributos Táticos</h3>
-                    <div class="radar-chart-box">
-                        <canvas id="radarChartCanvas"></canvas>
-                    </div>
-                </div>
-
-                <div class="card margin-bottom-20">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <h3><i class="fa-solid fa-clipboard-question accent-text"></i> Avaliação Tática de 51 Perguntas</h3>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Status: <span id="quiz-status-text" class="status-badge">Pendente</span></p>
-                        </div>
-                        <button id="btn-open-quiz" class="btn btn-accent"><i class="fa-solid fa-play"></i> Iniciar Teste</button>
-                    </div>
-                </div>
-
-                <div class="card margin-bottom-20">
-                    <h3><i class="fa-solid fa-bullhorn accent-text"></i> Mural Geral do Clube</h3>
-                    <p id="global-announcement-text" class="margin-top-10" style="color: var(--text-muted);"></p>
-
-                    <div id="private-announcement-box" class="margin-top-15 hidden" style="border-top: 1px dashed var(--border-color); padding-top: 10px;">
-                        <h4 style="color: var(--accent-gold);"><i class="fa-solid fa-envelope"></i> Mensagem Privada do Treinador Miguel Prime:</h4>
-                        <p id="private-announcement-text"></p>
-                    </div>
-                </div>
-
-                <div class="card margin-bottom-20">
-                    <h3><i class="fa-solid fa-file-pdf accent-text"></i> Relatório Completo de Scout (PDF)</h3>
-                    <p id="scout-pdf-desc" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Aguarde a liberação do seu relatório de avaliação pelo Treinador Miguel Prime.</p>
-                    <button id="btn-download-scout-pdf" class="btn btn-secondary btn-full margin-top-15" disabled>
-                        <i class="fa-solid fa-lock"></i> PDF Bloqueado
-                    </button>
-                </div>
-
-                <div id="reset-button-container" class="card hidden">
-                    <h4 style="color: var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> Zona de Perigo</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-muted);">O treinador liberou a opção para reiniciar seus dados e refazer seu cadastro do zero se necessário.</p>
-                    <button id="btn-user-self-reset" class="btn btn-danger btn-full margin-top-10"><i class="fa-solid fa-trash"></i> Excluir Conta e Reiniciar</button>
-                </div>
+                <button class="btn btn-secondary" onclick="switchView('login-view')">
+                    <i class="fa-solid fa-key"></i> Já Sou Cadastrado
+                </button>
             </div>
         </section>
 
-        <section id="quiz-execution-section" class="card hidden">
-            <div id="quiz-step-mode-selection">
-                <h2>Selecione sua Modalidade Principal</h2>
-                <p style="color: var(--text-muted);">As perguntas serão adaptadas com base na sua escolha.</p>
-                <div class="mode-cards-grid">
-                    <div class="mode-card" data-mode="campo">
-                        <i class="fa-solid fa-vector-square"></i>
-                        <h3>Futebol de Campo</h3>
-                        <p>Visão tática e tomada de decisão em campo grande (11 vs 11).</p>
-                    </div>
-                    <div class="mode-card" data-mode="quadra">
-                        <i class="fa-solid fa-shield-halved"></i>
-                        <h3>Futsal / Quadra</h3>
-                        <p>Ações rápidas, rotação em espaço reduzido (5 vs 5).</p>
-                    </div>
-                    <div class="mode-card" data-mode="ambos">
-                        <i class="fa-solid fa-layer-group"></i>
-                        <h3>Ambos (Campo + Quadra)</h3>
-                        <p>Avaliação tática completa integrada de 50 perguntas mistas.</p>
-                    </div>
-                </div>
-                <button id="btn-confirm-quiz-mode" class="btn btn-primary btn-full margin-top-15" disabled>Confirmar e Iniciar Pergunta 1</button>
-            </div>
+        <section id="login-view" class="auth-container" style="display: none;">
+            <div class="logo-fe-box">FE</div>
+            
+            <h2 class="auth-title">Futebol <span>Evolution</span></h2>
+            <p class="auth-subtitle">Cadastre seu perfil de atleta profissional v2.0</p>
 
-            <div id="quiz-step-questions" class="hidden">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span id="quiz-question-counter" class="badge-role">Pergunta 1 de 50</span>
-                    <span id="quiz-category-tag" class="status-badge">CAMPO</span>
-                </div>
-                <div class="progress-bar">
-                    <div id="quiz-progress-fill" class="progress-fill"></div>
-                </div>
-
-                <h3 id="quiz-question-text" class="margin-top-15" style="min-height: 60px;">Carregando pergunta...</h3>
-
-                <div id="quiz-options-container" class="options-grid margin-top-15">
-                    </div>
-
-                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                    <button id="btn-quiz-prev" class="btn btn-outline" disabled><i class="fa-solid fa-arrow-left"></i> Anterior</button>
-                    <button id="btn-quiz-next" class="btn btn-primary" disabled>Próxima <i class="fa-solid fa-arrow-right"></i></button>
-                </div>
-            </div>
-
-            <div id="quiz-step-question-51" class="hidden">
-                <h2>Pergunta Final #51 - Envio de Vídeo e Preferência</h2>
-                <p style="color: var(--text-muted);" class="margin-top-10">Envie um vídeo curto com seus melhores lances e indique a posição onde você se sente mais confortável jogando.</p>
-                
-                <div class="form-group margin-top-15">
-                    <label>Envie seu Vídeo de Melhores Lances (Opcional):</label>
-                    <input type="file" id="quiz-video-upload" accept="video/*">
-                </div>
-
-                <div class="form-group margin-top-15">
-                    <label>Em qual posição você prefere atuar de acordo com suas características?</label>
-                    <input type="text" id="quiz-position-preference" placeholder="Ex: Meia-Atacante ou Ala Esquerdo">
-                </div>
-
-                <button id="btn-submit-full-quiz" class="btn btn-accent btn-full margin-top-15"><i class="fa-solid fa-check-double"></i> Concluir e Enviar Avaliação</button>
-            </div>
-        </section>
-
-        <section id="admin-panel" class="card hidden">
-            <div class="admin-header">
-                <h2><i class="fa-solid fa-user-gear accent-text"></i> Painel Administrativo - Treinador Miguel Prime</h2>
-            </div>
-
-            <div class="admin-tabs margin-top-15">
-                <button class="admin-tab-btn active" data-tab="admin-tab-athletes">Gerenciar Atletas</button>
-                <button class="admin-tab-btn" data-tab="admin-tab-quiz">Vídeos Q51 & Avaliações</button>
-                <button class="admin-tab-btn" data-tab="admin-tab-pdf">Liberação de PDF</button>
-                <button class="admin-tab-btn" data-tab="admin-tab-settings">Avisos & Destaques</button>
-            </div>
-
-            <div id="admin-tab-athletes" class="tab-pane active margin-top-15">
-                <div class="admin-filter-bar">
-                    <input type="text" id="admin-search-athlete" placeholder="Buscar por nome do atleta...">
-                    <select id="admin-filter-category">
-                        <option value="all">Todas as Categorias</option>
-                        <option value="sub14">Sub-14</option>
-                        <option value="sub15">15+</option>
+            <form id="auth-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="access-profile">Perfil de Acesso</label>
+                    <select id="access-profile" class="form-select" required>
+                        <option value="admin">Administrador (Miguel Prime)</option>
+                        <option value="atleta" selected>Atleta Profissional</option>
+                        <option value="scout">Olheiro / Recrutador</option>
                     </select>
                 </div>
 
-                <div class="table-responsive margin-top-15">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Foto</th>
-                                <th>Nome / Email</th>
-                                <th>Nasc (Idade)</th>
-                                <th>Alt / Peso</th>
-                                <th>Posição</th>
-                                <th>Overall</th>
-                                <th>Quiz</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-athletes-table-body">
-                            </tbody>
-                    </table>
+                <div class="form-group">
+                    <label class="form-label" for="user-name">Nome Completo</label>
+                    <input type="text" id="user-name" class="form-control" placeholder="Ex: Lucas Silva" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="user-email">E-mail</label>
+                    <input type="email" id="user-email" class="form-control" placeholder="seu@email.com" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">
+                    Acessar Plataforma
+                </button>
+            </form>
+        </section>
+
+        <section id="dashboard-view" class="dashboard-grid" style="display: none;">
+            
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <h3 class="dashboard-card-title"><i class="fa-solid fa-id-card"></i> Evolution Card</h3>
+                    <span class="badge badge-green">Oficial</span>
+                </div>
+                
+                <div class="fut-card">
+                    <div class="fut-card-overall" id="card-overall">88</div>
+                    <div class="fut-card-position" id="card-position">MEI - Meia Atacante</div>
+                    <h3 style="margin: 0.5rem 0; color: #fff;" id="card-athlete-name">Lucas Silva</h3>
+                    
+                    <div class="attributes-grid">
+                        <div class="attr-item"><span class="attr-label">PAS</span><span class="attr-value" id="val-pas">85</span></div>
+                        <div class="attr-item"><span class="attr-label">RIT</span><span class="attr-value" id="val-rit">90</span></div>
+                        <div class="attr-item"><span class="attr-label">FIN</span><span class="attr-value" id="val-fin">82</span></div>
+                        <div class="attr-item"><span class="attr-label">DRI</span><span class="attr-value" id="val-dri">89</span></div>
+                        <div class="attr-item"><span class="attr-label">DEF</span><span class="attr-value" id="val-def">65</span></div>
+                        <div class="attr-item"><span class="attr-label">FIS</span><span class="attr-value" id="val-fis">78</span></div>
+                    </div>
                 </div>
             </div>
 
-            <div id="admin-tab-quiz" class="tab-pane margin-top-15">
-                <h3>Gerenciamento de Vídeos e Testes</h3>
-                <div id="admin-quiz-list-container"></div>
-            </div>
-
-            <div id="admin-tab-pdf" class="tab-pane margin-top-15">
-                <h3>Liberação do Relatório PDF de Scout</h3>
-                <div id="admin-pdf-list-container"></div>
-            </div>
-
-            <div id="admin-tab-settings" class="tab-pane margin-top-15">
-                <div class="grid-2">
-                    <div class="card">
-                        <h4>Enviar Mensagem Privada</h4>
-                        <form id="form-send-private-msg" class="margin-top-10">
-                            <div class="form-group">
-                                <label>Selecione o Atleta:</label>
-                                <select id="select-private-athlete" required></select>
-                            </div>
-                            <div class="form-group margin-top-10">
-                                <label>Mensagem:</label>
-                                <textarea id="input-private-msg-text" rows="3" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-full margin-top-10">Enviar Mensagem</button>
-                        </form>
-                    </div>
-
-                    <div class="card">
-                        <h4>Atualizar Mural Geral do Clube</h4>
-                        <form id="form-send-global-msg" class="margin-top-10">
-                            <div class="form-group">
-                                <label>Aviso Global:</label>
-                                <textarea id="input-global-msg-text" rows="3" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-accent btn-full margin-top-10">Atualizar Mural</button>
-                        </form>
-                    </div>
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <h3 class="dashboard-card-title"><i class="fa-solid fa-chart-pie"></i> Análise de Desempenho</h3>
+                    <span style="color: var(--text-muted); font-size: 0.8rem;">Teia Tática</span>
                 </div>
-
-                <div class="grid-2 margin-top-15">
-                    <div class="card">
-                        <h4>Definir Craque da Semana</h4>
-                        <div class="form-group margin-top-10">
-                            <select id="select-craque-semana"></select>
-                        </div>
-                        <button id="btn-save-craque-semana" class="btn btn-primary btn-full margin-top-10">Salvar Destaque</button>
-                    </div>
-
-                    <div class="card">
-                        <h4>Permissão de Auto-Reset do Aluno</h4>
-                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;" class="margin-top-10">
-                            <input type="checkbox" id="switch-enable-reset-btn">
-                            <span>Exibir botão "Excluir Conta" no portal do atleta</span>
-                        </label>
-                    </div>
+                
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
                 </div>
+            </div>
+        </section>
+
+        <section id="admin-view" class="hero-box" style="display: none; max-width: 1000px; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 class="auth-title" style="margin: 0;">Painel de <span>Administração</span></h2>
+                <span class="badge badge-purple"><i class="fa-solid fa-user-shield"></i> Modo Geral</span>
+            </div>
+            <p class="auth-subtitle">Gestão de atletas cadastrados e atualização dos atributos do gráfico.</p>
+
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Atleta</th>
+                            <th>E-mail</th>
+                            <th>Perfil</th>
+                            <th>Overall</th>
+                            <th>Status</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Miguel Prime</strong></td>
+                            <td>miguel@futebolevolution.com</td>
+                            <td>Administrador</td>
+                            <td>99</td>
+                            <td><span class="badge badge-purple">Ativo</span></td>
+                            <td><button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; width: auto;">Editar</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lucas Silva</strong></td>
+                            <td>lucas@atleta.com</td>
+                            <td>Atleta Profissional</td>
+                            <td>88</td>
+                            <td><span class="badge badge-green">Avaliado</span></td>
+                            <td><button class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; width: auto;" onclick="switchView('dashboard-view')">Ver Card</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
 
     </main>
 
-    <div id="modal-athlete-auth" class="modal-overlay hidden">
-        <div class="modal-card">
-            <button class="modal-close-btn">&times;</button>
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button id="tab-auth-login" class="btn btn-outline btn-full active">Entrar</button>
-                <button id="tab-auth-register" class="btn btn-outline btn-full">Cadastrar</button>
-            </div>
+    <script>
+        let radarChartInstance = null;
 
-            <form id="form-athlete-login">
-                <div class="form-group">
-                    <label>E-mail ou Nome:</label>
-                    <input type="text" id="login-email" required>
-                </div>
-                <div class="form-group margin-top-10">
-                    <label>Senha:</label>
-                    <input type="password" id="login-password" required>
-                </div>
-                <button type="submit" class="btn btn-primary btn-full margin-top-15">Acessar Portal</button>
-            </form>
+        // Alternar visualizações/telas sem recarregar a página
+        function switchView(viewId) {
+            const views = ['hero-view', 'login-view', 'dashboard-view', 'admin-view'];
+            views.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = (id === viewId) ? 'block' : 'none';
+            });
 
-            <form id="form-athlete-register" class="hidden">
-                <div class="form-group">
-                    <label>Nome Completo:</label>
-                    <input type="text" id="reg-name" required>
-                </div>
-                <div class="form-group margin-top-10">
-                    <label>E-mail:</label>
-                    <input type="email" id="reg-email" required>
-                </div>
-                <div class="form-group margin-top-10">
-                    <label>Senha:</label>
-                    <input type="password" id="reg-password" required>
-                </div>
-                <div class="form-group margin-top-10">
-                    <label>Data de Nascimento (DD/MM/AAAA):</label>
-                    <input type="text" id="reg-dob" placeholder="DD/MM/AAAA" maxlength="10" required>
-                </div>
-                <div class="grid-2 margin-top-10">
-                    <div class="form-group">
-                        <label>Altura (cm):</label>
-                        <input type="number" id="reg-height" placeholder="175" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Peso (kg):</label>
-                        <input type="number" id="reg-weight" placeholder="68" required>
-                    </div>
-                </div>
-                <div class="form-group margin-top-10">
-                    <label>Posição Principal:</label>
-                    <select id="reg-position" required>
-                        <option value="Goleiro">Goleiro</option>
-                        <option value="Zagueiro">Zagueiro</option>
-                        <option value="Lateral">Lateral</option>
-                        <option value="Volante">Volante</option>
-                        <option value="Meia">Meia</option>
-                        <option value="Ponta">Ponta</option>
-                        <option value="Atacante">Atacante</option>
-                        <option value="Fixo (Futsal)">Fixo (Futsal)</option>
-                        <option value="Ala (Futsal)">Ala (Futsal)</option>
-                        <option value="Pivô (Futsal)">Pivô (Futsal)</option>
-                    </select>
-                </div>
-                <div class="form-group margin-top-10">
-                    <label>Foto de Perfil:</label>
-                    <input type="file" id="reg-photo" accept="image/*" required>
-                </div>
-                <button type="submit" class="btn btn-accent btn-full margin-top-15">Cadastrar Atleta</button>
-            </form>
-        </div>
-    </div>
+            // Se for para o Dashboard, inicia o Gráfico de Radar
+            if (viewId === 'dashboard-view') {
+                setTimeout(initRadarChart, 100);
+            }
+        }
 
-    <div id="modal-admin-login" class="modal-overlay hidden">
-        <div class="modal-card">
-            <button class="modal-close-btn">&times;</button>
-            <h3>Acesso Restrito - Miguel Prime</h3>
-            <form id="form-admin-login" class="margin-top-15">
-                <div class="form-group">
-                    <label>Senha do Treinador:</label>
-                    <input type="password" id="admin-input-password" placeholder="Digite 3020" required>
-                </div>
-                <button type="submit" class="btn btn-secondary btn-full margin-top-15">Entrar no Painel</button>
-            </form>
-        </div>
-    </div>
+        // Login Simulado
+        function handleLogin(event) {
+            event.preventDefault();
+            const profile = document.getElementById('access-profile').value;
+            const name = document.getElementById('user-name').value || 'Lucas Silva';
+            
+            document.getElementById('card-athlete-name').innerText = name;
 
-    <div id="modal-admin-inspect" class="modal-overlay hidden">
-        <div class="modal-card">
-            <button class="modal-close-btn">&times;</button>
-            <div id="inspect-content-box"></div>
-        </div>
-    </div>
+            if (profile === 'admin') {
+                switchView('admin-view');
+            } else {
+                switchView('dashboard-view');
+            }
+        }
 
-    <div id="modal-admin-edit-athlete" class="modal-overlay hidden">
-        <div class="modal-card">
-            <button class="modal-close-btn">&times;</button>
-            <h3>Editar Dados do Atleta</h3>
-            <form id="form-admin-edit-athlete" class="margin-top-15">
-                <input type="hidden" id="edit-athlete-id">
-                <div class="form-group">
-                    <label>Nome:</label>
-                    <input type="text" id="edit-athlete-name" required>
-                </div>
-                <div class="form-group margin-top-10">
-                    <label>Data Nasc:</label>
-                    <input type="text" id="edit-athlete-dob" required>
-                </div>
-                <div class="grid-2 margin-top-10">
-                    <div class="form-group">
-                        <label>Altura (cm):</label>
-                        <input type="number" id="edit-athlete-height" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Peso (kg):</label>
-                        <input type="number" id="edit-athlete-weight" required>
-                    </div>
-                </div>
-                <div class="grid-2 margin-top-10">
-                    <div class="form-group">
-                        <label>Posição 1:</label>
-                        <input type="text" id="edit-athlete-pos" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Posição 2:</label>
-                        <input type="text" id="edit-athlete-secondary-pos">
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary btn-full margin-top-15">Salvar Alterações</button>
-            </form>
-        </div>
-    </div>
+        // Inicialização do Gráfico de Radar em Chart.js (Fidelidade ao Padrão Original)
+        function initRadarChart() {
+            const ctx = document.getElementById('radarChart');
+            if (!ctx) return;
 
-    <div id="modal-video-viewer" class="modal-overlay hidden">
-        <div class="modal-card">
-            <button class="modal-close-btn">&times;</button>
-            <h3>Vídeo do Atleta (Pergunta 51)</h3>
-            <video id="player-video-q51" controls style="width: 100%; border-radius: 8px; margin-top: 10px;"></video>
-        </div>
-    </div>
+            if (radarChartInstance) {
+                radarChartInstance.destroy();
+            }
 
-    <div id="scout-pdf-template" class="pdf-template hidden">
-        <div class="pdf-header">
-            <h1>FUTEBOL EVOLUTION - SCOUT REPORT</h1>
-            <h3>Relatório de Avaliação Tática e Performance</h3>
-        </div>
-        <div class="pdf-body">
-            <h2 id="pdf-player-name">Nome do Jogador</h2>
-            <p><strong>Idade:</strong> <span id="pdf-player-age"></span> | <strong>Categoria:</strong> <span id="pdf-player-category"></span></p>
-            <p><strong>Posição:</strong> <span id="pdf-player-pos"></span> | <strong>Overall Geral:</strong> <span id="pdf-player-overall"></span></p>
-            <h3>Resumo dos Atributos Táticos</h3>
-            <ul>
-                <li>Passe (PAS): <span id="pdf-pas"></span></li>
-                <li>Ritmo (RIT): <span id="pdf-rit"></span></li>
-                <li>Finalização (FIN): <span id="pdf-fin"></span></li>
-                <li>Drible (DRI): <span id="pdf-dri"></span></li>
-                <li>Defesa (DEF): <span id="pdf-def"></span></li>
-                <li>Físico (FIS): <span id="pdf-fis"></span></li>
-            </ul>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['PAS (Passe)', 'RIT (Ritmo)', 'FIN (Finalização)', 'DRI (Drible)', 'DEF (Defesa)', 'FIS (Físico)'],
+                    datasets: [{
+                        label: 'Atributos Táticos',
+                        data: [85, 90, 82, 89, 65, 78],
+                        backgroundColor: 'rgba(0, 230, 118, 0.25)',
+                        borderColor: '#00e676',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#f59e0b',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#f59e0b'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#1e293b' },
+                            grid: { color: '#1e293b' },
+                            pointLabels: {
+                                color: '#94a3b8',
+                                font: { size: 11, weight: 'bold', family: 'Inter' }
+                            },
+                            ticks: {
+                                color: '#64748b',
+                                backdropColor: 'transparent',
+                                stepSize: 20
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>
