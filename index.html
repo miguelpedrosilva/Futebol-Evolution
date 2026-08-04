@@ -1,405 +1,479 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Futebol Evolution - Plataforma Completa</title>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futebol Evolution - Performance & Análise Tática</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#020617] text-[#f8fafc] font-sans antialiased min-h-screen">
+<body class="min-h-screen flex flex-col bg-[#0b1321] text-slate-100">
 
-  <div id="auth-screen" class="fixed inset-0 z-50 bg-slate-950/95 flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-2xl max-w-md w-full shadow-2xl space-y-5 my-8">
-      <div class="text-center space-y-2">
-        <h1 class="text-2xl font-extrabold text-emerald-400 uppercase tracking-wider">Futebol Evolution</h1>
-        <p class="text-xs text-slate-400">Desenvolva seu futebol com análise tática e treinos direcionados</p>
-      </div>
-
-      <form onsubmit="handleAuth(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Perfil de Acesso</label>
-          <select id="user-role" onchange="toggleAdminField()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
-            <option value="atleta">Atleta / Jogador</option>
-            <option value="admin">Administrador (Miguel Prime)</option>
-          </select>
-        </div>
-
-        <div class="relative">
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Nome Completo</label>
-          <input type="text" id="user-name" required placeholder="Digite seu nome" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
-          <button type="button" onclick="startVoiceTranscription('user-name')" class="absolute right-3 bottom-2.5 text-slate-400 hover:text-emerald-400 text-sm">
-            <i class="fa-solid fa-microphone"></i>
-          </button>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">E-mail</label>
-          <input type="email" id="user-email" required placeholder="seu@email.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
-        </div>
-
-        <div id="athlete-fields" class="space-y-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Data de Nascimento (Cálculo Automático de Idade)</label>
-            <input type="date" id="user-birthdate" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Altura (cm)</label>
-              <input type="text" id="user-height" placeholder="Ex: 175 ou SN" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
+    <div id="screen-login" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#080d1a] bg-opacity-95">
+        <div class="glass-card w-full max-w-md p-8 rounded-2xl shadow-2xl text-center">
+            
+            <div class="w-16 h-16 bg-emerald-500 rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/30">
+                <span class="text-2xl font-black text-slate-950 tracking-wider">FE</span>
             </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Peso (kg)</label>
-              <input type="text" id="user-weight" placeholder="Ex: 70 ou SN" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
-            </div>
-          </div>
 
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Tem Bola de Treino?</label>
-              <select id="user-has-ball" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
-                <option value="sim">Sim, tenho bola</option>
-                <option value="nao">Não tenho bola</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Local de Treino</label>
-              <select id="user-location" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
-                <option value="casa">Em Casa / Quadra Bairro</option>
-                <option value="academia">Na Academia</option>
-              </select>
-            </div>
-          </div>
+            <h1 class="text-2xl font-black text-white tracking-wide mb-1">Futebol <span class="text-emerald-400">Evolution</span></h1>
+            <p class="text-xs text-slate-400 mb-6">Cadastra o teu perfil de atleta profissional</p>
 
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Foto de Perfil</label>
-            <input type="file" id="user-photo-input" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-emerald-400 hover:file:bg-slate-700">
-          </div>
+            <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Perfil de Acesso</label>
+                    <select id="login-role" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-lg p-3 focus:outline-none focus:border-emerald-500">
+                        <option value="atleta">Atleta Profissional / Base</option>
+                        <option value="supervisor">Técnico Supervisor</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nome Completo</label>
+                    <input type="text" id="login-name" required value="Arthur Silva" placeholder="Ex: Arthur Silva" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-lg p-3 focus:outline-none focus:border-emerald-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">E-mail</label>
+                    <input type="email" id="login-email" required value="arthur@futebolevolution.com" placeholder="seu@email.com" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-lg p-3 focus:outline-none focus:border-emerald-500">
+                </div>
+
+                <button type="submit" class="btn-emerald w-full py-3 px-4 rounded-lg font-bold text-sm transition duration-200 mt-2">
+                    Acessar Plataforma
+                </button>
+            </form>
         </div>
-
-        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-xl transition text-sm">Entrar na Plataforma</button>
-      </form>
-    </div>
-  </div>
-
-  <nav class="bg-slate-950 border-b border-slate-800 sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <h2 class="font-black text-emerald-400 text-lg uppercase tracking-wider">FE Evolution</h2>
-      </div>
-
-      <div class="hidden md:flex items-center space-x-1">
-        <button id="nav-futcard" onclick="switchTab('futcard')" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition">FutuCard</button>
-        <button id="nav-quiz" onclick="switchTab('quiz')" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition">Avaliação Tática</button>
-        <button id="nav-training" onclick="switchTab('training')" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition">Central de Treinos</button>
-        <button id="nav-tactical" onclick="switchTab('tactical')" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition">Decisão Tática</button>
-        <button id="nav-admin" onclick="switchTab('admin')" class="nav-btn hidden px-3 py-2 rounded-lg text-xs font-semibold text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition">Painel Admin</button>
-      </div>
-
-      <div class="flex items-center space-x-3">
-        <img id="nav-user-photo" src="https://via.placeholder.com/150" alt="Atleta" class="w-8 h-8 rounded-full border border-emerald-500 object-cover hidden">
-        <span id="nav-user-name" class="text-xs font-bold text-slate-200">Atleta</span>
-        <button onclick="logout()" class="text-slate-400 hover:text-red-400 text-xs transition"><i class="fa-solid fa-right-from-bracket"></i></button>
-      </div>
     </div>
 
-    <div class="md:hidden flex overflow-x-auto no-scrollbar space-x-2 px-4 py-2 border-t border-slate-900">
-      <button onclick="switchTab('futcard')" class="nav-btn text-xs whitespace-nowrap px-3 py-1.5 rounded-lg text-slate-300 bg-slate-900">FutuCard</button>
-      <button onclick="switchTab('quiz')" class="nav-btn text-xs whitespace-nowrap px-3 py-1.5 rounded-lg text-slate-300 bg-slate-900">Avaliação</button>
-      <button onclick="switchTab('training')" class="nav-btn text-xs whitespace-nowrap px-3 py-1.5 rounded-lg text-slate-300 bg-slate-900">Treinos</button>
-      <button onclick="switchTab('tactical')" class="nav-btn text-xs whitespace-nowrap px-3 py-1.5 rounded-lg text-slate-300 bg-slate-900">Decisão</button>
-      <button id="nav-admin-mobile" onclick="switchTab('admin')" class="nav-btn hidden text-xs whitespace-nowrap px-3 py-1.5 rounded-lg text-amber-400 bg-amber-500/10">Admin</button>
+
+    <div id="screen-app" class="hidden min-h-screen flex flex-col md:flex-row bg-[#0b1321]">
+
+        <aside class="w-full md:w-64 bg-slate-900/90 border-r border-slate-800 flex flex-col justify-between shrink-0">
+            <div>
+                <div class="p-5 border-b border-slate-800 flex items-center gap-3">
+                    <div class="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center font-black text-slate-950 text-base shadow-md shadow-emerald-500/20">
+                        FE
+                    </div>
+                    <div>
+                        <h2 class="font-extrabold text-white text-base leading-tight">Futebol <span class="text-emerald-400">Evolution</span></h2>
+                    </div>
+                </div>
+
+                <nav class="flex md:flex-col overflow-x-auto no-scrollbar p-2 gap-1 border-b md:border-b-0 border-slate-800">
+                    <button onclick="switchTab('inicio')" id="nav-inicio" class="tab-btn active flex items-center gap-3 w-full px-4 py-3 text-xs font-bold rounded-xl transition text-emerald-400 bg-slate-800/80 whitespace-nowrap">
+                        <i class="fa-solid fa-house w-4"></i> INÍCIO
+                    </button>
+                    <button onclick="switchTab('avaliacao')" id="nav-avaliacao" class="tab-btn flex items-center gap-3 w-full px-4 py-3 text-xs font-bold rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800/50 whitespace-nowrap">
+                        <i class="fa-solid fa-clipboard-check w-4"></i> AVALIAÇÃO TÉCNICA
+                    </button>
+                    <button onclick="switchTab('treinos')" id="nav-treinos" class="tab-btn flex items-center gap-3 w-full px-4 py-3 text-xs font-bold rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800/50 whitespace-nowrap">
+                        <i class="fa-solid fa-dumbbell w-4"></i> CENTRAL DE TREINOS
+                    </button>
+                    <button onclick="switchTab('futucard')" id="nav-futucard" class="tab-btn flex items-center gap-3 w-full px-4 py-3 text-xs font-bold rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800/50 whitespace-nowrap">
+                        <i class="fa-solid fa-id-card w-4"></i> EVOLUTION CARD
+                    </button>
+                    <button onclick="switchTab('agenda')" id="nav-agenda" class="tab-btn flex items-center gap-3 w-full px-4 py-3 text-xs font-bold rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800/50 whitespace-nowrap">
+                        <i class="fa-solid fa-calendar-days w-4"></i> AGENDA E TREINO
+                    </button>
+                    <button onclick="switchTab('videos')" id="nav-videos" class="tab-btn flex items-center gap-3 w-full px-4 py-3 text-xs font-bold rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800/50 whitespace-nowrap">
+                        <i class="fa-solid fa-video w-4"></i> VÍDEOS
+                    </button>
+                    <button onclick="switchTab('config')" id="nav-config" class="tab-btn flex items-center gap-3 w-full px-4 py-3 text-xs font-bold rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800/50 whitespace-nowrap">
+                        <i class="fa-solid fa-gear w-4"></i> CONFIGURAÇÕES
+                    </button>
+                    <button onclick="switchTab('admin')" id="nav-admin" class="tab-btn flex items-center gap-3 w-full px-4 py-3 text-xs font-bold rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800/50 whitespace-nowrap">
+                        <i class="fa-solid fa-shield-halved w-4"></i> TÉCNICO SUPERVISOR
+                    </button>
+                </nav>
+            </div>
+
+            <div class="p-3 border-t border-slate-800 hidden md:block">
+                <button onclick="openSupervisorAuth()" class="flex items-center gap-3 w-full px-4 py-3 text-xs font-bold text-slate-400 hover:text-emerald-400 bg-slate-950/60 hover:bg-slate-800 rounded-xl transition">
+                    <i class="fa-solid fa-shield-halved text-emerald-500"></i>
+                    <div class="text-left">
+                        <p class="text-[10px] text-slate-500 uppercase">TÉCNICO SUPERVISOR</p>
+                        <p class="text-xs text-slate-300">Acesso Restrito (PIN 3020)</p>
+                    </div>
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+            
+            <header class="h-16 border-b border-slate-800/80 bg-slate-900/40 px-6 flex items-center justify-between">
+                <h3 id="current-tab-title" class="font-extrabold text-white text-lg tracking-wide uppercase">Início (Dashboard)</h3>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-3 bg-slate-800/60 px-3 py-1.5 rounded-full border border-slate-700/50">
+                        <div class="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center font-bold text-slate-950 text-xs" id="user-avatar">A</div>
+                        <span class="text-xs font-semibold text-slate-200" id="top-user-name">Arthur Silva (MEI)</span>
+                    </div>
+                    <button onclick="logout()" class="text-xs bg-slate-800 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                        <i class="fa-solid fa-right-from-bracket"></i> Sair
+                    </button>
+                </div>
+            </header>
+
+            <div class="p-4 md:p-6 space-y-6">
+
+                <section id="tab-inicio" class="tab-content space-y-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        
+                        <div class="lg:col-span-5 flex flex-col items-center glass-card p-6 rounded-2xl">
+                            <span class="text-xs font-extrabold text-slate-400 mb-4 tracking-widest uppercase">FUTUCARD Ouro EA FC</span>
+                            
+                            <div class="relative w-64 h-96 rounded-2xl futcard-gold p-4 flex flex-col justify-between border-2 border-yellow-200/50">
+                                <div class="flex justify-between items-start">
+                                    <div class="text-left leading-none">
+                                        <span class="text-4xl font-black block tracking-tighter" id="card-overall">88</span>
+                                        <span class="text-sm font-extrabold tracking-widest block uppercase" id="card-pos">MEI</span>
+                                        <span class="text-xs font-bold text-slate-800 block mt-1">🇧🇷</span>
+                                    </div>
+                                    <div class="w-20 h-20 rounded-full bg-slate-900/10 border border-slate-800/20 flex items-center justify-center overflow-hidden">
+                                        <i class="fa-solid fa-user text-4xl text-slate-800/80"></i>
+                                    </div>
+                                </div>
+
+                                <div class="text-center mt-2">
+                                    <h2 class="text-xl font-black uppercase tracking-wide border-b border-slate-800/20 pb-1" id="card-name">Arthur Silva</h2>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-xs font-black uppercase px-2">
+                                    <div class="flex justify-between"><span>PAS</span> <span id="stat-pas">91</span></div>
+                                    <div class="flex justify-between"><span>FIS</span> <span id="stat-fis">85</span></div>
+                                    <div class="flex justify-between"><span>DEF</span> <span id="stat-def">78</span></div>
+                                    <div class="flex justify-between"><span>VEL</span> <span id="stat-vel">90</span></div>
+                                    <div class="flex justify-between"><span>CHU</span> <span id="stat-chu">86</span></div>
+                                    <div class="flex justify-between"><span>VIS</span> <span id="stat-vis">92</span></div>
+                                </div>
+                            </div>
+
+                            <button onclick="switchTab('futucard')" class="btn-emerald w-full mt-6 py-3 px-4 rounded-xl text-xs font-extrabold shadow-lg uppercase">
+                                BAIXAR CARD .PNG
+                            </button>
+                        </div>
+
+                        <div class="lg:col-span-7 space-y-6">
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="glass-card p-4 rounded-2xl">
+                                    <h4 class="text-xs font-extrabold text-slate-300 uppercase mb-3 text-center">SEU RADAR TÁTICO</h4>
+                                    <div class="h-48 relative">
+                                        <canvas id="radarChart"></canvas>
+                                    </div>
+                                </div>
+
+                                <div class="glass-card p-4 rounded-2xl">
+                                    <h4 class="text-xs font-extrabold text-slate-300 uppercase mb-3 text-center">EVOLUÇÃO TEMPORAL</h4>
+                                    <div class="h-48 relative">
+                                        <canvas id="evolutionChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="glass-card p-4 rounded-2xl space-y-3">
+                                    <h4 class="text-xs font-extrabold text-slate-300 uppercase flex items-center justify-between">
+                                        <span>DECISÃO TÁTICA</span>
+                                        <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded" id="tactical-step-badge">Scenario Quick Test</span>
+                                    </h4>
+                                    <div class="relative bg-emerald-950/60 border border-emerald-500/30 rounded-xl h-28 flex flex-col items-center justify-center p-3 text-center" id="tactical-scenario-box">
+                                        <i class="fa-solid fa-futbol text-emerald-400 text-xl mb-1"></i>
+                                        <p class="text-xs text-slate-200 font-semibold" id="tactical-scenario-text">"Contra-ataque 3x2: passe em profundidade ou chute direto?"</p>
+                                    </div>
+                                    <button onclick="nextTacticalScenario()" class="w-full bg-slate-800 hover:bg-slate-700 text-xs text-emerald-400 font-bold py-2 rounded-lg border border-slate-700 transition">
+                                        Próximo Desafio Tático
+                                    </button>
+                                </div>
+
+                                <div class="glass-card p-4 rounded-2xl flex flex-col justify-between">
+                                    <h4 class="text-xs font-extrabold text-slate-300 uppercase">COOLDOWN AVALIAÇÃO</h4>
+                                    <div class="my-3">
+                                        <p class="text-xs text-slate-400 mb-1">Próxima Avaliação Tática disponível em:</p>
+                                        <span class="text-2xl font-black text-emerald-400" id="cooldown-days">58 dias</span>
+                                        <div class="w-full bg-slate-800 h-2 rounded-full mt-2 overflow-hidden">
+                                            <div class="bg-emerald-500 h-full w-[85%] rounded-full"></div>
+                                        </div>
+                                    </div>
+                                    <span class="text-[10px] text-slate-500">Trava de 60 dias ativada para garantir tempo de treino antes do reteste.</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-avaliacao" class="tab-content hidden glass-card p-6 rounded-2xl space-y-6">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                        <div>
+                            <h3 class="text-lg font-extrabold text-white">Avaliação Técnica - Foco: Leitura de Jogo & Posição</h3>
+                            <p class="text-xs text-slate-400">Questionário adaptativo por modalidade (Campo/Futsal) e posição (50 Perguntas).</p>
+                        </div>
+                        <button onclick="toggleVoiceInput()" id="btn-voice" class="bg-slate-800 hover:bg-emerald-500/20 text-emerald-400 border border-slate-700 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-microphone"></i> Clique para Responder por Voz (SpeechRecognition API)
+                        </button>
+                    </div>
+
+                    <div id="quiz-container" class="space-y-6">
+                        <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800">
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2" id="quiz-step-label">Pergunta 12 de 50</span>
+                            <h4 class="text-sm font-bold text-white mb-4" id="quiz-question-text">Como você reage ao receber a bola sob pressão no meio-campo?</h4>
+                            
+                            <div class="space-y-2" id="quiz-options-container">
+                                <button onclick="nextQuestion()" class="w-full text-left p-3 rounded-lg bg-slate-800 hover:bg-emerald-500/10 border border-slate-700 hover:border-emerald-500 text-xs font-semibold text-slate-200 transition">A) Toco de primeira para o companheiro livre</button>
+                                <button onclick="nextQuestion()" class="w-full text-left p-3 rounded-lg bg-slate-800 hover:bg-emerald-500/10 border border-slate-700 hover:border-emerald-500 text-xs font-semibold text-slate-200 transition">B) Protejo com o corpo e tento girar</button>
+                                <button onclick="nextQuestion()" class="w-full text-left p-3 rounded-lg bg-slate-800 hover:bg-emerald-500/10 border border-slate-700 hover:border-emerald-500 text-xs font-semibold text-slate-200 transition">C) Chuto para frente sem arriscar</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-treinos" class="tab-content hidden space-y-6">
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+                            <div>
+                                <h3 class="text-lg font-extrabold text-white">Rotina: Academia + Com Bola</h3>
+                                <p class="text-xs text-slate-400" id="training-subtitle">Exercícios adaptados automaticamente de acordo com o perfil e local de treino escolhido.</p>
+                            </div>
+                            <span class="bg-emerald-500/20 text-emerald-400 text-xs font-bold px-3 py-1 rounded-lg border border-emerald-500/30">Ambiente: Academia + Com Bola</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="training-cards-container">
+                            <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-3">
+                                <span class="text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">PASSE & VISÃO</span>
+                                <h4 class="text-sm font-bold text-white">Passe Curto Alternado em Parede / Rebounder</h4>
+                                <p class="text-xs text-slate-400">4 Séries x 20 Repetições | Descanso: 45 seg</p>
+                                <button onclick="startTimer(45)" class="btn-emerald w-full py-2 rounded-lg text-xs font-bold">
+                                    Iniciar Descanso (45s)
+                                </button>
+                            </div>
+
+                            <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-3">
+                                <span class="text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">EXPLOSÃO</span>
+                                <h4 class="text-sm font-bold text-white">Sprints Curtos em 'Z' com Mudança de Direção</h4>
+                                <p class="text-xs text-slate-400">5 Séries x 10 metros | Descanso: 60 seg</p>
+                                <button onclick="startTimer(60)" class="btn-emerald w-full py-2 rounded-lg text-xs font-bold">
+                                    Iniciar Descanso (60s)
+                                </button>
+                            </div>
+
+                            <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-3">
+                                <span class="text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">PREVENÇÃO</span>
+                                <h4 class="text-sm font-bold text-white">Fortalecimento de Isquiotibiais (Excentricidade)</h4>
+                                <p class="text-xs text-slate-400">3 Séries x 12 Repetições | Descanso: 60 seg</p>
+                                <button onclick="startTimer(60)" class="btn-emerald w-full py-2 rounded-lg text-xs font-bold">
+                                    Iniciar Descanso (60s)
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 bg-slate-950 p-6 rounded-xl border border-emerald-500/30 flex flex-col items-center justify-center text-center">
+                            <span class="text-xs text-slate-400 font-extrabold uppercase tracking-widest mb-1">CRONÔMETRO DE DESCANSO</span>
+                            <span class="text-4xl font-black text-emerald-400 my-2" id="timer-display">00:45</span>
+                            <button onclick="resetTimer()" class="btn-emerald px-6 py-2 rounded-xl text-xs font-bold uppercase mt-2">
+                                Já Estou Pronto
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-futucard" class="tab-content hidden glass-card p-6 rounded-2xl space-y-6">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div>
+                            <h3 class="text-lg font-extrabold text-white">Sua Carta Oficial de Atleta</h3>
+                            <p class="text-xs text-slate-400">Gerada via Canvas no próprio navegador em alta definição para compartilhar no Instagram, olheiros e escolinhas.</p>
+                        </div>
+                        <button onclick="downloadCard()" class="btn-emerald px-6 py-3 rounded-xl text-xs font-extrabold shadow-lg uppercase">
+                            BAIXAR EM PNG (HD)
+                        </button>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-6 rounded-xl border border-slate-800">
+                        <h4 class="text-xs font-extrabold text-emerald-400 uppercase tracking-widest mb-4">DETALHAMENTO DE ATRIBUTOS (OVERALL 88)</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs font-bold">
+                            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 flex justify-between">
+                                <span class="text-slate-400">PASSE (PAS):</span>
+                                <span class="text-white">91 / 100</span>
+                            </div>
+                            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 flex justify-between">
+                                <span class="text-slate-400">DEFESA (DEF):</span>
+                                <span class="text-white">78 / 100</span>
+                            </div>
+                            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 flex justify-between">
+                                <span class="text-slate-400">CHUTE (CHU):</span>
+                                <span class="text-white">86 / 100</span>
+                            </div>
+                            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 flex justify-between">
+                                <span class="text-slate-400">FÍSICO (FIS):</span>
+                                <span class="text-white">85 / 100</span>
+                            </div>
+                            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 flex justify-between">
+                                <span class="text-slate-400">VELOCIDADE (VEL):</span>
+                                <span class="text-white">90 / 100</span>
+                            </div>
+                            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 flex justify-between">
+                                <span class="text-slate-400">VISÃO (VIS):</span>
+                                <span class="text-white">92 / 100</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-agenda" class="tab-content hidden glass-card p-6 rounded-2xl space-y-6">
+                    <div class="flex items-center justify-between bg-slate-900/80 p-5 rounded-xl border border-slate-800">
+                        <div>
+                            <span class="text-xs text-slate-400 font-extrabold uppercase tracking-widest">SEQUÊNCIA DE DISCIPLINA (STREAK)</span>
+                            <h3 class="text-2xl font-black text-emerald-400 mt-1" id="streak-count">14 Dias Seguidos 🔥</h3>
+                            <p class="text-xs text-slate-400 mt-1">Treino concluído hoje! Volte amanhã para manter a chama acesa.</p>
+                        </div>
+                        <span class="badge-streak text-xs px-3 py-1.5 rounded-lg font-bold">
+                            Frequência Diária
+                        </span>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800">
+                        <h4 class="text-xs font-bold text-slate-300 uppercase mb-4">REGISTRO DE PRESENÇA</h4>
+                        <div class="grid grid-cols-7 gap-2 text-center">
+                            <button onclick="toggleDay(this)" class="p-3 bg-emerald-500 text-slate-950 font-bold rounded-xl text-xs">SEG</button>
+                            <button onclick="toggleDay(this)" class="p-3 bg-emerald-500 text-slate-950 font-bold rounded-xl text-xs">TER</button>
+                            <button onclick="toggleDay(this)" class="p-3 bg-emerald-500 text-slate-950 font-bold rounded-xl text-xs">QUA</button>
+                            <button onclick="toggleDay(this)" class="p-3 bg-emerald-500 text-slate-950 font-bold rounded-xl text-xs">QUI</button>
+                            <button onclick="toggleDay(this)" class="p-3 bg-emerald-500 text-slate-950 font-bold rounded-xl text-xs">SEX</button>
+                            <button onclick="toggleDay(this)" class="p-3 bg-slate-800 text-slate-400 font-bold rounded-xl text-xs">SÁB</button>
+                            <button onclick="toggleDay(this)" class="p-3 bg-slate-800 text-slate-400 font-bold rounded-xl text-xs">DOM</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-videos" class="tab-content hidden glass-card p-6 rounded-2xl space-y-6">
+                    <div>
+                        <h3 class="text-lg font-extrabold text-white">MEUS MELHORES LANCES (HIGHLIGHTS)</h3>
+                        <p class="text-xs text-slate-400">Portfolio do jogador para armazenar vídeos de partidas reais para avaliação contínua do Técnico Supervisor.</p>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-3">
+                        <label class="block text-xs font-semibold text-slate-300">+ ADICIONAR NOVO VÍDEO</label>
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Cole o link do YouTube ou Instagram: https://..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-emerald-500">
+                            <button class="btn-emerald px-5 rounded-xl text-xs font-bold">Salvar na Biblioteca</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h4 class="text-xs font-bold text-slate-300 uppercase">Biblioteca Tática</h4>
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
+                            <div>
+                                <p class="text-xs font-bold text-white mb-1">Golo de Falta - Final do Torneio Regional</p>
+                                <span class="text-[10px] text-slate-500">https://youtube.com/watch?v=demo123</span>
+                            </div>
+                            <span class="text-xs text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg border border-emerald-500/30 font-bold">Analisado</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-config" class="tab-content hidden glass-card p-6 rounded-2xl space-y-6">
+                    <div>
+                        <h3 class="text-lg font-extrabold text-white">CONFIGURAÇÕES DO ATLETA</h3>
+                        <p class="text-xs text-slate-400">Dados de cadastro flexíveis. Permite alterar dados pessoais a qualquer momento, ajustando a faixa etária e perguntas táticas.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Nome Completo</label>
+                            <input type="text" value="Arthur Silva" class="w-full bg-slate-900 border border-slate-700 text-white text-xs rounded-lg p-3">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Data Nascimento</label>
+                            <input type="text" value="14/05/2008 (16 Anos)" class="w-full bg-slate-900 border border-slate-700 text-white text-xs rounded-lg p-3">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Modalidade</label>
+                            <select class="w-full bg-slate-900 border border-slate-700 text-white text-xs rounded-lg p-3">
+                                <option selected>Futebol de Campo</option>
+                                <option>Futsal</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Posição Principal</label>
+                            <select id="config-pos" onchange="updatePlayerPosition(this.value)" class="w-full bg-slate-900 border border-slate-700 text-white text-xs rounded-lg p-3">
+                                <option value="MEI" selected>Meia-Atacante (MEI)</option>
+                                <option value="ZAG">Zagueiro (ZAG)</option>
+                                <option value="ATA">Atacante (ATA)</option>
+                                <option value="VOL">Volante (VOL)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Altura / Peso</label>
+                            <input type="text" value="1.78m / 68kg" class="w-full bg-slate-900 border border-slate-700 text-white text-xs rounded-lg p-3">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Ambiente de Treino</label>
+                            <select class="w-full bg-slate-900 border border-slate-700 text-white text-xs rounded-lg p-3">
+                                <option selected>Academia + Com Bola</option>
+                                <option>Casa + Sem Equipamento</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-admin" class="tab-content hidden glass-card p-6 rounded-2xl space-y-6">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                        <div>
+                            <h3 class="text-lg font-extrabold text-white">GESTÃO DE ATLETAS & EMISSÃO DE SCOUT (PDF)</h3>
+                            <p class="text-xs text-slate-400">Painel Protegido (Senha 3020) com controle total e privacidade garantida.</p>
+                        </div>
+                        <span class="bg-emerald-500/20 text-emerald-400 text-xs font-bold px-3 py-1 rounded-lg border border-emerald-500/30">Privacidade Garantida</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 text-center">
+                            <span class="text-2xl font-black text-white">24</span>
+                            <p class="text-xs text-slate-400 uppercase font-bold mt-1">Atletas Cadastrados</p>
+                        </div>
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 text-center">
+                            <span class="text-2xl font-black text-emerald-400">18</span>
+                            <p class="text-xs text-slate-400 uppercase font-bold mt-1">Avaliações Concluídas</p>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-900 text-slate-400 uppercase font-bold">
+                                <tr>
+                                    <th class="p-3">Atleta</th>
+                                    <th class="p-3">Idade</th>
+                                    <th class="p-3">Posição</th>
+                                    <th class="p-3">Overall</th>
+                                    <th class="p-3">Ação Scout</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr>
+                                    <td class="p-3 font-bold text-white">Arthur Silva</td>
+                                    <td class="p-3 text-slate-400">16 Anos</td>
+                                    <td class="p-3 text-emerald-400 font-bold">MEI</td>
+                                    <td class="p-3 font-black text-white">88</td>
+                                    <td class="p-3"><button onclick="alert('Gerando Ficha Scout PDF...')" class="btn-emerald px-3 py-1.5 rounded font-bold text-[10px] uppercase">GERAR PDF SCOUT</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-white">Lucas Santos</td>
+                                    <td class="p-3 text-slate-400">13 Anos</td>
+                                    <td class="p-3 text-emerald-400 font-bold">ATA</td>
+                                    <td class="p-3 font-black text-white">92</td>
+                                    <td class="p-3"><button onclick="alert('Gerando Ficha Scout PDF...')" class="btn-emerald px-3 py-1.5 rounded font-bold text-[10px] uppercase">GERAR PDF SCOUT</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+        </main>
     </div>
-  </nav>
 
-  <main class="max-w-7xl mx-auto px-4 py-6">
-
-    <div id="admin-custom-announcement" class="hidden bg-gradient-to-r from-emerald-500/20 to-slate-900 border border-emerald-500/40 p-4 rounded-xl text-xs sm:text-sm text-emerald-200 mb-6 shadow-lg"></div>
-
-    <section id="tab-futcard" class="tab-content active space-y-6">
-      <div class="flex flex-col md:flex-row items-center justify-between bg-slate-900 border border-slate-800 p-6 rounded-2xl gap-4">
-        <div>
-          <h2 id="welcome-message" class="text-xl font-bold text-white">Bem-vindo, Atleta!</h2>
-          <p class="text-xs text-slate-400 mt-1">Sua ficha técnica profissional, gráficos táticos e acompanhamento evolutivo.</p>
-        </div>
-        <button onclick="downloadFutuCard()" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold px-5 py-2.5 rounded-xl transition text-xs flex items-center gap-2">
-          <i class="fa-solid fa-download"></i> Baixar Meu FutuCard (.PNG)
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-        <div class="flex justify-center">
-          <div class="futcard-gold w-72 rounded-3xl p-5 text-slate-950 shadow-2xl relative border-4 border-amber-300/40">
-            <div class="flex justify-between items-start">
-              <div>
-                <span id="card-overall" class="text-5xl font-black block leading-none">00</span>
-                <span id="card-pos" class="text-sm font-bold uppercase tracking-wider block mt-1">MEI</span>
-              </div>
-              <i class="fa-solid fa-bolt text-2xl opacity-40"></i>
-            </div>
-
-            <div class="my-4 flex justify-center">
-              <img id="card-photo" src="https://via.placeholder.com/150" alt="Atleta" class="w-36 h-36 rounded-2xl object-cover border-2 border-slate-950 shadow-md">
-            </div>
-
-            <div class="text-center space-y-1">
-              <h3 id="card-name" class="font-extrabold text-lg uppercase tracking-tight truncate">NOME DO ATLETA</h3>
-              <p id="card-meta" class="text-[10px] font-bold uppercase tracking-widest text-slate-800">17 ANOS | BRASIL</p>
-            </div>
-
-            <div class="mt-4 pt-3 border-t border-slate-950/20 grid grid-cols-2 gap-2 text-center text-xs font-black">
-              <div>PAS: <span id="stat-pas">00</span></div>
-              <div>DEF: <span id="stat-def">00</span></div>
-              <div>CHU: <span id="stat-chu">00</span></div>
-              <div>FIS: <span id="stat-fis">00</span></div>
-              <div>VEL: <span id="stat-vel">00</span></div>
-              <div>VIS: <span id="stat-vis">00</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="md:col-span-2 space-y-6">
-          <div id="chart-zero-warning" class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-xl text-xs text-amber-300">
-            <i class="fa-solid fa-circle-info mr-2"></i> Realize a sua <strong>Avaliação Tática</strong> no menu superior para gerar seus gráficos de desempenho e liberar o FutuCard completo.
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl h-64">
-              <h4 class="text-xs font-bold text-slate-300 mb-2">Mapa de Atributos Táticos</h4>
-              <div class="h-48">
-                <canvas id="attributesChart"></canvas>
-              </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl h-64">
-              <h4 class="text-xs font-bold text-slate-300 mb-2">Evolução no Tempo</h4>
-              <div class="h-48">
-                <canvas id="progressChart"></canvas>
-              </div>
-            </div>
-          </div>
-
-          <div id="diagnostic-report-card" class="hidden bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 class="font-bold text-white text-sm">Relatório do Diagnóstico</h3>
-              <span id="badge-position" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-3 py-1 rounded-full">Posição: --</span>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
-                <p class="font-bold text-emerald-400 mb-2">Pontos Fortes</p>
-                <ul id="report-strengths" class="list-disc list-inside text-slate-300 space-y-1"></ul>
-              </div>
-              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
-                <p class="font-bold text-amber-400 mb-2">Pontos a Desenvolver</p>
-                <ul id="report-weaknesses" class="list-disc list-inside text-slate-300 space-y-1"></ul>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
-                <p class="font-bold text-slate-200 mb-2"> O Que FAZER no Jogo</p>
-                <ul id="report-dos" class="list-disc list-inside text-slate-300 space-y-1"></ul>
-              </div>
-              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
-                <p class="font-bold text-red-400 mb-2"> O Que EVITAR no Jogo</p>
-                <ul id="report-donts" class="list-disc list-inside text-slate-300 space-y-1"></ul>
-              </div>
-            </div>
-
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-              <p id="report-ball-status" class="font-bold text-xs text-emerald-400"></p>
-              <div id="report-training-plan" class="text-xs text-slate-300 space-y-2"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-quiz" class="tab-content space-y-6">
-      <div id="quiz-cooldown-alert" class="hidden bg-amber-500/10 border border-amber-500/30 p-4 rounded-xl text-amber-300 text-xs">
-        <i class="fa-solid fa-lock mr-2"></i> <span id="cooldown-timer-text">Sua reavaliação estará disponível em breve.</span>
-      </div>
-
-      <div id="quiz-block-screen" class="hidden bg-slate-900 border border-slate-800 p-8 rounded-2xl text-center space-y-4">
-        <i class="fa-solid fa-hourglass-half text-amber-400 text-5xl"></i>
-        <h3 class="text-xl font-bold text-white">Avaliação Bloqueada temporariamente</h3>
-        <p class="text-xs text-slate-400 max-w-md mx-auto">Para garantir a evolução real do seu futebol, o período de reavaliação ocorre a cada 60 dias (2 meses).</p>
-        <div id="quiz-countdown-box" class="inline-block bg-slate-950 text-amber-400 font-bold px-6 py-3 rounded-xl border border-slate-800 text-sm">-- Dias Restantes</div>
-      </div>
-
-      <div id="quiz-active-screen" class="max-w-2xl mx-auto">
-        <div id="quiz-container" class="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-2xl space-y-6">
-          <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-            <span id="quiz-category" class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Categoria</span>
-            <span id="quiz-progress" class="text-xs font-semibold text-slate-400">Pergunta 1 de 50</span>
-          </div>
-
-          <h3 id="quiz-question" class="text-base sm:text-lg font-bold text-white">Carregando pergunta...</h3>
-
-          <div id="quiz-options" class="space-y-3"></div>
-
-          <div class="pt-2 flex justify-between items-center">
-            <button onclick="startVoiceTranscription('quiz-options')" class="text-xs text-slate-400 hover:text-emerald-400 flex items-center gap-1">
-              <i class="fa-solid fa-microphone"></i> Responder por Voz
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-training" class="tab-content space-y-6">
-
-      <div id="young-athlete-features" class="hidden space-y-6">
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-emerald-400 text-sm">🏆 Ranking da Disciplina (Infanto-Juvenil)</h3>
-            <span class="text-xs text-slate-400">Consistência diária</span>
-          </div>
-          <p class="text-xs text-slate-300">Marque seus treinos na agenda para subir de nível e desbloquear distintivos exclusivos!</p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
-            <h4 class="font-bold text-white text-xs">⚔️ Modo Comparar Cards</h4>
-            <p class="text-xs text-slate-400">Compare os seus atributos com atletas parceiros da sua escolinha.</p>
-          </div>
-          <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
-            <h4 class="font-bold text-white text-xs">📄 Relatório em PDF para os Pais</h4>
-            <button onclick="generateParentsPDF()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition">Exportar Relatório</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="adult-athlete-features" class="hidden space-y-6">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
-            <h4 class="font-bold text-white text-xs">🏥 Checagem Física de Prevenção</h4>
-            <p class="text-xs text-slate-400">Registre dores articulares ou fadiga muscular antes de treinar.</p>
-          </div>
-          <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
-            <h4 class="font-bold text-white text-xs">🎯 Mural de Objetivos</h4>
-            <p class="text-xs text-slate-400">Foco do mês: Explosão, Chute de Longe, Perna Ruim.</p>
-          </div>
-          <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
-            <h4 class="font-bold text-white text-xs">🧊 Protocolo Pré & Pós-Jogo</h4>
-            <p class="text-xs text-slate-400">Guia de ativação muscular e soltura pós-partida.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-white text-sm">Agenda de Treinos</h3>
-            <span class="text-xs font-bold text-emerald-400">Streak: <span id="streak-count">0</span> dias</span>
-          </div>
-
-          <div class="flex items-center justify-between text-xs font-semibold text-slate-300">
-            <button onclick="changeMonth(-1)" class="p-1 hover:text-emerald-400"><i class="fa-solid fa-chevron-left"></i></button>
-            <span id="calendar-month-year">Mês 2026</span>
-            <button onclick="changeMonth(1)" class="p-1 hover:text-emerald-400"><i class="fa-solid fa-chevron-right"></i></button>
-          </div>
-
-          <div id="calendar-grid" class="grid grid-cols-7 gap-1 text-center text-xs"></div>
-
-          <button onclick="markTodayWorkout()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2.5 rounded-xl transition text-xs">
-            Registrar Treino de Hoje
-          </button>
-        </div>
-
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4 flex flex-col justify-between">
-          <div>
-            <h3 class="font-bold text-white text-sm">Cronômetro de Treino & Descanso</h3>
-            <p class="text-xs text-slate-400 mt-1">Tempo para preparação do celular / descanso entre séries (2 min).</p>
-          </div>
-
-          <div class="text-center py-4">
-            <span id="timer-display" class="text-5xl font-black text-emerald-400 tracking-wider">00:00</span>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <button id="timer-start-btn" onclick="toggleTimer()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition">Iniciar</button>
-            <button onclick="skipTimerPrep()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 rounded-lg text-xs transition">⏩ Já Estou Pronto</button>
-          </div>
-        </div>
-
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-          <h3 class="font-bold text-white text-sm">Biblioteca de Lances & Vídeos</h3>
-          
-          <form onsubmit="submitVideo(event)" class="space-y-2">
-            <input type="text" id="video-title" required placeholder="Título do lance (ex: Drible no jogo X)" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
-            <input type="url" id="video-url" required placeholder="Link do YouTube ou Insta" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200">
-            <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold py-2 rounded-lg text-xs transition">Salvar Lance</button>
-          </form>
-
-          <div id="user-video-gallery" class="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto no-scrollbar pt-2"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-tactical" class="tab-content space-y-6">
-      <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
-        <h2 class="text-lg font-bold text-white">Mini-Game de Decisão Tática e QI de Jogo</h2>
-        <p class="text-xs text-slate-400">Analise o lance e escolha a melhor tomada de decisão no menor tempo possível.</p>
-
-        <div class="bg-slate-950 border border-slate-800 p-6 rounded-xl text-center space-y-4">
-          <p class="text-sm font-semibold text-slate-200">Cenário: Você recebe a bola de costas no meio-campo com marcador pressionando nas suas costas.</p>
-          
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-            <button onclick="solveTacticalGame('girar')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-200 p-3 rounded-xl">1. Girar sobre o zagueiro</button>
-            <button onclick="solveTacticalGame('tocar')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-200 p-3 rounded-xl">2. Tocar de primeira para o apoio</button>
-            <button onclick="solveTacticalGame('travar')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-200 p-3 rounded-xl">3. Travar a bola e sofrer a falta</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-admin" class="tab-content space-y-6">
-      <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-          <div>
-            <h2 class="text-lg font-extrabold text-amber-400 uppercase">Painel de Gestão - Miguel Prime</h2>
-            <p class="text-xs text-slate-400">Métricas gerais, atletas cadastrados e controle de Fichas de Scout</p>
-          </div>
-          <div class="bg-slate-950 border border-slate-800 px-4 py-2 rounded-xl text-xs font-bold text-slate-300">
-            Total Atletas: <span id="admin-athlete-count" class="text-emerald-400">0</span>
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <label class="block text-xs font-bold text-slate-300">Publicar Aviso Oficial no Mural</label>
-          <div class="flex gap-2">
-            <input type="text" id="admin-announcement-input" placeholder="Digite uma mensagem para todos os atletas..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200">
-            <button onclick="saveAdminAnnouncement()" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition">Publicar</button>
-          </div>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-300">
-            <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
-              <tr>
-                <th class="p-3">Nome</th>
-                <th class="p-3">E-mail</th>
-                <th class="p-3">Idade</th>
-                <th class="p-3">Alt / Peso</th>
-                <th class="p-3">Local</th>
-                <th class="p-3">Posição</th>
-                <th class="p-3">Ações</th>
-              </tr>
-            </thead>
-            <tbody id="admin-user-list" class="divide-y divide-slate-800"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
