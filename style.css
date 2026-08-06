@@ -1,187 +1,61 @@
-/* ==========================================================================
-   FUTEBOL EVOLUTION - ESTILOS OFICIAIS (style.css)
-   ========================================================================== */
+/* ESTILOS CUSTOMIZADOS - FUTEBOL EVOLUTION */
 
-/* 1. IMPORTAÇÃO DE FONTES & VARIÁVEIS DE COR */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
-
-:root {
-    /* Cores Principais do Código Antigo */
-    --bg-main: #0b1321;            /* Fundo Escuro Profundo */
-    --bg-darker: #080d1a;          /* Fundo da Tela de Login */
-    --bg-card: rgba(30, 41, 59, 0.85); /* Fundo Glassmorphism */
-    --emerald-primary: #10b981;    /* Verde Neon / Esmeralda Principal */
-    --emerald-hover: #059669;      /* Verde Escuro para Hover */
-    --emerald-light: rgba(16, 185, 129, 0.15); /* Fundo Suave Verde */
-    
-    /* Cores Futcard EA FC Ouro */
-    --gold-grad-start: #f5d061;
-    --gold-grad-mid: #e6ac27;
-    --gold-grad-end: #9e7311;
-    --gold-text: #1e1b18;
-
-    /* Tons de Cinza / Bordas */
-    --border-color: rgba(255, 255, 255, 0.08);
-    --border-emerald: rgba(16, 185, 129, 0.3);
-    --text-white: #f8fafc;
-    --text-muted: #94a3b8;
-}
-
-/* 2. RESET E BASE */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-white);
-    min-height: 100vh;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-}
-
-/* 3. SCROLLBAR PERSONALIZADA */
+/* Scrollbar Personalizada */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  width: 6px;
+  height: 6px;
 }
-
 ::-webkit-scrollbar-track {
-    background: #090f1d;
+  background: #020617;
 }
-
 ::-webkit-scrollbar-thumb {
-    background: #1e293b;
-    border-radius: 4px;
+  background: #1e293b;
+  border-radius: 9999px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--emerald-primary);
+  background: #10b981;
 }
 
-/* Ocultar Scrollbar no Menu de Abas do Telemóvel */
+/* Remover Scrollbar Horizontal no Menu Mobile */
 .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* 4. COMPONENTES VISUAIS (GLASSMORPHISM) */
-.glass-card {
-    background: var(--bg-card);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+/* CARTÃO FUTUCARD - GRADIENTE EA FC OURO */
+.futucard-gold {
+  background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%);
+  box-shadow: 0 20px 25px -5px rgba(202, 138, 4, 0.2), 0 8px 10px -6px rgba(202, 138, 4, 0.2);
 }
 
-/* 5. EA FC FUT CARD (CARTA OURO) */
-.futcard-gold {
-    background: linear-gradient(135deg, var(--gold-grad-start) 0%, var(--gold-grad-mid) 50%, var(--gold-grad-end) 100%);
-    color: var(--gold-text);
-    box-shadow: 0 12px 30px -5px rgba(230, 172, 39, 0.35);
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.futcard-gold:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 18px 40px -5px rgba(230, 172, 39, 0.5);
-}
-
-/* Brilho da Carta */
-.futcard-gold::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-        45deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.15) 50%,
-        transparent 100%
-    );
-    transform: rotate(30deg);
-    pointer-events: none;
-}
-
-/* 6. BOTÕES E INTERAÇÕES */
-.btn-emerald {
-    background-color: var(--emerald-primary);
-    color: #022c22;
-    font-weight: 800;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
-}
-
-.btn-emerald:hover {
-    background-color: #34d399;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-}
-
-.btn-emerald:active {
-    transform: translateY(0);
-}
-
-/* 7. NAVEGAÇÃO E ABAS */
-.tab-btn {
-    transition: all 0.2s ease-in-out;
-}
-
+/* Botões de Tab Ativos */
 .tab-btn.active {
-    color: var(--emerald-primary) !important;
-    background-color: rgba(30, 41, 59, 0.9) !important;
-    border-left: 4px solid var(--emerald-primary);
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border-right: 3px solid #10b981;
 }
 
-/* No telemóvel, o indicador ativo muda para borda inferior */
-@media (max-width: 768px) {
-    .tab-btn.active {
-        border-left: none;
-        border-bottom: 3px solid var(--emerald-primary);
-    }
+/* Botões de Filtro de Treino Ativo */
+.wk-filter.active {
+  background-color: #10b981;
+  color: #020617;
 }
 
-/* 8. ELEMENTOS DE FORMULÁRIO */
-input, select, textarea {
-    accent-color: var(--emerald-primary);
-}
-
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--emerald-primary) !important;
-    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-}
-
-/* 9. ANIMAÇÕES SUAVES DE CARREGAMENTO DE ABA */
+/* Animações Suaves */
 .tab-content {
-    animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 10. CRONÓMETRO E BADGES DE DESEMPENHO */
-.badge-streak {
-    background: var(--emerald-light);
-    color: var(--emerald-primary);
-    border: 1px solid var(--border-emerald);
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

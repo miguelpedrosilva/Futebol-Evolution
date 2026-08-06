@@ -1,365 +1,252 @@
-/* ==========================================================================
-   FUTEBOL EVOLUTION - LÓGICA E SCRIPT PRINCIPAL (script.js)
-   ========================================================================== */
-
-// 1. ESTADO GLOBAL DA APLICAÇÃO
-let currentUser = {
-    name: "Arthur Silva",
-    email: "arthur@futebolevolution.com",
-    role: "atleta",
-    position: "MEI",
-    modality: "Campo",
-    overall: 88,
-    stats: {
-        pas: 91,
-        fis: 85,
-        def: 78,
-        vel: 90,
-        chu: 86,
-        vis: 92
-    }
+// STATE E DADOS LOCAIS DA APLICAÇÃO
+let athleteData = JSON.parse(localStorage.getItem('FE_athleteData')) || {
+    nome: "Arthur Silva",
+    dob: "2009-05-14",
+    altura: "175 cm",
+    peso: "68 kg",
+    posicao: "MEI",
+    modalidade: "campo",
+    stats: { pas: 91, def: 78, chu: 86, fis: 85, vel: 90, vis: 92 },
+    streak: 14,
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop"
 };
 
-let radarChartInstance = null;
-let evolutionChartInstance = null;
+let isAdminLoggedIn = false;
 let timerInterval = null;
-let currentQuizIndex = 0;
-let currentTacticalIndex = 0;
+let currentRadarChart = null;
+let currentLineChart = null;
 
-// 2. BANCO DINÂMICO DE PERGUNTAS ADAPTATIVAS (SISTEMA ANTI-COLA)
-const quizBank = [
-    {
-        id: 1,
-        question: "Ao receber a bola sob alta pressão no meio-campo, qual é a tua leitura primária?",
-        options: [
-            { text: "Tocar de primeira para o homem livre no espaço vazio.", points: 3, valencia: "PAS" },
-            { text: "Usar o corpo para proteger a bola e tentar girar.", points: 2, valencia: "FIS" },
-            { text: "Bater para a frente imediatamente sem olhar.", points: 1, valencia: "DEF" }
-        ]
-    },
-    {
-        id: 2,
-        question: "Numa transição defensiva rápida, qual a tua prioridade tática imediata?",
-        options: [
-            { text: "Pressionar a portador da bola para cortar o ataque na origem.", points: 3, valencia: "DEF" },
-            { text: "Temporizar e recompor a linha defensiva do setor.", points: 2, valencia: "VIS" },
-            { text: "Acompanhar apenas o teu marcador individual direto.", points: 1, valencia: "FIS" }
-        ]
-    },
-    {
-        id: 3,
-        question: "Como atacas os espaços em blocos defensivos adversários fechados?",
-        options: [
-            { text: "Movimentação em diagonal atacando as costas da linha.", points: 3, valencia: "VEL" },
-            { text: "Arriscar o remate de fora da área para tentar a sobra.", points: 2, valencia: "CHU" },
-            { text: "Pedir a bola sempre no pé sem criar desmarque.", points: 1, valencia: "PAS" }
-        ]
-    },
-    {
-        id: 4,
-        question: "Quando o teu equipa está a perder nos minutos finais, como reages taticamente?",
-        options: [
-            { text: "Aumentas o ritmo de passe e procuras ruturas rápidas.", points: 3, valencia: "VIS" },
-            { text: "Forças jogadas individuais de 1v1 em velocidade.", points: 2, valencia: "VEL" },
-            { text: "Tentas remates de qualquer distância com pressa.", points: 1, valencia: "CHU" }
-        ]
-    }
-];
-
-// 3. BANCO DE DESAFIOS DA PRANCHETA TÁTICA
-const tacticalScenarios = [
-    {
-        title: "Contra-ataque 3x2",
-        description: "Infiltração rápida pela meia-esquerda com 2 defesas perfilados. Qual a melhor decisão?",
-        badge: "Desafio 1/20"
-    },
-    {
-        title: "Saída de Bola Sob Pressão",
-        description: "Adversário em bloco alto no teu terço defensivo. Como realizar a progressão?",
-        badge: "Desafio 2/20"
-    },
-    {
-        title: "Duelo 1v1 na Linha Lateral",
-        description: "Espaço aberto na ponta contra o lateral adversário. Como finalizar a jogada?",
-        badge: "Desafio 3/20"
-    }
-];
-
-// 4. INICIALIZAÇÃO E AUTENTICAÇÃO
+// INICIALIZAÇÃO
 document.addEventListener('DOMContentLoaded', () => {
-    // Garante que o aplicativo inicia no estado correto se já houver dados
-    console.log("Futebol Evolution v2.0 carregado com sucesso.");
+    updatePositionsOptions();
+    renderAthleteData();
+    initCharts();
+    renderWorkouts('casa', true);
 });
 
-function handleLogin(event) {
-    event.preventDefault();
-    
-    const roleInput = document.getElementById('login-role').value;
-    const nameInput = document.getElementById('login-name').value;
-    const emailInput = document.getElementById('login-email').value;
-
-    if (!nameInput.trim()) return;
-
-    currentUser.role = roleInput;
-    currentUser.name = nameInput;
-    currentUser.email = emailInput;
-
-    // Atualiza a Interface do Usuário
-    document.getElementById('top-user-name').textContent = currentUser.name;
-    document.getElementById('card-name').textContent = currentUser.name.split(' ')[0];
-    document.getElementById('user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
-
-    // Troca de Tela
-    document.getElementById('screen-login').classList.add('hidden');
-    document.getElementById('screen-app').classList.remove('hidden');
-
-    // Inicializa Gráficos e Quiz
-    initCharts();
-    renderQuizQuestion();
-}
-
-function logout() {
-    document.getElementById('screen-app').classList.add('hidden');
-    document.getElementById('screen-login').classList.remove('hidden');
-}
-
-// 5. NAVEGAÇÃO ENTRE ABAS
+// ALTA DE NAVEGAÇÃO / ABA
 function switchTab(tabId) {
-    // Oculta todas as abas
-    document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.add('hidden');
-    });
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
-    // Remove estado ativo de todos os botões do menu
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active', 'text-emerald-400', 'bg-slate-800/80');
-        btn.classList.add('text-slate-400');
-    });
+    const selectedTab = document.getElementById(`tab-${tabId}`);
+    const selectedBtn = document.getElementById(`nav-${tabId}`);
 
-    // Mostra a aba selecionada
-    const targetTab = document.getElementById(`tab-${tabId}`);
-    if (targetTab) {
-        targetTab.classList.remove('hidden');
-    }
-
-    // Ativa o botão correspondente no menu
-    const activeBtn = document.getElementById(`nav-${tabId}`);
-    if (activeBtn) {
-        activeBtn.classList.add('active', 'text-emerald-400', 'bg-slate-800/80');
-    }
-
-    // Atualiza o Título do Header
-    const titleMap = {
-        'inicio': 'Início (Dashboard)',
-        'avaliacao': 'Avaliação Técnica',
-        'treinos': 'Central de Treinos',
-        'futucard': 'Evolution Card',
-        'agenda': 'Agenda & Streak',
-        'videos': 'Vídeos & Lances',
-        'config': 'Configurações',
-        'admin': 'Técnico Supervisor'
-    };
-    document.getElementById('current-tab-title').textContent = titleMap[tabId] || tabId.toUpperCase();
+    if (selectedTab) selectedTab.classList.remove('hidden');
+    if (selectedBtn) selectedBtn.classList.add('active');
 }
 
-// 6. PAINEL PROTEGIDO DO TÉCNICO SUPERVISOR
-function openSupervisorAuth() {
-    const pin = prompt("Insira o PIN de acesso do Técnico Supervisor:");
-    if (pin === "3020") {
-        switchTab('admin');
-    } else if (pin !== null) {
-        alert("PIN Incorreto! Acesso negado.");
-    }
+// ATUALIZAÇÃO DAS OPÇÕES DE POSIÇÃO
+function updatePositionsOptions() {
+    const mod = document.getElementById('quiz-modalidade').value;
+    const posSelect = document.getElementById('quiz-posicao');
+    posSelect.innerHTML = '';
+
+    const options = (mod === 'quadra') 
+        ? ['Goleiro', 'Fixo', 'Ala', 'Pivô'] 
+        : ['Goleiro', 'Zagueiro', 'Meia', 'Atacante'];
+
+    options.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.substring(0, 3).toUpperCase();
+        opt.textContent = p;
+        posSelect.appendChild(opt);
+    });
 }
 
-// 7. MOTOR DO QUESTIONÁRIO TÁTICO (ANTI-COLA & EMBARALHAMENTO)
-function renderQuizQuestion() {
-    const currentQuestion = quizBank[currentQuizIndex % quizBank.length];
+// ATUALIZA INTERFACE COM DADOS DO ATLETA
+function renderAthleteData() {
+    const overall = Math.round((athleteData.stats.pas + athleteData.stats.def + athleteData.stats.chu + athleteData.stats.fis + athleteData.stats.vel + athleteData.stats.vis) / 6);
     
-    document.getElementById('quiz-step-label').textContent = `Pergunta ${currentQuizIndex + 1} de 50`;
-    document.getElementById('quiz-question-text').textContent = currentQuestion.question;
+    // Nomes
+    document.getElementById('dash-atleta-nome').textContent = athleteData.nome;
+    document.getElementById('sidebar-name').textContent = athleteData.nome;
+    document.getElementById('card-nome').textContent = athleteData.nome;
+    document.getElementById('full-card-nome').textContent = athleteData.nome;
 
-    const optionsContainer = document.getElementById('quiz-options-container');
-    optionsContainer.innerHTML = '';
+    // Stats Card Mini
+    document.getElementById('card-overall').textContent = overall;
+    document.getElementById('card-pos').textContent = athleteData.posicao;
+    document.getElementById('stat-pas').textContent = athleteData.stats.pas;
+    document.getElementById('stat-def').textContent = athleteData.stats.def;
+    document.getElementById('stat-chu').textContent = athleteData.stats.chu;
+    document.getElementById('stat-fis').textContent = athleteData.stats.fis;
+    document.getElementById('stat-vel').textContent = athleteData.stats.vel;
+    document.getElementById('stat-vis').textContent = athleteData.stats.vis;
 
-    // Algoritmo de Embaralhamento (Fisher-Yates) para evitar respostas idênticas
-    const shuffledOptions = [...currentQuestion.options].sort(() => Math.random() - 0.5);
+    // Stats Card Full
+    document.getElementById('full-card-overall').textContent = overall;
+    document.getElementById('full-card-pos').textContent = athleteData.posicao;
+    document.getElementById('full-stat-pas').textContent = athleteData.stats.pas;
+    document.getElementById('full-stat-def').textContent = athleteData.stats.def;
+    document.getElementById('full-stat-chu').textContent = athleteData.stats.chu;
+    document.getElementById('full-stat-fis').textContent = athleteData.stats.fis;
+    document.getElementById('full-stat-vel').textContent = athleteData.stats.vel;
+    document.getElementById('full-stat-vis').textContent = athleteData.stats.vis;
 
-    shuffledOptions.forEach((option, index) => {
-        const button = document.createElement('button');
-        button.className = "w-full text-left p-3 rounded-lg bg-slate-800 hover:bg-emerald-500/10 border border-slate-700 hover:border-emerald-500 text-xs font-semibold text-slate-200 transition duration-150";
-        button.textContent = `${String.fromCharCode(65 + index)}) ${option.text}`;
-        button.onclick = () => processQuizAnswer(option.points);
-        optionsContainer.appendChild(button);
+    localStorage.setItem('FE_athleteData', JSON.stringify(athleteData));
+}
+
+// GRÁFICOS DINÂMICOS VIA CHART.JS
+function initCharts() {
+    const ctxRadar = document.getElementById('chartRadar').getContext('2d');
+    const ctxLine = document.getElementById('chartLine').getContext('2d');
+
+    if (currentRadarChart) currentRadarChart.destroy();
+    if (currentLineChart) currentLineChart.destroy();
+
+    currentRadarChart = new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+            labels: ['PAS', 'DEF', 'CHU', 'FIS', 'VEL', 'VIS'],
+            datasets: [{
+                label: 'Atributos Táticos',
+                data: [athleteData.stats.pas, athleteData.stats.def, athleteData.stats.chu, athleteData.stats.fis, athleteData.stats.vel, athleteData.stats.vis],
+                backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                borderColor: '#10b981',
+                borderWidth: 2,
+                pointBackgroundColor: '#10b981'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { r: { min: 0, max: 100, ticks: { display: false }, grid: { color: '#334155' } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    currentLineChart = new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: ['Mês 1', 'Mês 2', 'Mês 3', 'Mês 4'],
+            datasets: [{
+                label: 'Progresso',
+                data: [72, 78, 83, 88],
+                borderColor: '#10b981',
+                tension: 0.4,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { min: 50, max: 100, grid: { color: '#334155' } }, x: { grid: { display: false } } },
+            plugins: { legend: { display: false } }
+        }
     });
 }
 
-function processQuizAnswer(points) {
-    currentQuizIndex++;
-    if (currentQuizIndex < 50) {
-        renderQuizQuestion();
-    } else {
-        alert("Avaliação Concluída! O teu novo Overall e valências foram recalculados.");
-        currentQuizIndex = 0;
-        switchTab('inicio');
-    }
-}
-
-// 8. PRANCHETA VISUAL DE DECISÕES TÁTICAS
-function nextTacticalScenario() {
-    currentTacticalIndex = (currentTacticalIndex + 1) % tacticalScenarios.length;
-    const scenario = tacticalScenarios[currentTacticalIndex];
-
-    document.getElementById('tactical-step-badge').textContent = scenario.badge;
-    document.getElementById('tactical-scenario-text').textContent = `${scenario.title}: ${scenario.description}`;
-}
-
-// 9. CRONÓMETRO INTERATIVO DE DESCANSO
-function startTimer(seconds) {
+// CRONÔMETRO DE DESCANSO
+function startRestTimer(seconds) {
     clearInterval(timerInterval);
-    let timeLeft = seconds;
+    let remaining = seconds;
     const display = document.getElementById('timer-display');
 
     timerInterval = setInterval(() => {
-        const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-        const secs = (timeLeft % 60).toString().padStart(2, '0');
-        display.textContent = `${minutes}:${secs}`;
+        const mins = Math.floor(remaining / 60);
+        const secs = remaining % 60;
+        display.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 
-        if (--timeLeft < 0) {
+        if (--remaining < 0) {
             clearInterval(timerInterval);
             display.textContent = "DESCANSO CONCLUÍDO! 🔥";
         }
     }, 1000);
 }
 
-function resetTimer() {
+function skipRestTimer() {
     clearInterval(timerInterval);
-    document.getElementById('timer-display').textContent = "00:00";
+    document.getElementById('timer-display').textContent = "PRONTO! ⚡";
 }
 
-// 10. RECONHECIMENTO DE VOZ (WEB SPEECH API)
-function toggleVoiceInput() {
-    const btn = document.getElementById('btn-voice');
-    
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-        
-        recognition.lang = 'pt-BR';
-        recognition.continuous = false;
-        recognition.interimResults = false;
+// RENDER DE EXERCÍCIOS
+function renderWorkouts(local, comBola) {
+    const list = document.getElementById('workout-list');
+    list.innerHTML = '';
 
-        btn.classList.add('bg-rose-500/20', 'text-rose-400');
-        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> A ouvir...`;
+    const treinos = [
+        { titulo: "Passe & Visão Periférica", series: "3 Série x 15 Repetições", desc: "Controle de bola rápido virando a cabeça antes do receção." },
+        { titulo: "Explosão Curta & Mudança de Direção", series: "4 Séries x 10m", desc: "Pique de aceleração com foco na recuperação física rápida." },
+        { titulo: "Prevenção & Mobilidade de Quadril", series: "2 Séries x 12 Repetições", desc: "Exercício fundamental para evitar dores e lesões no joelho." }
+    ];
 
-        recognition.start();
+    treinos.forEach(t => {
+        list.innerHTML += `
+            <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                <div>
+                    <span class="text-[10px] font-black uppercase text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg">${local} • ${comBola ? 'Com Bola' : 'Sem Bola'}</span>
+                    <h4 class="text-sm font-bold text-white mt-2">${t.titulo}</h4>
+                    <p class="text-xs text-slate-400 mt-1">${t.desc}</p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-800/80 flex justify-between items-center text-xs font-bold text-slate-300">
+                    <span>${t.series}</span>
+                    <i class="fa-solid fa-circle-play text-emerald-400 text-base"></i>
+                </div>
+            </div>
+        `;
+    });
+}
 
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            alert(`Resposta Capturada por Voz: "${transcript}"`);
-            btn.classList.remove('bg-rose-500/20', 'text-rose-400');
-            btn.innerHTML = `<i class="fa-solid fa-microphone"></i> Responder por Voz`;
-            processQuizAnswer(3);
-        };
+function setWorkoutFilter(local, comBola) {
+    document.querySelectorAll('.wk-filter').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    renderWorkouts(local, comBola);
+}
 
-        recognition.onerror = () => {
-            alert("Não foi possível reconhecer a voz. Tenta novamente.");
-            btn.classList.remove('bg-rose-500/20', 'text-rose-400');
-            btn.innerHTML = `<i class="fa-solid fa-microphone"></i> Responder por Voz`;
-        };
+// EXPORTAR FUTUCARD EM PNG
+function downloadFutuCard() {
+    const cardNode = document.getElementById('futucard-full');
+    html2canvas(cardNode, { scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `FutuCard_${athleteData.nome.replace(/\s+/g, '_')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
+}
+
+// PAINEL ADMIN (MIGUEL PRIME)
+function loginAdmin() {
+    const pin = document.getElementById('admin-pin-input').value;
+    if (pin === '3020') {
+        isAdminLoggedIn = true;
+        document.getElementById('admin-login-box').classList.add('hidden');
+        document.getElementById('admin-dashboard').classList.remove('hidden');
+        renderAdminTable();
     } else {
-        alert("O teu navegador não suporta reconhecimento de voz direto.");
+        alert("PIN Incorreto! Acesso negado.");
     }
 }
 
-// 11. GRÁFICOS INTERATIVOS (CHART.JS)
-function initCharts() {
-    // Renderiza Radar Chart das Valências
-    const ctxRadar = document.getElementById('radarChart');
-    if (ctxRadar) {
-        if (radarChartInstance) radarChartInstance.destroy();
+function logoutAdmin() {
+    isAdminLoggedIn = false;
+    document.getElementById('admin-login-box').classList.remove('hidden');
+    document.getElementById('admin-dashboard').classList.add('hidden');
+}
 
-        radarChartInstance = new Chart(ctxRadar.getContext('2d'), {
-            type: 'radar',
-            data: {
-                labels: ['PAS', 'DEF', 'CHU', 'FIS', 'VEL', 'VIS'],
-                datasets: [{
-                    label: 'Valências Táticas',
-                    data: [
-                        currentUser.stats.pas,
-                        currentUser.stats.def,
-                        currentUser.stats.chu,
-                        currentUser.stats.fis,
-                        currentUser.stats.vel,
-                        currentUser.stats.vis
-                    ],
-                    backgroundColor: 'rgba(16, 185, 129, 0.25)',
-                    borderColor: '#10b981',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#10b981',
-                    pointBorderColor: '#fff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        angleLines: { color: 'rgba(255,255,255,0.1)' },
-                        grid: { color: 'rgba(255,255,255,0.1)' },
-                        pointLabels: { color: '#94a3b8', font: { size: 10, weight: 'bold' } },
-                        ticks: { display: false, min: 0, max: 100 }
-                    }
-                },
-                plugins: { legend: { display: false } }
-            }
-        });
+function renderAdminTable() {
+    const table = document.getElementById('admin-athletes-table');
+    table.innerHTML = `
+        <tr>
+            <td class="py-3 flex items-center gap-2">
+                <img src="${athleteData.avatar}" class="w-6 h-6 rounded-full object-cover">
+                ${athleteData.nome}
+            </td>
+            <td class="py-3">${athleteData.posicao}</td>
+            <td class="py-3 text-emerald-400">88</td>
+            <td class="py-3">
+                <button onclick="alert('Relatório PDF gerado para o atleta!')" class="px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg">Ficha Scout PDF</button>
+            </td>
+        </tr>
+    `;
+}
+
+function publishAnnouncement() {
+    const txt = document.getElementById('admin-aviso-input').value;
+    if (txt) {
+        document.getElementById('mural-avisos').classList.remove('hidden');
+        document.getElementById('mural-texto').textContent = txt;
+        document.getElementById('admin-aviso-input').value = '';
+        alert("Aviso publicado no topo da plataforma de todos os atletas!");
     }
-
-    // Renderiza Linha de Evolução Temporal
-    const ctxEvolution = document.getElementById('evolutionChart');
-    if (ctxEvolution) {
-        if (evolutionChartInstance) evolutionChartInstance.destroy();
-
-        evolutionChartInstance = new Chart(ctxEvolution.getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: ['Mês 1', 'Mês 2', 'Mês 3', 'Mês 4'],
-                datasets: [{
-                    label: 'Progresso Overall',
-                    data: [72, 79, 83, currentUser.overall],
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } },
-                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
-                },
-                plugins: { legend: { display: false } }
-            }
-        });
-    }
-}
-
-// 12. UTILITÁRIOS E GERENCIADORES DE DADOS
-function toggleDay(buttonElement) {
-    buttonElement.classList.toggle('bg-emerald-500');
-    buttonElement.classList.toggle('text-slate-950');
-    buttonElement.classList.toggle('bg-slate-800');
-    buttonElement.classList.toggle('text-slate-400');
-}
-
-function updatePlayerPosition(newPos) {
-    currentUser.position = newPos;
-    document.getElementById('card-pos').textContent = newPos;
-}
-
-function downloadCard() {
-    alert("A gerar e descarregar o teu Evolution Card Ouro em PNG HD...");
 }
