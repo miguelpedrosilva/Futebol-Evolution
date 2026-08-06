@@ -227,7 +227,7 @@ function startTimer(seconds) {
 
         if (--timeLeft < 0) {
             clearInterval(timerInterval);
-            display.textContent = "PRONTO!";
+            display.textContent = "DESCANSO CONCLUÍDO! 🔥";
         }
     }, 1000);
 }
