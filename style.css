@@ -1,61 +1,301 @@
-/* ESTILOS CUSTOMIZADOS - FUTEBOL EVOLUTION */
-
-/* Scrollbar Personalizada */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #020617;
-}
-::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #10b981;
+:root {
+    --bg-dark: #0a0f1d;
+    --card-bg: #111827;
+    --border-color: #1e293b;
+    --accent-green: #00ff88;
+    --accent-gold: #ffd700;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
 }
 
-/* Remover Scrollbar Horizontal no Menu Mobile */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Urbanist', sans-serif;
 }
 
-/* CARTÃO FUTUCARD - GRADIENTE EA FC OURO */
-.futucard-gold {
-  background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%);
-  box-shadow: 0 20px 25px -5px rgba(202, 138, 4, 0.2), 0 8px 10px -6px rgba(202, 138, 4, 0.2);
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    min-height: 100vh;
+    padding-bottom: 40px;
 }
 
-/* Botões de Tab Ativos */
+/* HEADER & NAVEGAÇÃO */
+header {
+    background: #0d1322;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--accent-green);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: #1e293b;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tab-btn:hover {
+    color: #ffffff;
+    background: #334155;
+}
+
 .tab-btn.active {
-  background-color: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-  border-right: 3px solid #10b981;
+    background: var(--accent-green);
+    color: #064e3b;
 }
 
-/* Botões de Filtro de Treino Ativo */
-.wk-filter.active {
-  background-color: #10b981;
-  color: #020617;
+.tab-btn.gold {
+    background: var(--accent-gold);
+    color: #451a03;
 }
 
-/* Animações Suaves */
+/* CONTAINER PRINCIPAL */
+main {
+    max-width: 1200px;
+    margin: 25px auto;
+    padding: 0 20px;
+}
+
 .tab-content {
-  animation: fadeIn 0.3s ease-in-out;
+    display: none;
+    flex-direction: column;
+    gap: 25px;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.tab-content.active {
+    display: flex;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+/* CARDS */
+.card-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--accent-green);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* BANNERS */
+.banner-cms {
+    background: linear-gradient(90deg, #064e3b, #065f46);
+    border: 1px solid var(--accent-green);
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 14px;
+}
+
+.banner-alert {
+    background: linear-gradient(90deg, #78350f, #92400e);
+    border: 1px solid var(--accent-gold);
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+/* FÔLEGO DIÁRIO */
+.folego-bar {
+    width: 100%;
+    height: 16px;
+    background: #1e293b;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.folego-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #ef4444, #f59e0b, #00ff88);
+    transition: width 0.4s ease-in-out;
+}
+
+.chip-btn {
+    background: #1e293b;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.chip-btn.active {
+    background: var(--accent-green);
+    color: #064e3b;
+    border-color: var(--accent-green);
+}
+
+/* BOTÕES E FORMULÁRIOS */
+.btn {
+    background: var(--accent-green);
+    color: #064e3b;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.1s;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-gold {
+    background: var(--accent-gold);
+    color: #451a03;
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    background: #1e293b;
+    border: 1px solid #374151;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* CARD EA FC */
+.fifa-card {
+    background: linear-gradient(135deg, #ffd700, #b45309);
+    color: #451a03;
+    border-radius: 18px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(255, 215, 0, 0.25);
+    max-width: 320px;
+    margin: 0 auto;
+    position: relative;
+    border: 2px solid #fef08a;
+}
+
+.card-photo-placeholder {
+    width: 110px;
+    height: 110px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 50%;
+    margin: 10px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 2px solid rgba(69, 26, 3, 0.2);
+}
+
+.card-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.12);
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 13px;
+    margin-top: 15px;
+}
+
+/* MODAL SEGURO PIN */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+}
+
+.modal-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 360px;
+    width: 90%;
+}
+
+/* RESPONSIVIDADE PARA CELULARES */
+@media (max-width: 850px) {
+    .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+    }
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
 }
