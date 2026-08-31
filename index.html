@@ -60,7 +60,7 @@
 
                     <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; gap: 10px; flex-wrap: wrap;">
                         <span>Fôlego Restante: <strong id="folego-val" style="color: var(--accent-green);">100%</strong></span>
-                        <span id="folego-rec" style="color: var(--accent-green);">Treino Indicado: Intenso / Normal</span>
+                        <span id="folego-rec" style="color: var(--accent-green);">Treino Indicado: Intenso / Alta Carga</span>
                     </div>
                     <div class="folego-bar"><div class="folego-fill" id="folego-fill-bar"></div></div>
                 </div>
@@ -149,8 +149,9 @@
                             <span>85<br><span style="font-size: 14px;">PON</span></span>
                             <i class="fa-solid fa-crown"></i>
                         </div>
-                        <div class="card-photo-placeholder">
-                            <i class="fa-solid fa-user" style="font-size: 50px; color: #451a03; opacity: 0.6;"></i>
+                        <div class="card-photo-placeholder" id="photo-container">
+                            <i class="fa-solid fa-user" id="default-avatar" style="font-size: 50px; color: #451a03; opacity: 0.6;"></i>
+                            <img id="player-img-preview" src="" alt="Foto Atleta" style="display: none; width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <h2 style="margin: 5px 0; font-size: 20px;">PEDRINHO SANTOS</h2>
                         <p style="font-size: 11px; font-weight: 800;">AMBIDESTRO | CAMPO &amp; FUTSAL</p>
@@ -169,7 +170,7 @@
                     <button class="btn" onclick="alert('Gerando PDF do Evolution Card...')"><i class="fa-solid fa-download"></i> BAIXAR CARD EM PDF</button>
                     <button class="btn btn-gold" onclick="alert('Salvando imagem HD...')"><i class="fa-solid fa-image"></i> SALVAR IMAGEM HD PARA INSTAGRAM</button>
                     <button class="btn" style="background: #1e293b; color: white;" onclick="document.getElementById('photo-upload').click()"><i class="fa-solid fa-upload"></i> Alterar Foto do Card</button>
-                    <input type="file" id="photo-upload" style="display: none;" accept="image/*">
+                    <input type="file" id="photo-upload" style="display: none;" accept="image/*" onchange="previewPlayerPhoto(event)">
                 </div>
             </div>
         </section>

@@ -138,19 +138,29 @@ main {
     gap: 8px;
 }
 
-/* GRÁFICOS RESTRIÇÃO DE TAMANHO */
+/* GRÁFICOS RESTRIÇÃO DE TAMANHO (CORREÇÃO DE EXPANSAO) */
 .chart-wrapper-radar {
     position: relative;
     width: 100%;
-    max-width: 260px;
-    max-height: 260px;
+    max-width: 280px;
+    height: 280px;
     margin: 0 auto;
+}
+
+.chart-wrapper-radar canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
 }
 
 .chart-wrapper-timeline {
     position: relative;
     width: 100%;
-    height: 220px;
+    height: 250px;
+}
+
+.chart-wrapper-timeline canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
 }
 
 /* BANNERS */

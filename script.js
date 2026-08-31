@@ -42,6 +42,22 @@ function calculateStamina(lossPercentage, btnElement) {
     }
 }
 
+// PREVIEW DA FOTO DO CARD
+function previewPlayerPhoto(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imgPreview = document.getElementById('player-img-preview');
+            const defaultAvatar = document.getElementById('default-avatar');
+            imgPreview.src = e.target.result;
+            imgPreview.style.display = 'block';
+            if (defaultAvatar) defaultAvatar.style.display = 'none';
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
 // MICROFONE DE VOZ
 function startVoiceInput(targetId) {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -119,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 scales: {
                     r: {
                         angleLines: { color: '#1e293b' },
