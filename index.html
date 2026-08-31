@@ -7,248 +7,49 @@
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Chart.js for Radar & Timeline Charts -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <style>
-        :root {
-            --bg-dark: #0a0f1d;
-            --card-bg: #111827;
-            --border-color: #1e293b;
-            --accent-green: #00ff88;
-            --accent-gold: #ffd700;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Urbanist', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding-bottom: 40px; }
-
-        /* HEADER & NAVIGATION */
-        header {
-            background: #0d1322;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo { font-size: 22px; font-weight: 900; color: var(--accent-green); display: flex; align-items: center; gap: 10px; }
-        .nav-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
-        .tab-btn {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: #1e293b;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-muted);
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .tab-btn:hover { color: white; background: #334155; }
-        .tab-btn.active { background: var(--accent-green); color: #064e3b; }
-        .tab-btn.gold { background: var(--accent-gold); color: #451a03; }
-
-        /* LAYOUT & CONTAINERS */
-        main { max-width: 1200px; margin: 25px auto; padding: 0 20px; }
-        .tab-content { display: none; flex-direction: column; gap: 25px; }
-        .tab-content.active { display: flex; }
-
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-
-        @media (max-width: 850px) {
-            .grid-2, .grid-3 { grid-template-columns: 1fr; }
-            header { flex-direction: column; gap: 15px; }
-        }
-
-        /* CARDS & UI COMPONENTS */
-        .card-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-        }
-        .card-title {
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--accent-green);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* BANNERS */
-        .banner-cms {
-            background: linear-gradient(90deg, #064e3b, #065f46);
-            border: 1px solid var(--accent-green);
-            padding: 15px 20px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 14px;
-        }
-        .banner-alert {
-            background: linear-gradient(90deg, #78350f, #92400e);
-            border: 1px solid var(--accent-gold);
-            padding: 15px 20px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-        }
-
-        /* STAMINA CALCULATOR */
-        .folego-bar { width: 100%; height: 16px; background: #1e293b; border-radius: 8px; overflow: hidden; margin-top: 10px; }
-        .folego-fill { height: 100%; width: 70%; background: linear-gradient(90deg, #ef4444, #f59e0b, #00ff88); transition: width 0.4s; }
-        .chip-btn {
-            background: #1e293b;
-            color: var(--text-muted);
-            border: 1px solid var(--border-color);
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .chip-btn.active { background: var(--accent-green); color: #064e3b; border-color: var(--accent-green); }
-
-        /* BUTTONS & INPUTS */
-        .btn {
-            background: var(--accent-green);
-            color: #064e3b;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: 800;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: transform 0.1s;
-        }
-        .btn:active { transform: scale(0.98); }
-        .btn-gold { background: var(--accent-gold); color: #451a03; }
-        .btn-danger { background: #ef4444; color: white; }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            background: #1e293b;
-            border: 1px solid #374151;
-            color: white;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-
-        /* EA FC CARD STYLING */
-        .fifa-card {
-            background: linear-gradient(135deg, #ffd700, #b45309);
-            color: #451a03;
-            border-radius: 18px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.25);
-            max-width: 320px;
-            margin: 0 auto;
-            position: relative;
-            border: 2px solid #fef08a;
-        }
-        .card-photo-placeholder {
-            width: 110px;
-            height: 110px;
-            background: rgba(0, 0, 0, 0.15);
-            border-radius: 50%;
-            margin: 10px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 2px solid rgba(69, 26, 3, 0.2);
-        }
-        .card-stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            text-align: left;
-            background: rgba(0, 0, 0, 0.12);
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 13px;
-            margin-top: 15px;
-        }
-
-        /* MODAL PIN LOCK */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 200;
-        }
-        .modal-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 30px;
-            border-radius: 16px;
-            text-align: center;
-            max-width: 360px;
-            width: 90%;
-        }
-    </style>
+    <!-- Estilos Externos -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- HEADER / NAVIGATION -->
+    <!-- CABEÇALHO E NAVEGAÇÃO -->
     <header>
-        <div class="logo"><i class="fa-solid fa-futbol"></i> FUTEBOL EVOLUTION</div>
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('home')"><i class="fa-solid fa-house"></i> Início</button>
-            <button class="tab-btn" onclick="switchTab('avaliacao')"><i class="fa-solid fa-clipboard-check"></i> Avaliação (50Q)</button>
-            <button class="tab-btn" onclick="switchTab('treinos')"><i class="fa-solid fa-dumbbell"></i> Treinos</button>
-            <button class="tab-btn gold" onclick="switchTab('card')"><i class="fa-solid fa-id-card"></i> Evolution Card</button>
-            <button class="tab-btn" onclick="switchTab('guia')"><i class="fa-solid fa-book-open"></i> Guia Rápido</button>
-            <button class="tab-btn" onclick="switchTab('comparador')"><i class="fa-solid fa-code-compare"></i> Comparador 1v1</button>
-            <button class="tab-btn" onclick="openAdminModal()"><i class="fa-solid fa-crown"></i> Admin</button>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fa-solid fa-futbol"></i> FUTEBOL EVOLUTION
+            </div>
+            <nav class="nav-tabs">
+                <button class="tab-btn active" onclick="switchTab('home', event)"><i class="fa-solid fa-house"></i> Início</button>
+                <button class="tab-btn" onclick="switchTab('avaliacao', event)"><i class="fa-solid fa-clipboard-check"></i> Avaliação (50Q)</button>
+                <button class="tab-btn" onclick="switchTab('treinos', event)"><i class="fa-solid fa-dumbbell"></i> Treinos</button>
+                <button class="tab-btn gold" onclick="switchTab('card', event)"><i class="fa-solid fa-id-card"></i> Evolution Card</button>
+                <button class="tab-btn" onclick="switchTab('guia', event)"><i class="fa-solid fa-book-open"></i> Guia Rápido</button>
+                <button class="tab-btn" onclick="switchTab('comparador', event)"><i class="fa-solid fa-code-compare"></i> Comparador 1v1</button>
+                <button class="tab-btn" onclick="openAdminModal()"><i class="fa-solid fa-crown"></i> Admin</button>
+            </nav>
         </div>
     </header>
 
     <main>
-        <!-- ABA 1: HOME DO ATLETA -->
+        <!-- ABA 1: HOME -->
         <section id="tab-home" class="tab-content active">
-            <!-- MURAL CMS -->
             <div class="banner-cms">
                 <i class="fa-solid fa-bullhorn" style="color: var(--accent-gold); font-size: 20px;"></i>
                 <span id="cms-notice-text"><strong>MURAL DO TREINADOR:</strong> Treino de arranque e finalização liberado para Pontas e Meias nesta semana!</span>
             </div>
 
-            <!-- ALERTA DE AVALIAÇÃO PENDENTE -->
             <div class="banner-alert" id="pending-alert-box">
                 <span><i class="fa-solid fa-bell" style="color: var(--accent-gold);"></i> <strong>AVALIAÇÃO PENDENTE:</strong> Seu Treinador enviou um teste especial de tomada de decisão!</span>
-                <button class="btn btn-gold" onclick="switchTab('avaliacao')" style="padding: 6px 12px; font-size: 12px;">FAZER AGORA</button>
+                <button class="btn btn-gold" onclick="switchTab('avaliacao', event)" style="padding: 6px 12px; font-size: 12px;">FAZER AGORA</button>
             </div>
 
             <div class="grid-2">
-                <!-- CALCULADORA DIÁRIA DE CANSAÇO -->
+                <!-- CALCULADORA DE FÔLEGO -->
                 <div class="card-box">
-                    <div class="card-title"><i class="fa-solid fa-gauge-high"></i> Calculadora Diária de Fôlego & Cansaço</div>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Você jogou futebol ou treinou hoje em algum lugar? (Escola, rua, quadra ou campo)</p>
+                    <div class="card-title"><i class="fa-solid fa-gauge-high"></i> Calculadora Diária de Fôlego &amp; Cansaço</div>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Você jogou futebol ou treinou hoje em algum lugar?</p>
                     
                     <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px;">
                         <button class="chip-btn active" onclick="calculateStamina(0, this)">Não joguei</button>
@@ -257,42 +58,42 @@
                         <button class="chip-btn" onclick="calculateStamina(50, this)">2 Partidas (1h30min)</button>
                     </div>
 
-                    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700;">
+                    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; gap: 10px; flex-wrap: wrap;">
                         <span>Fôlego Restante: <strong id="folego-val" style="color: var(--accent-green);">100%</strong></span>
                         <span id="folego-rec" style="color: var(--accent-green);">Treino Indicado: Intenso / Normal</span>
                     </div>
                     <div class="folego-bar"><div class="folego-fill" id="folego-fill-bar"></div></div>
                 </div>
 
-                <!-- RADAR DE ATRIBUTOS FIFA -->
+                <!-- RADAR FIFA -->
                 <div class="card-box" style="text-align: center;">
                     <div class="card-title" style="justify-content: center; color: var(--accent-gold);"><i class="fa-solid fa-chart-pie"></i> Radar de Atributos EA FC</div>
-                    <div style="max-width: 250px; margin: 0 auto;">
+                    <div class="chart-wrapper-radar">
                         <canvas id="radarChart"></canvas>
                     </div>
                     <p style="font-size: 13px; color: var(--text-muted); margin-top: 10px;">Overall Geral Atual: <strong style="color: var(--accent-green); font-size: 18px;">85 OVR</strong></p>
                 </div>
             </div>
 
-            <!-- HISTÓRICO DE EVOLUÇÃO (TIMELINE OVR) -->
+            <!-- TIMELINE OVR -->
             <div class="card-box">
                 <div class="card-title"><i class="fa-solid fa-chart-line"></i> Evolução da Nota Geral (Timeline OVR)</div>
-                <div style="max-height: 200px; width: 100%;">
+                <div class="chart-wrapper-timeline">
                     <canvas id="timelineChart"></canvas>
                 </div>
             </div>
         </section>
 
-        <!-- ABA 2: AVALIAÇÃO DE 50 PERGUNTAS -->
+        <!-- ABA 2: AVALIAÇÃO -->
         <section id="tab-avaliacao" class="tab-content">
             <div class="card-box">
-                <div class="card-title"><i class="fa-solid fa-clipboard-question"></i> Avaliação de Percepção Técnica & Tática</div>
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Responda às questões abaixo para ajustar seu Radar FIFA. Escolha entre digitar ou falar no microfone.</p>
+                <div class="card-title"><i class="fa-solid fa-clipboard-question"></i> Avaliação de Percepção Técnica &amp; Tática</div>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Responda às questões abaixo para ajustar seu Radar FIFA.</p>
 
                 <div style="display: flex; flex-direction: column; gap: 20px;">
                     <div>
                         <label style="font-weight: 700; font-size: 14px;">1. Quando você recebe a bola na ponta com marcador colado, qual é sua decisão rápida?</label>
-                        <div style="display: flex; gap: 10px; margin-top: 8px;">
+                        <div class="input-with-btn">
                             <textarea id="q1-input" rows="2" placeholder="Digite sua resposta aqui..."></textarea>
                             <button class="btn btn-danger" onclick="startVoiceInput('q1-input')"><i class="fa-solid fa-microphone"></i></button>
                         </div>
@@ -300,7 +101,7 @@
 
                     <div>
                         <label style="font-weight: 700; font-size: 14px;">2. Como você avalia o uso da sua perna ruim sob pressão no 2º tempo?</label>
-                        <div style="display: flex; gap: 10px; margin-top: 8px;">
+                        <div class="input-with-btn">
                             <textarea id="q2-input" rows="2" placeholder="Digite sua resposta aqui..."></textarea>
                             <button class="btn btn-danger" onclick="startVoiceInput('q2-input')"><i class="fa-solid fa-microphone"></i></button>
                         </div>
@@ -311,7 +112,7 @@
             </div>
         </section>
 
-        <!-- ABA 3: CENTRAL DE TREINOS -->
+        <!-- ABA 3: TREINOS -->
         <section id="tab-treinos" class="tab-content">
             <div class="card-box">
                 <div class="card-title"><i class="fa-solid fa-filter"></i> Filtros de Treino Recomendado</div>
@@ -339,11 +140,10 @@
             </div>
         </section>
 
-        <!-- ABA 4: EVOLUTION CARD & EXPORTAÇÃO PDF -->
+        <!-- ABA 4: CARD -->
         <section id="tab-card" class="tab-content">
             <div class="grid-2">
                 <div>
-                    <!-- CARD EXIBIDO -->
                     <div class="fifa-card" id="my-fifa-card">
                         <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 32px;">
                             <span>85<br><span style="font-size: 14px;">PON</span></span>
@@ -353,7 +153,7 @@
                             <i class="fa-solid fa-user" style="font-size: 50px; color: #451a03; opacity: 0.6;"></i>
                         </div>
                         <h2 style="margin: 5px 0; font-size: 20px;">PEDRINHO SANTOS</h2>
-                        <p style="font-size: 11px; font-weight: 800;">AMBIDESTRO | CAMPO & FUTSAL</p>
+                        <p style="font-size: 11px; font-weight: 800;">AMBIDESTRO | CAMPO &amp; FUTSAL</p>
 
                         <div class="card-stats-grid">
                             <div>PASSE: 85</div><div>VISÃO: 88</div>
@@ -364,41 +164,40 @@
                 </div>
 
                 <div class="card-box" style="display: flex; flex-direction: column; justify-content: center; gap: 15px;">
-                    <div class="card-title"><i class="fa-solid fa-file-pdf"></i> Salvar & Compartilhar Card</div>
-                    <p style="font-size: 13px; color: var(--text-muted);">Baixe seu Evolution Card oficial em PDF ou formato de imagem HD para enviar no grupo da equipe ou postar no Instagram!</p>
+                    <div class="card-title"><i class="fa-solid fa-file-pdf"></i> Salvar &amp; Compartilhar Card</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Baixe seu Evolution Card oficial em PDF ou formato de imagem HD!</p>
                     <button class="btn" onclick="alert('Gerando PDF do Evolution Card...')"><i class="fa-solid fa-download"></i> BAIXAR CARD EM PDF</button>
-                    <button class="btn btn-gold" onclick="alert('Salvando imagem HD para Redes Sociais...')"><i class="fa-solid fa-image"></i> SALVAR IMAGEM HD PARA INSTAGRAM</button>
+                    <button class="btn btn-gold" onclick="alert('Salvando imagem HD...')"><i class="fa-solid fa-image"></i> SALVAR IMAGEM HD PARA INSTAGRAM</button>
                     <button class="btn" style="background: #1e293b; color: white;" onclick="document.getElementById('photo-upload').click()"><i class="fa-solid fa-upload"></i> Alterar Foto do Card</button>
                     <input type="file" id="photo-upload" style="display: none;" accept="image/*">
                 </div>
             </div>
         </section>
 
-        <!-- ABA 5: GUIA RÁPIDO & BIBLIOTECA VISUAL -->
+        <!-- ABA 5: GUIA RÁPIDO -->
         <section id="tab-guia" class="tab-content">
             <div class="card-box">
-                <div class="card-title"><i class="fa-solid fa-book-open"></i> Guia Rápido de Movimentos & Postura</div>
+                <div class="card-title"><i class="fa-solid fa-book-open"></i> Guia Rápido de Movimentos &amp; Postura</div>
                 <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Consulte tutoriais visuais de posicionamento antes do seu jogo.</p>
                 
                 <div class="grid-2">
                     <div class="card-box" style="background: #0d1322;">
                         <h4 style="color: var(--accent-green); margin-bottom: 8px;">1. Dominada Orientada na Ponta</h4>
-                        <p style="font-size: 12px; color: var(--text-muted);">Receba o passe com o pé distante do marcador já projetando o corpo para a linha de fundo ou para dentro.</p>
+                        <p style="font-size: 12px; color: var(--text-muted);">Receba o passe com o pé distante do marcador já projetando o corpo para a linha de fundo.</p>
                     </div>
                     <div class="card-box" style="background: #0d1322;">
                         <h4 style="color: var(--accent-gold); margin-bottom: 8px;">2. Postura Corporal no 1v1 Defensivo</h4>
-                        <p style="font-size: 12px; color: var(--text-muted);">Mantenha o centro de gravidade baixo, joelhos fletidos e profile o corpo para induzir o atacante à perna fraca dele.</p>
+                        <p style="font-size: 12px; color: var(--text-muted);">Mantenha o centro de gravidade baixo e joelhos fletidos para induzir o atacante à perna fraca.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ABA 6: COMPARADOR 1V1 COM FILTRO POR IDADE -->
+        <!-- ABA 6: COMPARADOR -->
         <section id="tab-comparador" class="tab-content">
             <div class="card-box">
                 <div class="card-title"><i class="fa-solid fa-code-compare"></i> Comparador de Cards 1v1</div>
                 
-                <!-- FILTRO POR IDADE -->
                 <div style="margin-bottom: 20px;">
                     <label style="font-size: 12px; color: var(--text-muted);">Selecione a Categoria de Idade:</label>
                     <select id="age-category-filter" onchange="filterPlayersByAge()" style="max-width: 300px;">
@@ -409,26 +208,25 @@
 
                 <div class="grid-2">
                     <div class="card-box" style="background: #0d1322; text-align: center;">
-                        <h3 style="color: var(--accent-green); margin-bottom: 10px;">Atleta A: Pedrinho (13 yrs)</h3>
+                        <h3 style="color: var(--accent-green); margin-bottom: 10px;">Atleta A: Pedrinho (13 anos)</h3>
                         <p style="font-size: 13px;">Overall: <strong>85 OVR</strong> | Velocidade: 92 | Passe: 85</p>
                     </div>
                     <div class="card-box" style="background: #0d1322; text-align: center;">
-                        <h3 style="color: var(--accent-gold); margin-bottom: 10px;">Atleta B: Lucas (14 yrs)</h3>
+                        <h3 style="color: var(--accent-gold); margin-bottom: 10px;">Atleta B: Lucas (14 anos)</h3>
                         <p style="font-size: 13px;">Overall: <strong>83 OVR</strong> | Velocidade: 88 | Passe: 87</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ABA 7: PAINEL ADMINISTRADOR (SÓ VISÍVEL APÓS PIN) -->
+        <!-- ABA 7: ADMIN -->
         <section id="tab-admin" class="tab-content">
             <div class="card-box">
                 <div class="card-title" style="color: var(--accent-gold);"><i class="fa-solid fa-crown"></i> Painel do Administrador (Treinador)</div>
 
                 <div class="grid-2">
-                    <!-- ENVIAR MENSAGEM PRIVADA -->
                     <div class="card-box" style="background: #0d1322;">
-                        <h4 style="color: var(--accent-green); margin-bottom: 10px;"><i class="fa-solid fa-paper-plane"></i> Enviar Mensagem Privada Motivar</h4>
+                        <h4 style="color: var(--accent-green); margin-bottom: 10px;"><i class="fa-solid fa-paper-plane"></i> Enviar Mensagem Privada Motivacional</h4>
                         <label style="font-size: 12px; color: var(--text-muted);">Selecione o Atleta:</label>
                         <select>
                             <option>Pedrinho Santos (Ponta - Ambidestro)</option>
@@ -438,7 +236,6 @@
                         <button class="btn" style="margin-top: 10px;"><i class="fa-solid fa-paper-plane"></i> Enviar Mensagem</button>
                     </div>
 
-                    <!-- ATUALIZAR MURAL CMS -->
                     <div class="card-box" style="background: #0d1322;">
                         <h4 style="color: var(--accent-gold); margin-bottom: 10px;"><i class="fa-solid fa-bullhorn"></i> Atualizar Mural do Topo</h4>
                         <textarea id="cms-input" rows="3" placeholder="Digite o novo aviso geral..."></textarea>
@@ -449,12 +246,12 @@
         </section>
     </main>
 
-    <!-- MODAL DE PIN DO ADMIN -->
+    <!-- MODAL DO PIN DA ADMINISTRAÇÃO -->
     <div class="modal-overlay" id="pin-modal">
         <div class="modal-box">
             <h3 style="color: var(--accent-gold); margin-bottom: 15px;"><i class="fa-solid fa-lock"></i> Acesso Restrito</h3>
             <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Digite o PIN do Administrador para acessar:</p>
-            <input type="password" id="pin-input" placeholder="PIN Secreto (ex: 1234)" style="text-align: center; font-size: 18px; letter-spacing: 5px;">
+            <input type="password" id="pin-input" placeholder="****" style="text-align: center; font-size: 18px; letter-spacing: 5px;">
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button class="btn" style="flex: 1;" onclick="checkPin()">ENTRAR</button>
                 <button class="btn btn-danger" style="flex: 1;" onclick="closeAdminModal()">CANCELAR</button>
@@ -462,142 +259,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT PRINCIPAL JavaScript -->
-    <script>
-        // TECLA DE NAVEGAÇÃO ENTRE ABAS
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            const targetTab = document.getElementById('tab-' + tabId);
-            if (targetTab) targetTab.classList.add('active');
-
-            // Highlight active button if not admin modal trigger
-            event?.target?.classList?.add('active');
-        }
-
-        // CALCULADORA DE CANSAÇO / FÔLEGO
-        function calculateStamina(lossPercentage, btnElement) {
-            document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
-            if(btnElement) btnElement.classList.add('active');
-
-            let remaining = 100 - lossPercentage;
-            document.getElementById('folego-val').innerText = remaining + '%';
-            document.getElementById('folego-fill-bar').style.width = remaining + '%';
-
-            let recText = document.getElementById('folego-rec');
-            if (remaining >= 85) {
-                recText.innerText = "Treino Indicado: Intenso / Alta Carga";
-                recText.style.color = "#00ff88";
-            } else if (remaining >= 60) {
-                recText.innerText = "Treino Indicado: Moderado / Técnico";
-                recText.style.color = "#ffd700";
-            } else {
-                recText.innerText = "Treino Indicado: Leve / Regenerativo";
-                recText.style.color = "#ef4444";
-            }
-        }
-
-        // RECONHECIMENTO DE VOZ (MICROFONE)
-        function startVoiceInput(targetId) {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert('O seu navegador não suporta a entrada por voz. Por favor, digite no campo de texto.');
-                return;
-            }
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'pt-BR';
-            recognition.start();
-
-            recognition.onresult = function(event) {
-                const text = event.results[0][0].transcript;
-                document.getElementById(targetId).value = text;
-            };
-        }
-
-        // MODAL DO ADMIN E PIN (1234)
-        function openAdminModal() {
-            document.getElementById('pin-modal').style.display = 'flex';
-        }
-        function closeAdminModal() {
-            document.getElementById('pin-modal').style.display = 'none';
-        }
-        function checkPin() {
-            const inputPin = document.getElementById('pin-input').value;
-            if (inputPin === '1234') {
-                closeAdminModal();
-                switchTab('admin');
-            } else {
-                alert('PIN Incorreto! Tente novamente.');
-            }
-        }
-
-        // ATUALIZAR MURAL CMS
-        function updateCMS() {
-            const text = document.getElementById('cms-input').value;
-            if(text.trim() !== "") {
-                document.getElementById('cms-notice-text').innerHTML = `<strong>MURAL DO TREINADOR:</strong> ${text}`;
-                alert('Mural atualizado com sucesso!');
-            }
-        }
-
-        // INICIALIZAÇÃO DE GRÁFICOS (CHART.JS)
-        window.onload = function() {
-            // RADAR CHART EA FC
-            const ctxRadar = document.getElementById('radarChart').getContext('2d');
-            new Chart(ctxRadar, {
-                type: 'radar',
-                data: {
-                    labels: ['PAS', 'CHU', 'VEL', 'FIS', 'DEF', 'TAC'],
-                    datasets: [{
-                        label: 'Atributos OVR',
-                        data: [85, 80, 92, 78, 65, 86],
-                        backgroundColor: 'rgba(0, 255, 136, 0.25)',
-                        borderColor: '#00ff88',
-                        pointBackgroundColor: '#ffd700',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    scales: {
-                        r: {
-                            angleLines: { color: '#1e293b' },
-                            grid: { color: '#1e293b' },
-                            pointLabels: { color: '#ffd700', font: { size: 12, weight: 'bold' } },
-                            ticks: { display: false },
-                            min: 0, max: 100
-                        }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-
-            // TIMELINE CHART OVR
-            const ctxTimeline = document.getElementById('timelineChart').getContext('2d');
-            new Chart(ctxTimeline, {
-                type: 'line',
-                data: {
-                    labels: ['Mês 1', 'Mês 2', 'Mês 3', 'Mês 4', 'Atual'],
-                    datasets: [{
-                        label: 'Evolução OVR',
-                        data: [72, 75, 79, 82, 85],
-                        borderColor: '#00ff88',
-                        backgroundColor: 'rgba(0, 255, 136, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } },
-                        x: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-        };
-    </script>
+    <!-- Script JS Externo -->
+    <script src="script.js"></script>
 </body>
 </html>

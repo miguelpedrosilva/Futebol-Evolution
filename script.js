@@ -1,4 +1,4 @@
-// NAVEGAÇÃO ENTRE ABAS
+// TROCA DE ABAS
 function switchTab(tabId, event) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -13,7 +13,7 @@ function switchTab(tabId, event) {
     }
 }
 
-// CALCULADORA DE CANSAÇO E FÔLEGO DIÁRIO
+// CALCULADORA DE FÔLEGO DIÁRIO
 function calculateStamina(lossPercentage, btnElement) {
     document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
     if (btnElement) {
@@ -42,10 +42,10 @@ function calculateStamina(lossPercentage, btnElement) {
     }
 }
 
-// RECONHECIMENTO DE VOZ (MICROFONE NAS AVALIAÇÕES)
+// MICROFONE DE VOZ
 function startVoiceInput(targetId) {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        alert('O seu navegador não suporta a entrada por voz. Por favor, digite no campo de texto.');
+        alert('O seu navegador não suporta a entrada por voz.');
         return;
     }
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -62,7 +62,7 @@ function startVoiceInput(targetId) {
     };
 }
 
-// MODAL DO PAINEL ADMIN (PIN DE SEGURANÇA: 1234)
+// MODAL ADMIN (PIN: 1234)
 function openAdminModal() {
     const modal = document.getElementById('pin-modal');
     if (modal) modal.style.display = 'flex';
@@ -77,13 +77,13 @@ function checkPin() {
     const inputPin = document.getElementById('pin-input').value;
     if (inputPin === '1234') {
         closeAdminModal();
-        switchTab('admin');
+        switchTab('admin', null);
     } else {
         alert('PIN Incorreto! Tente novamente.');
     }
 }
 
-// ATUALIZAR MURAL DO TREINADOR (CMS)
+// MURAL CMS
 function updateCMS() {
     const text = document.getElementById('cms-input').value;
     if (text.trim() !== "") {
@@ -92,16 +92,15 @@ function updateCMS() {
     }
 }
 
-// FILTRO DE CATEGORIA POR IDADE NO COMPARADOR
+// FILTRO DE IDADE
 function filterPlayersByAge() {
     const category = document.getElementById('age-category-filter').value;
     const catName = category === 'sub14' ? 'Até 14 anos' : '15 anos ou mais';
     alert(`Filtrando comparador para a categoria: ${catName}`);
 }
 
-// INICIALIZAÇÃO DE GRÁFICOS (CHART.JS)
+// GRÁFICOS (CHART.JS)
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. RADAR DE ATRIBUTOS EA FC / FIFA
     const radarCanvas = document.getElementById('radarChart');
     if (radarCanvas) {
         const ctxRadar = radarCanvas.getContext('2d');
@@ -119,11 +118,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: true,
                 scales: {
                     r: {
                         angleLines: { color: '#1e293b' },
                         grid: { color: '#1e293b' },
-                        pointLabels: { color: '#ffd700', font: { size: 12, weight: 'bold' } },
+                        pointLabels: { color: '#ffd700', font: { size: 11, weight: 'bold' } },
                         ticks: { display: false },
                         min: 0,
                         max: 100
@@ -134,7 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 2. TIMELINE DE EVOLUÇÃO OVR
     const timelineCanvas = document.getElementById('timelineChart');
     if (timelineCanvas) {
         const ctxTimeline = timelineCanvas.getContext('2d');
