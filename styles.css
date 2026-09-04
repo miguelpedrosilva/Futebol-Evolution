@@ -138,7 +138,7 @@ main {
     gap: 8px;
 }
 
-/* CONTAINER DOS GRÁFICOS (TRAVA DE TAMANHO) */
+/* FORMATAÇÃO FIXA DOS GRÁFICOS */
 .chart-wrapper-radar {
     position: relative;
     width: 100%;
@@ -148,8 +148,9 @@ main {
 }
 
 .chart-wrapper-radar canvas {
-    max-width: 100% !important;
-    max-height: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
 }
 
 .chart-wrapper-timeline {
@@ -159,8 +160,9 @@ main {
 }
 
 .chart-wrapper-timeline canvas {
-    max-width: 100% !important;
-    max-height: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
 }
 
 /* BANNERS */
@@ -223,7 +225,7 @@ main {
     border-color: var(--accent-green);
 }
 
-/* BOTÕES E FORMULÁRIOS */
+/* BOTÕES E INPUTS */
 .btn {
     background: var(--accent-green);
     color: #064e3b;
@@ -312,7 +314,7 @@ input, select, textarea {
     margin-top: 15px;
 }
 
-/* MODAL SEGURO PIN */
+/* MODAL ADMIN */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -336,7 +338,6 @@ input, select, textarea {
     width: 90%;
 }
 
-/* RESPONSIVIDADE PARA CELULARES */
 @media (max-width: 850px) {
     .grid-2, .grid-3 {
         grid-template-columns: 1fr;

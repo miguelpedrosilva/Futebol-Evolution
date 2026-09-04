@@ -1,3 +1,6 @@
+let radarChartInstance = null;
+let timelineChartInstance = null;
+
 // TROCA DE ABAS
 function switchTab(tabId, event) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -10,6 +13,11 @@ function switchTab(tabId, event) {
 
     if (event && event.currentTarget) {
         event.currentTarget.classList.add('active');
+    }
+
+    // Se voltar para a aba home, atualiza o dimensionamento dos gráficos
+    if (tabId === 'home') {
+        setTimeout(initCharts, 50);
     }
 }
 
@@ -102,7 +110,7 @@ function checkPin() {
 // MURAL CMS
 function updateCMS() {
     const text = document.getElementById('cms-input').value;
-    if (text.trim() !== "") {
+    if (text && text.trim() !== "") {
         document.getElementById('cms-notice-text').innerHTML = `<strong>MURAL DO TREINADOR:</strong> ${text}`;
         alert('Mural publicado com sucesso!');
     }
@@ -115,12 +123,20 @@ function filterPlayersByAge() {
     alert(`Filtrando comparador para a categoria: ${catName}`);
 }
 
-// GRÁFICOS (CHART.JS)
-document.addEventListener('DOMContentLoaded', function() {
+// CARREGAMENTO E CRIAÇÃO DOS GRÁFICOS
+function initCharts() {
+    if (typeof Chart === 'undefined') {
+        setTimeout(initCharts, 200);
+        return;
+    }
+
+    // 1. Radar Chart
     const radarCanvas = document.getElementById('radarChart');
     if (radarCanvas) {
-        const ctxRadar = radarCanvas.getContext('2d');
-        new Chart(ctxRadar, {
+        if (radarChartInstance) {
+            radarChartInstance.destroy();
+        }
+        radarChartInstance = new Chart(radarCanvas, {
             type: 'radar',
             data: {
                 labels: ['PAS', 'CHU', 'VEL', 'FIS', 'DEF', 'TAC'],
@@ -151,10 +167,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // 2. Timeline Chart
     const timelineCanvas = document.getElementById('timelineChart');
     if (timelineCanvas) {
-        const ctxTimeline = timelineCanvas.getContext('2d');
-        new Chart(ctxTimeline, {
+        if (timelineChartInstance) {
+            timelineChartInstance.destroy();
+        }
+        timelineChartInstance = new Chart(timelineCanvas, {
             type: 'line',
             data: {
                 labels: ['Mês 1', 'Mês 2', 'Mês 3', 'Mês 4', 'Atual'],
@@ -178,4 +197,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
+}
+
+// INICIALIZADORES DE CARREGAMENTO
+window.addEventListener('DOMContentLoaded', initCharts);
+window.addEventListener('load', initCharts);

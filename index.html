@@ -5,17 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futebol Evolution</title>
 
+    <!-- Favicon -->
     <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/53/53283.png" type="image/png">
 
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
+    <!-- Estilo CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- CABEÇALHO E NAVEGAÇÃO -->
     <header>
         <div class="header-container">
             <div class="logo">
@@ -34,6 +39,7 @@
     </header>
 
     <main>
+        <!-- ABA 1: HOME -->
         <section id="tab-home" class="tab-content active">
             <div class="banner-cms">
                 <i class="fa-solid fa-bullhorn" style="color: var(--accent-gold); font-size: 20px;"></i>
@@ -46,6 +52,7 @@
             </div>
 
             <div class="grid-2">
+                <!-- CALCULADORA DE FÔLEGO -->
                 <div class="card-box">
                     <div class="card-title"><i class="fa-solid fa-gauge-high"></i> Calculadora Diária de Fôlego &amp; Cansaço</div>
                     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Você jogou futebol ou treinou hoje em algum lugar?</p>
@@ -64,6 +71,7 @@
                     <div class="folego-bar"><div class="folego-fill" id="folego-fill-bar"></div></div>
                 </div>
 
+                <!-- RADAR FIFA -->
                 <div class="card-box" style="text-align: center;">
                     <div class="card-title" style="justify-content: center; color: var(--accent-gold);"><i class="fa-solid fa-chart-pie"></i> Radar de Atributos EA FC</div>
                     <div class="chart-wrapper-radar">
@@ -73,6 +81,7 @@
                 </div>
             </div>
 
+            <!-- TIMELINE OVR -->
             <div class="card-box">
                 <div class="card-title"><i class="fa-solid fa-chart-line"></i> Evolução da Nota Geral (Timeline OVR)</div>
                 <div class="chart-wrapper-timeline">
@@ -81,6 +90,7 @@
             </div>
         </section>
 
+        <!-- ABA 2: AVALIAÇÃO -->
         <section id="tab-avaliacao" class="tab-content">
             <div class="card-box">
                 <div class="card-title"><i class="fa-solid fa-clipboard-question"></i> Avaliação de Percepção Técnica &amp; Tática</div>
@@ -108,6 +118,7 @@
             </div>
         </section>
 
+        <!-- ABA 3: TREINOS -->
         <section id="tab-treinos" class="tab-content">
             <div class="card-box">
                 <div class="card-title"><i class="fa-solid fa-filter"></i> Filtros de Treino Recomendado</div>
@@ -135,6 +146,7 @@
             </div>
         </section>
 
+        <!-- ABA 4: CARD -->
         <section id="tab-card" class="tab-content">
             <div class="grid-2">
                 <div>
@@ -169,6 +181,7 @@
             </div>
         </section>
 
+        <!-- ABA 5: GUIA RÁPIDO -->
         <section id="tab-guia" class="tab-content">
             <div class="card-box">
                 <div class="card-title"><i class="fa-solid fa-book-open"></i> Guia Rápido de Movimentos &amp; Postura</div>
@@ -187,6 +200,7 @@
             </div>
         </section>
 
+        <!-- ABA 6: COMPARADOR -->
         <section id="tab-comparador" class="tab-content">
             <div class="card-box">
                 <div class="card-title"><i class="fa-solid fa-code-compare"></i> Comparador de Cards 1v1</div>
@@ -212,6 +226,7 @@
             </div>
         </section>
 
+        <!-- ABA 7: ADMIN -->
         <section id="tab-admin" class="tab-content">
             <div class="card-box">
                 <div class="card-title" style="color: var(--accent-gold);"><i class="fa-solid fa-crown"></i> Painel do Administrador (Treinador)</div>
@@ -238,6 +253,7 @@
         </section>
     </main>
 
+    <!-- MODAL DO PIN DA ADMINISTRAÇÃO -->
     <div class="modal-overlay" id="pin-modal">
         <div class="modal-box">
             <h3 style="color: var(--accent-gold); margin-bottom: 15px;"><i class="fa-solid fa-lock"></i> Acesso Restrito</h3>
@@ -250,6 +266,7 @@
         </div>
     </div>
 
+    <!-- Script JS -->
     <script src="script.js"></script>
 </body>
 </html>
