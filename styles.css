@@ -138,7 +138,7 @@ main {
     gap: 8px;
 }
 
-/* GRÁFICOS RESTRIÇÃO DE TAMANHO (CORREÇÃO DE EXPANSAO) */
+/* CONTAINER DOS GRÁFICOS (TRAVA DE TAMANHO) */
 .chart-wrapper-radar {
     position: relative;
     width: 100%;
