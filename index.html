@@ -270,3 +270,20 @@
     <script src="script.js"></script>
 </body>
 </html>
+<!-- Secção da Avaliação Tática / 50Q -->
+<div class="card-avaliacao">
+    <h3>Pergunta Tática #01</h3>
+    <p><em>"O teu equipa está a perder por 1-0 aos 80 minutos e o adversário faz pressão alta no teu meio-campo. Qual deve ser a tua decisão como médio-centro?"</em></p>
+
+    <!-- Caixa de Resposta do Atleta -->
+    <textarea id="respostaAtleta" rows="4" placeholder="Escreve aqui a tua decisão tática..."></textarea>
+    
+    <!-- Botão para enviar à IA -->
+    <button id="btnAvaliar" onclick="processarAvaliaIA()">Enviar para Avaliação da IA</button>
+
+    <!-- Área onde a IA vai mostrar o feedback -->
+    <div id="feedbackTreinador" class="resultado-ia" style="display: none;">
+        <h4>Feedback do Treinador IA:</h4>
+        <p id="textoFeedback">A analisar a tua jogada...</p>
+    </div>
+</div>

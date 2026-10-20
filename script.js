@@ -202,3 +202,68 @@ function initCharts() {
 // INICIALIZADORES DE CARREGAMENTO
 window.addEventListener('DOMContentLoaded', initCharts);
 window.addEventListener('load', initCharts);
+
+async function perguntarAoGemini(promptTexto) {
+    const vercelURL = 'https://futebol-evolution.vercel.app/api/gemini';
+
+    try {
+        const response = await fetch(vercelURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: promptTexto })
+        });
+
+        const data = await response.json();
+
+        if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+            return data.candidates[0].content.parts[0].text;
+        } else {
+            console.error('Resposta inesperada da IA:', data);
+            return 'Não foi possível obter resposta da IA no momento.';
+        }
+    } catch (error) {
+        console.error('Erro na ligação à Vercel:', error);
+        return 'Erro de conexão com o servidor seguro.';
+    }
+}
+async function processarAvaliaIA() {
+    const resposta = document.getElementById('respostaAtleta').value.trim();
+    const btn = document.getElementById('btnAvaliar');
+    const boxFeedback = document.getElementById('feedbackTreinador');
+    const textoFeedback = document.getElementById('textoFeedback');
+
+    // Validação simples se o atleta escreveu algo
+    if (!resposta) {
+        alert("Por favor, escreve a tua resposta antes de enviar!");
+        return;
+    }
+
+    // 1. Mostrar estado de carregamento
+    btn.disabled = true;
+    btn.innerText = "Treinador a analisar...";
+    boxFeedback.style.display = "block";
+    textoFeedback.innerText = "O Treinador IA está a analisar a tua resposta tática...";
+
+    // 2. Criar o prompt com instruções para a IA agir como um Treinador Exigente
+    const promptEngenharia = `
+        Atua como um treinador profissional de futebol e avaliador tático.
+        Um atleta respondeu à seguinte pergunta tática:
+        "O teu equipa está a perder por 1-0 aos 80 minutos e o adversário faz pressão alta no teu meio-campo. Qual deve ser a tua decisão como médio-centro?"
+        
+        Resposta do atleta: "${resposta}"
+
+        Responde com:
+        1. Uma nota de 0 a 100 para a leitura tática dele.
+        2. Um feedback curto (no máximo 3 frases) em tom motivador mas profissional, explicando o que ele fez bem e o que pode melhorar na decisão.
+    `;
+
+    // 3. Chamar o Gemini via Vercel
+    const resultadoIA = await perguntarAoGemini(promptEngenharia);
+
+    // 4. Exibir o resultado na tela
+    textoFeedback.innerText = resultadoIA;
+
+    // Restaurar botão
+    btn.disabled = false;
+    btn.innerText = "Enviar para Avaliação da IA";
+}
